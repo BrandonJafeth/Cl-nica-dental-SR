@@ -68,14 +68,15 @@ git pull origin main
 git push origin feature/nuevo-modulo
 ```
 
-### [!NOTE]
-- **Monorepo**: Este repositorio es un monorepo, lo que significa que contiene múltiples proyectos en un solo repositorio. Asegúrate de utilizar `git sparse-checkout` si solo necesitas trabajar en una parte específica.
+>[!NOTE]
+>**Monorepo**: Este repositorio es un monorepo, lo que significa que contiene múltiples proyectos en un solo repositorio. Asegúrate de utilizar `git sparse-checkout` si solo necesitas trabajar en una parte específica.
 
-### [!TIP]
-- **Utilizar Ramas**: Mantén una estrategia de ramas clara para manejar las distintas características y proyectos en el monorepo. Esto ayuda a gestionar el desarrollo sin afectar otros proyectos dentro del mismo repositorio.
+> [!TIP]
 
-### [!WARNING]
-- **Conflictos en Dependencias**: Dado que múltiples proyectos pueden compartir dependencias en un monorepo, asegúrate de alinear las versiones de estas dependencias para evitar conflictos.
+> **Utilizar Ramas**: Mantén una estrategia de ramas clara para manejar las distintas características y proyectos en el monorepo. Esto ayuda a gestionar el desarrollo sin afectar otros proyectos dentro del mismo repositorio.
+
+> [!IMPORTANT]
+>  **Conflictos en Dependencias**: Dado que múltiples proyectos pueden compartir dependencias en un monorepo, asegúrate de alinear las versiones de estas dependencias para evitar conflictos.
 
 Este README ofrece una visión general clara y organizada del proyecto, incluyendo los detalles técnicos y prácticos necesarios para colaborar eficazmente en el desarrollo.
 ```
