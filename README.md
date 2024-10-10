@@ -1,3 +1,4 @@
+
 # Sistema de Gestión para Clínica Dental Sonrisa Perfecta
 
 ## Descripción del Proyecto
@@ -22,6 +23,8 @@ La "Clínica Dental Sonrisa Perfecta" es una entidad dedicada a proporcionar ser
 ### Formato de Commits
 - **Estructura:**
   ```
+  <tipo>(<alcance>): <descripción>
+  ```
   - **Tipo:** feat, fix, docs, style, refactor, test, chore.
   - **Alcance:** Opcional, puede ser cualquier sección del proyecto afectada.
   - **Descripción:** Breve descripción de los cambios realizados.
@@ -45,8 +48,12 @@ La "Clínica Dental Sonrisa Perfecta" es una entidad dedicada a proporcionar ser
 
 ## Comandos Básicos
 ```bash
-# Clonar repositorio
-git clone <url_del_repositorio>
+# Clonar el repositorio (monorepo)
+git clone https://github.com/BrandonJafeth/Clinica-dental-SP.git
+
+# Iniciar Sparse Checkout si solo necesitas una parte del monorepo
+git sparse-checkout init --cone
+git sparse-checkout set <directorio_necesario>
 
 # Crear una rama de función
 git checkout -b feature/nuevo-modulo
@@ -59,5 +66,16 @@ git pull origin main
 
 # Subir cambios
 git push origin feature/nuevo-modulo
+```
+
+### [!NOTE]
+- **Monorepo**: Este repositorio es un monorepo, lo que significa que contiene múltiples proyectos en un solo repositorio. Asegúrate de utilizar `git sparse-checkout` si solo necesitas trabajar en una parte específica.
+
+### [!TIP]
+- **Utilizar Ramas**: Mantén una estrategia de ramas clara para manejar las distintas características y proyectos en el monorepo. Esto ayuda a gestionar el desarrollo sin afectar otros proyectos dentro del mismo repositorio.
+
+### [!WARNING]
+- **Conflictos en Dependencias**: Dado que múltiples proyectos pueden compartir dependencias en un monorepo, asegúrate de alinear las versiones de estas dependencias para evitar conflictos.
 
 Este README ofrece una visión general clara y organizada del proyecto, incluyendo los detalles técnicos y prácticos necesarios para colaborar eficazmente en el desarrollo.
+```
