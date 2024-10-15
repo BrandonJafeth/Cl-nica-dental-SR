@@ -80,3 +80,4 @@ git push origin feature/nuevo-modulo
 
 Este README ofrece una visión general clara y organizada del proyecto, incluyendo los detalles técnicos y prácticos necesarios para colaborar eficazmente en el desarrollo.
 ```
+Yo soy del UX/UI
