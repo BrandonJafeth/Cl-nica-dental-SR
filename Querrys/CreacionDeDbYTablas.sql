@@ -1,164 +1,263 @@
--- Usar la base de datos master
-USE master;
-GO
 
--- Crear la base de datos ClinicaDentalSP con control sobre los archivos de datos y log
-CREATE DATABASE ClinicaDentalSP
-ON PRIMARY
-(
-    NAME = 'ClinicaDentalSP_data',
-    FILENAME = 'D:\SQLData\ClinicaDentalSP_data.mdf',
-    SIZE = 50MB,
-    MAXSIZE = 500MB,
-    FILEGROWTH = 10MB
+--1. Crear la base de datos
+CREATE DATABASE ClinicaDental
+ON PRIMARY (
+    NAME = 'ClinicaDental_Data',       
+    FILENAME = 'D:\SQLData\ClinicaDental_Data.mdf',  
+    SIZE = 10MB,                      
+    MAXSIZE = 100MB,                  
+    FILEGROWTH = 5MB                   
 )
-LOG ON
-(
-    NAME = 'ClinicaDentalSP_log',
-    FILENAME = 'D:\SQLLog\ClinicaDentalSP_log.ldf',
-    SIZE = 20MB,
-    MAXSIZE = 200MB,
-    FILEGROWTH = 5MB
+LOG ON (
+    NAME = 'ClinicaDental_Log',        
+    FILENAME = 'D:\SQLLog\ClinicaDental_Log.ldf',   
+    SIZE = 5MB,                        
+    MAXSIZE = 50MB,                    
+    FILEGROWTH = 5MB                   
 );
 GO
 
--- Usar la base de datos recien creada
-USE ClinicaDentalSP;
+-- 2. Usar la base de datos
+USE ClinicaDental;
 GO
 
--- Crear la tabla Paciente primero, ya que otras tablas hacen referencia a ella
-CREATE TABLE Paciente (
-    ID_Paciente INT PRIMARY KEY,
-    Nombre VARCHAR(20) NOT NULL,
-    Apellido1 VARCHAR(20) NOT NULL,
-    Apellido2 VARCHAR(20),
-    Fecha_Nacimiento DATE,
-    Edad INT,
-    Telefono VARCHAR(20),
-    Correo VARCHAR(30),
-    Direccion VARCHAR(200),
-    ID_HistorialMedico INT
-);
-GO
+-- 3. Crear tablas en el orden correcto
 
--- Crear la tabla Historial_Medico, que no depende de otras tablas
-CREATE TABLE Historial_Medico (
-    ID_HistorialMedico INT PRIMARY KEY,
-    Fecha_Historial DATE NOT NULL,
-    Diagnostico VARCHAR(100),
-    Tratamientos_Medicos VARCHAR(200)
-);
-GO
-
--- Ahora que Paciente y Historial_Medico est�n creadas, podemos agregar la llave for�nea en Paciente
-ALTER TABLE Paciente
-ADD CONSTRAINT FK_HistorialMedico FOREIGN KEY (ID_HistorialMedico) REFERENCES Historial_Medico(ID_HistorialMedico);
-GO
-
--- Crear la tabla Estado_Pago
+-- Tabla: Estado_Pago
 CREATE TABLE Estado_Pago (
-    ID_EstadoPago INT PRIMARY KEY,
-    Nombre VARCHAR(20) NOT NULL,
-    Descripcion VARCHAR(200)
+    ID_EstadoPago CHAR(8) PRIMARY KEY,
+    Nombre_EP VARCHAR(20),
+    Descripcion_EP VARCHAR(200)
 );
-GO
 
--- Crear la tabla Factura que hace referencia a Paciente y Estado_Pago
-CREATE TABLE Factura (
-    ID_Factura INT PRIMARY KEY,
-    MontoTotal MONEY NOT NULL,
-    FechaEmision DATE NOT NULL,
-    ID_Paciente INT,
-    ID_EstadoPago INT,
-    CONSTRAINT FK_Paciente_Factura FOREIGN KEY (ID_Paciente) REFERENCES Paciente(ID_Paciente),
-    CONSTRAINT FK_EstadoPago_Factura FOREIGN KEY (ID_EstadoPago) REFERENCES Estado_Pago(ID_EstadoPago)
-);
-GO
-
--- Crear la tabla Estado_Cita
-CREATE TABLE Estado_Cita (
-    ID_EstadoCita INT PRIMARY KEY,
-    NombreEstado VARCHAR(20) NOT NULL,
-    DescripcionEstado VARCHAR(200)
-);
-GO
-
--- Crear la tabla Cita que hace referencia a Paciente y Estado_Cita
-CREATE TABLE Cita (
-    ID_Cita INT PRIMARY KEY,
-    Fecha_Hora DATETIME NOT NULL,
-    ID_Paciente INT,
-    ID_EstadoCita INT,
-    CONSTRAINT FK_Paciente_Cita FOREIGN KEY (ID_Paciente) REFERENCES Paciente(ID_Paciente),
-    CONSTRAINT FK_EstadoCita_Cita FOREIGN KEY (ID_EstadoCita) REFERENCES Estado_Cita(ID_EstadoCita)
-);
-GO
-
--- Crear la tabla Dentista
-CREATE TABLE Dentista (
-    ID_Dentista INT PRIMARY KEY,
-    Nombre VARCHAR(20) NOT NULL,
-    Apellido1 VARCHAR(20) NOT NULL,
-    Apellido2 VARCHAR(20),
-    Direccion VARCHAR(200),
-    FechaNacimiento DATE,
-    Telefono VARCHAR(20),
-    Correo VARCHAR(30)
-);
-GO
-
--- Crear la tabla Especialidad
-CREATE TABLE Especialidad (
-    ID_Especialidad INT PRIMARY KEY,
-    NombreEspecialidad VARCHAR(20),
-    Descripcion VARCHAR(200)
-);
-GO
-
--- Crear la tabla Dentista_Especialidad que hace referencia a Dentista y Especialidad
-CREATE TABLE Dentista_Especialidad (
-    ID_Dentista_Especialidad INT PRIMARY KEY,
-    ID_Dentista INT,
-    ID_Especialidad INT,
-    CONSTRAINT FK_Dentista_Especialidad FOREIGN KEY (ID_Dentista) REFERENCES Dentista(ID_Dentista),
-    CONSTRAINT FK_Especialidad_Dentista FOREIGN KEY (ID_Especialidad) REFERENCES Especialidad(ID_Especialidad)
-);
-GO
-
--- Crear la tabla Tipo_Tratamiento
+-- Tabla: Tipo_Tratamiento
 CREATE TABLE Tipo_Tratamiento (
-    ID_TipoTratamiento INT PRIMARY KEY,
+    ID_TipoTratamiento CHAR(8) PRIMARY KEY,
     Nombre_Tipo_Tratamiento VARCHAR(20),
     Descripcion_Tipo_Tratamiento VARCHAR(200)
 );
-GO
 
--- Crear la tabla Tratamiento que hace referencia a Tipo_Tratamiento
+-- Tabla: Tratamiento
 CREATE TABLE Tratamiento (
-    ID_Tratamiento INT PRIMARY KEY,
-    Nombre_Tratamiento VARCHAR(20),
-    Descripcion_Tratamiento VARCHAR(200),
-    ID_TipoTratamiento INT,
-    CONSTRAINT FK_TipoTratamiento FOREIGN KEY (ID_TipoTratamiento) REFERENCES Tipo_Tratamiento(ID_TipoTratamiento)
+    ID_Tratamiento CHAR(8) PRIMARY KEY,
+    Nombre_Tra VARCHAR(20),
+    Descripcion_Tra VARCHAR(200),
+    ID_TipoTratamiento CHAR(8),
+    FOREIGN KEY (ID_TipoTratamiento) REFERENCES Tipo_Tratamiento(ID_TipoTratamiento)
 );
-GO
 
--- Crear la tabla Procedimiento que hace referencia a Tratamiento
+-- Tabla: Procedimiento
 CREATE TABLE Procedimiento (
-    ID_Procedimiento INT PRIMARY KEY,
-    FechaProcedimiento DATE,
-    DetallesProcedimiento VARCHAR(200),
-    ID_Tratamiento INT,
-    CONSTRAINT FK_Tratamiento_Procedimiento FOREIGN KEY (ID_Tratamiento) REFERENCES Tratamiento(ID_Tratamiento)
+    ID_Procedimiento CHAR(8) PRIMARY KEY,
+    Fecha_Proc DATE,
+    Detalles_Proc VARCHAR(200),
+    Hora_Inicio_Proc TIME,
+    Hora_Fin_Proc TIME,
+    ID_Tratamiento CHAR(8),
+    FOREIGN KEY (ID_Tratamiento) REFERENCES Tratamiento(ID_Tratamiento)
 );
-GO
 
--- Crear la tabla Paciente_Procedimiento que hace referencia a Paciente y Procedimiento
-CREATE TABLE Paciente_Procedimiento (
-    ID_Paciente_Procedimiento INT PRIMARY KEY,
-    ID_Paciente INT,
-    ID_Procedimiento INT,
-    CONSTRAINT FK_Paciente_Proc FOREIGN KEY (ID_Paciente) REFERENCES Paciente(ID_Paciente),
-    CONSTRAINT FK_Procedimiento_Paciente FOREIGN KEY (ID_Procedimiento) REFERENCES Procedimiento(ID_Procedimiento)
+-- Tabla: Factura
+CREATE TABLE Factura (
+    ID_Factura CHAR(8) PRIMARY KEY,
+    MontoTotal_Fa MONEY,
+    FechaEmision_Fa DATE,
+    ID_EstadoPago CHAR(8),
+    FOREIGN KEY (ID_EstadoPago) REFERENCES Estado_Pago(ID_EstadoPago)
 );
+
+-- Tabla: Tipo_Pago
+CREATE TABLE Tipo_Pago (
+    ID_Tipo_Pago CHAR(8) PRIMARY KEY,
+    Nombre_TP VARCHAR(20),
+    Descripcion_TP VARCHAR(200)
+);
+
+-- Tabla: Pago
+CREATE TABLE Pago (
+    ID_Pago INT PRIMARY KEY,
+    Monto_Pago MONEY,
+    Fecha_Pago DATE,
+    ID_Factura CHAR(8),
+    ID_Tipo_Pago CHAR(8),
+    FOREIGN KEY (ID_Factura) REFERENCES Factura(ID_Factura),
+    FOREIGN KEY (ID_Tipo_Pago) REFERENCES Tipo_Pago(ID_Tipo_Pago)
+);
+
+-- Tabla: Estado_Cuenta
+CREATE TABLE Estado_Cuenta (
+    ID_Estado_Cuenta CHAR(8) PRIMARY KEY,
+    Nombre_EC VARCHAR(20),
+    Descripcion_EC VARCHAR(200)
+);
+
+-- Tabla: Paciente
+CREATE TABLE Paciente (
+    ID_Paciente CHAR(8) PRIMARY KEY,
+    Nombre_Pac VARCHAR(20),
+    Apellido1_Pac VARCHAR(20),
+    Apellido2_Pac VARCHAR(20),
+    Fecha_Nacimiento_Pac DATE,
+    Edad_Pac INT,
+    Telefono_Pac VARCHAR(20),
+    Correo_Pac VARCHAR(30),
+    Direccion_Pac VARCHAR(200),
+    ID_HistorialMedico CHAR(8)
+);
+
+-- Tabla: Historial_Medico
+CREATE TABLE Historial_Medico (
+    ID_HistorialMedico CHAR(8) PRIMARY KEY,
+    Fecha_Historial DATE,
+    Diagnostico VARCHAR(100),
+    Tratamientos_Medicos VARCHAR(200)
+);
+
+-- Clave foránea de Historial_Medico en Paciente
+ALTER TABLE Paciente
+ADD CONSTRAINT FK_Paciente_HistorialMedico
+FOREIGN KEY (ID_HistorialMedico) REFERENCES Historial_Medico(ID_HistorialMedico);
+
+-- Tabla: Cuenta
+CREATE TABLE Cuenta (
+    ID_Cuenta CHAR(8) PRIMARY KEY,
+    Saldo_Total MONEY,
+    Fecha_Apertura DATE,
+    Fecha_Cierre DATE,
+    Monto_Total_Facturado MONEY,
+    Fecha_Ultima_Actualizacion DATE,
+    Observaciones VARCHAR(255),
+    ID_Estado_Cuenta CHAR(8),
+    ID_Factura CHAR(8),
+    ID_Paciente CHAR(8),
+    FOREIGN KEY (ID_Estado_Cuenta) REFERENCES Estado_Cuenta(ID_Estado_Cuenta),
+    FOREIGN KEY (ID_Factura) REFERENCES Factura(ID_Factura),
+    FOREIGN KEY (ID_Paciente) REFERENCES Paciente(ID_Paciente)
+);
+
+-- Tabla: Factura_Procedimiento
+CREATE TABLE Factura_Procedimiento (
+    ID_Factura_Procedimiento CHAR(8) PRIMARY KEY,
+    ID_Factura CHAR(8),
+    ID_Procedimiento CHAR(8),
+    FOREIGN KEY (ID_Factura) REFERENCES Factura(ID_Factura),
+    FOREIGN KEY (ID_Procedimiento) REFERENCES Procedimiento(ID_Procedimiento)
+);
+
+-- Tabla: Factura_Tratamiento
+CREATE TABLE Factura_Tratamiento (
+    ID_Factura_Tratamiento CHAR(8) PRIMARY KEY,
+    ID_Factura CHAR(8),
+    ID_Tratamiento CHAR(8),
+    FOREIGN KEY (ID_Factura) REFERENCES Factura(ID_Factura),
+    FOREIGN KEY (ID_Tratamiento) REFERENCES Tratamiento(ID_Tratamiento)
+);
+
+-- Tabla: Auditoria
+CREATE TABLE Auditoria (
+    ID_Auditoria CHAR(8) PRIMARY KEY,
+    Fecha_Hora_Accion DATETIME,
+    Descripcion_Accion VARCHAR(200),
+    DispositivoQueRealizo CHAR(8),
+    ID_TipoAccion CHAR(8),
+    ID_Usuario CHAR(8)
+);
+
+-- Tabla: Tipo_Accion
+CREATE TABLE Tipo_Accion (
+    ID_TipoAccion CHAR(8) PRIMARY KEY,
+    Nombre_Accion VARCHAR(20),
+    Descripcion_Tipo_Accion VARCHAR(200)
+);
+-- Tabla: Funcionario
+CREATE TABLE Funcionario (
+    ID_Funcionario CHAR(8) PRIMARY KEY,
+    Nombre VARCHAR(20),
+    Apellido1 VARCHAR(200),
+    Apellido2 VARCHAR(200),
+    Email VARCHAR(20),
+    Contraseña CHAR(12)
+);
+
+-- Tabla: Usuarios
+CREATE TABLE Usuarios (
+    ID_Usuario CHAR(8) PRIMARY KEY,
+    Nombre VARCHAR(20),
+    Apellido1 VARCHAR(200),
+    Apellido2 VARCHAR(200),
+    Email VARCHAR(20),
+    Contraseña CHAR(12),
+    Token VARCHAR(100),
+    ID_Funcionario CHAR(8),
+    FOREIGN KEY (ID_Funcionario) REFERENCES Funcionario(ID_Funcionario)
+);
+
+-- Clave foránea en Auditoria hacia Tipo_Accion y Usuario
+ALTER TABLE Auditoria
+ADD CONSTRAINT FK_Auditoria_TipoAccion
+FOREIGN KEY (ID_TipoAccion) REFERENCES Tipo_Accion(ID_TipoAccion);
+
+ALTER TABLE Auditoria
+ADD CONSTRAINT FK_Auditoria_Usuario
+FOREIGN KEY (ID_Usuario) REFERENCES Usuarios(ID_Usuario);
+
+
+
+-- Tabla: Dentista
+CREATE TABLE Dentista (
+    ID_Dentista CHAR(8) PRIMARY KEY,
+    Nombre_Den VARCHAR(20),
+    Apellido1_Den VARCHAR(20),
+    Apellido2_Den VARCHAR(20),
+    Direccion_Den VARCHAR(200),
+    FechaNacimiento_Den DATE,
+    Telefono_Den VARCHAR(20),
+    Correo_Den VARCHAR(30),
+    ID_Funcionario CHAR(8),
+    FOREIGN KEY (ID_Funcionario) REFERENCES Funcionario(ID_Funcionario)
+);
+-- Tabla: Especialidad
+CREATE TABLE Especialidad (
+    ID_Especialidad CHAR(8) PRIMARY KEY,
+    Nombre_Esp VARCHAR(20),
+    Descripcion_Esp VARCHAR(200)
+);
+-- Tabla: Dentista_Especialidad
+CREATE TABLE Dentista_Especialidad (
+    ID_Dentista_Especialidad CHAR(8) PRIMARY KEY,
+    ID_Dentista CHAR(8),
+    ID_Especialidad CHAR(8),
+    FOREIGN KEY (ID_Dentista) REFERENCES Dentista(ID_Dentista),
+    FOREIGN KEY (ID_Especialidad) REFERENCES Especialidad(ID_Especialidad)
+);
+
+
+
+-- Tabla: Cita
+CREATE TABLE Cita (
+    ID_Cita CHAR(8) PRIMARY KEY,
+    Fecha_Cita DATE,
+    Motivo VARCHAR(200),
+    Hora_Inicio TIME,
+    ID_Paciente CHAR(8),
+    ID_Dentista CHAR(8),
+    ID_Funcionario CHAR(8),
+    ID_EstadoCita CHAR(8),
+    FOREIGN KEY (ID_Paciente) REFERENCES Paciente(ID_Paciente),
+    FOREIGN KEY (ID_Dentista) REFERENCES Dentista(ID_Dentista),
+    FOREIGN KEY (ID_Funcionario) REFERENCES Funcionario(ID_Funcionario)
+);
+
+-- Tabla: Estado_Citas
+CREATE TABLE Estado_Citas (
+    ID_EstadoCita CHAR(8) PRIMARY KEY,
+    Nombre_Estado VARCHAR(20),
+    Descripcion_Estado VARCHAR(200)
+);
+
+-- Clave foránea en Cita hacia Estado_Citas
+ALTER TABLE Cita
+ADD CONSTRAINT FK_Cita_EstadoCita
+FOREIGN KEY (ID_EstadoCita) REFERENCES Estado_Citas(ID_EstadoCita);
+
 GO
