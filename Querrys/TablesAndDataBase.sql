@@ -1,11 +1,15 @@
+use master 
+go
+drop database ClinicaDental
+go
 
---1. Crear la base de datos
+-- 1. Crear la base de datos
 CREATE DATABASE ClinicaDental
 ON PRIMARY (
     NAME = 'ClinicaDental_Data',       
     FILENAME = 'D:\SQLData\ClinicaDental_Data.mdf',  
-    SIZE = 10MB,                      
-    MAXSIZE = 100MB,                  
+    SIZE = 10MB,                       
+    MAXSIZE = 100MB,                   
     FILEGROWTH = 5MB                   
 )
 LOG ON (
@@ -191,7 +195,6 @@ CREATE TABLE Usuarios (
     ID_Funcionario CHAR(8),
     FOREIGN KEY (ID_Funcionario) REFERENCES Funcionario(ID_Funcionario)
 );
-
 -- Clave foránea en Auditoria hacia Tipo_Accion y Usuario
 ALTER TABLE Auditoria
 ADD CONSTRAINT FK_Auditoria_TipoAccion
@@ -216,12 +219,14 @@ CREATE TABLE Dentista (
     ID_Funcionario CHAR(8),
     FOREIGN KEY (ID_Funcionario) REFERENCES Funcionario(ID_Funcionario)
 );
+
 -- Tabla: Especialidad
 CREATE TABLE Especialidad (
     ID_Especialidad CHAR(8) PRIMARY KEY,
     Nombre_Esp VARCHAR(20),
     Descripcion_Esp VARCHAR(200)
 );
+
 -- Tabla: Dentista_Especialidad
 CREATE TABLE Dentista_Especialidad (
     ID_Dentista_Especialidad CHAR(8) PRIMARY KEY,
@@ -230,8 +235,6 @@ CREATE TABLE Dentista_Especialidad (
     FOREIGN KEY (ID_Dentista) REFERENCES Dentista(ID_Dentista),
     FOREIGN KEY (ID_Especialidad) REFERENCES Especialidad(ID_Especialidad)
 );
-
-
 
 -- Tabla: Cita
 CREATE TABLE Cita (
@@ -259,5 +262,55 @@ CREATE TABLE Estado_Citas (
 ALTER TABLE Cita
 ADD CONSTRAINT FK_Cita_EstadoCita
 FOREIGN KEY (ID_EstadoCita) REFERENCES Estado_Citas(ID_EstadoCita);
+
+-- 4. Añadir nuevas tablas de Roles y Permisos
+
+-- Tabla: DB_User
+CREATE TABLE DB_User (
+    ID_DBUser CHAR(8) PRIMARY KEY,
+    DBUserName VARCHAR(20),
+    Contrasena CHAR(12)
+);
+
+-- Tabla: Roles
+CREATE TABLE Roles (
+    ID_Roles CHAR(8) PRIMARY KEY,
+    Nombre VARCHAR(20),
+    Descripcion VARCHAR(200)
+);
+
+-- Tabla: Permisos
+CREATE TABLE Permisos (
+    ID_Permisos CHAR(8) PRIMARY KEY,
+    Nombre VARCHAR(20),
+    Descripcion VARCHAR(200)
+);
+
+-- Tabla: Roles_DBUser (relación muchos a muchos entre DB_User y Roles)
+CREATE TABLE Roles_DBUser (
+    ID_Roles_DBUser CHAR(8) PRIMARY KEY,
+    ID_Roles CHAR(8),
+    ID_DBUser CHAR(8),
+    FOREIGN KEY (ID_Roles) REFERENCES Roles(ID_Roles),
+    FOREIGN KEY (ID_DBUser) REFERENCES DB_User(ID_DBUser)
+);
+
+-- Tabla: Roles_Permisos (relación muchos a muchos entre Roles y Permisos)
+CREATE TABLE Roles_Permisos (
+    ID_Roles_Permisos CHAR(8) PRIMARY KEY,
+    ID_Roles CHAR(8),
+    ID_Permisos CHAR(8),
+    FOREIGN KEY (ID_Roles) REFERENCES Roles(ID_Roles),
+    FOREIGN KEY (ID_Permisos) REFERENCES Permisos(ID_Permisos)
+);
+
+-- Tabla: Usuario_Roles (relación entre los usuarios y sus roles)
+CREATE TABLE Usuario_Roles (
+    ID_Usuario_Roles CHAR(8) PRIMARY KEY,
+    ID_Usuario CHAR(8),
+    ID_Roles CHAR(8),
+    FOREIGN KEY (ID_Usuario) REFERENCES Usuarios(ID_Usuario),
+    FOREIGN KEY (ID_Roles) REFERENCES Roles(ID_Roles)
+);
 
 GO
