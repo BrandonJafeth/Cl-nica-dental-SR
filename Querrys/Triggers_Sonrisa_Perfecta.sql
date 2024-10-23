@@ -1,5 +1,5 @@
 -- Trigger: tr_AuditarInsercionPaciente
--- Propósito: Auditar la inserción de nuevos pacientes en la tabla Paciente y registrar la acción en Auditoria.
+-- Propï¿½sito: Auditar la inserciï¿½n de nuevos pacientes en la tabla Paciente y registrar la acciï¿½n en Auditoria.
 
 CREATE TRIGGER tr_AuditarInsercionPaciente
 ON Paciente
@@ -9,19 +9,19 @@ BEGIN
     DECLARE @ID_Paciente CHAR(8), @Nombre VARCHAR(20), @Apellido1 VARCHAR(20), @Apellido2 VARCHAR(20), @Fecha_Hora DATETIME, @ID_Usuario CHAR(8);
 
     -- Obtener los datos del paciente insertado
-    SELECT @ID_Paciente = i.ID_Paciente, @Nombre = i.Nombre_Pac, @Apellido1 = i.Apellido1_Pac, @Apellido2 = i.Apellido2_Pac, @Fecha_Hora = GETDATE(), @ID_Usuario = 'ID_ADMIN' -- O cualquier lógica para obtener el ID del usuario
+    SELECT @ID_Paciente = i.ID_Paciente, @Nombre = i.Nombre_Pac, @Apellido1 = i.Apellido1_Pac, @Apellido2 = i.Apellido2_Pac, @Fecha_Hora = GETDATE(), @ID_Usuario = 'ID_ADMIN' -- O cualquier lï¿½gica para obtener el ID del usuario
     FROM inserted i;
 
     -- Insertar el registro en la tabla Auditoria
     INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Descripcion_Accion, ID_TipoAccion, ID_Usuario)
-    VALUES (NEWID(), @Fecha_Hora, 'Inserción de paciente: ' + @Nombre + ' ' + @Apellido1 + ' ' + @Apellido2, 'INSERCION', @ID_Usuario);
+    VALUES (NEWID(), @Fecha_Hora, 'Inserciï¿½n de paciente: ' + @Nombre + ' ' + @Apellido1 + ' ' + @Apellido2, 'INSERCION', @ID_Usuario);
 END;
 GO
 
 
 
 -- Trigger: tr_AuditarActualizacionPaciente
--- Propósito: Auditar las actualizaciones de datos de pacientes, comparando valores antiguos y nuevos, y registrar los cambios en Auditoria.
+-- Propï¿½sito: Auditar las actualizaciones de datos de pacientes, comparando valores antiguos y nuevos, y registrar los cambios en Auditoria.
 
 CREATE TRIGGER tr_AuditarActualizacionPaciente
 ON Paciente
@@ -39,7 +39,7 @@ BEGIN
     IF @NombreAntiguo <> @NombreNuevo
     BEGIN
         INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Descripcion_Accion, ID_TipoAccion, ID_Usuario)
-        VALUES (NEWID(), @Fecha_Hora, 'Actualización de paciente: Cambio de Nombre de ' + @NombreAntiguo + ' a ' + @NombreNuevo, 'ACTUALIZACION', @ID_Usuario);
+        VALUES (NEWID(), @Fecha_Hora, 'Actualizaciï¿½n de paciente: Cambio de Nombre de ' + @NombreAntiguo + ' a ' + @NombreNuevo, 'ACTUALIZACION', @ID_Usuario);
     END;
 END;
 GO
@@ -47,7 +47,7 @@ GO
 
 
 -- Trigger: tr_AuditarEliminacionPaciente
--- Propósito: Auditar la eliminación de pacientes y registrar la acción en Auditoria.
+-- Propï¿½sito: Auditar la eliminaciï¿½n de pacientes y registrar la acciï¿½n en Auditoria.
 
 CREATE TRIGGER tr_AuditarEliminacionPaciente
 ON Paciente
@@ -62,14 +62,14 @@ BEGIN
 
     -- Insertar registro en la tabla Auditoria
     INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Descripcion_Accion, ID_TipoAccion, ID_Usuario)
-    VALUES (NEWID(), @Fecha_Hora, 'Eliminación de paciente: ' + @Nombre + ' ' + @Apellido1, 'ELIMINACION', @ID_Usuario);
+    VALUES (NEWID(), @Fecha_Hora, 'Eliminaciï¿½n de paciente: ' + @Nombre + ' ' + @Apellido1, 'ELIMINACION', @ID_Usuario);
 END;
 GO
 
 
 
 -- Trigger: tr_EvitarDuplicadosCita
--- Propósito: Evitar que se inserten citas duplicadas para el mismo dentista en la misma fecha y hora.
+-- Propï¿½sito: Evitar que se inserten citas duplicadas para el mismo dentista en la misma fecha y hora.
 
 CREATE TRIGGER tr_EvitarDuplicadosCita
 ON Cita
@@ -109,7 +109,7 @@ GO
 
 
 -- Trigger: tr_EvitarFacturaConMontoCero
--- Propósito: Evitar que se inserten facturas con un monto total de cero o negativo.
+-- Propï¿½sito: Evitar que se inserten facturas con un monto total de cero o negativo.
 
 CREATE TRIGGER tr_EvitarFacturaConMontoCero
 ON Factura
@@ -118,7 +118,7 @@ AS
 BEGIN
     DECLARE @MontoTotal MONEY, @ID_Factura CHAR(8);
 
-    -- Obtener el monto total de la factura recién insertada
+    -- Obtener el monto total de la factura reciï¿½n insertada
     SELECT @MontoTotal = i.MontoTotal_Fa, @ID_Factura = i.ID_Factura
     FROM inserted i;
 
@@ -129,7 +129,7 @@ BEGIN
         DELETE FROM Factura WHERE ID_Factura = @ID_Factura;
 
         -- Lanzar un error para notificar del problema
-        RAISERROR('No se permite la inserción de facturas con monto cero o negativo.', 16, 1);
+        RAISERROR('No se permite la inserciï¿½n de facturas con monto cero o negativo.', 16, 1);
     END;
 END;
 GO
@@ -137,7 +137,7 @@ GO
 
 
 -- Trigger: tr_ActualizarEstadoFactura
--- Propósito: Actualizar el estado de la factura a "Pagada" cuando el monto pagado sea igual o mayor al monto total de la factura.
+-- Propï¿½sito: Actualizar el estado de la factura a "Pagada" cuando el monto pagado sea igual o mayor al monto total de la factura.
 
 CREATE TRIGGER tr_ActualizarEstadoFactura
 ON Pago
@@ -172,7 +172,7 @@ GO
 
 
 -- Trigger: tr_ActualizarMontoFactura
--- Propósito: Actualizar el monto total de la factura automáticamente cuando se modifiquen los tratamientos asociados.
+-- Propï¿½sito: Actualizar el monto total de la factura automï¿½ticamente cuando se modifiquen los tratamientos asociados.
 
 CREATE TRIGGER tr_ActualizarMontoFactura
 ON Factura_Tratamiento
@@ -199,7 +199,7 @@ END;
 GO
 
 -- Trigger: tr_ActualizarFechaUltimaActualizacionCuenta
--- Propósito: Registrar la fecha y hora de la última actualización en la cuenta del paciente.
+-- Propï¿½sito: Registrar la fecha y hora de la ï¿½ltima actualizaciï¿½n en la cuenta del paciente.
 
 CREATE TRIGGER tr_ActualizarFechaUltimaActualizacionCuenta
 ON Cuenta
@@ -212,7 +212,7 @@ BEGIN
     SELECT @ID_Cuenta = i.ID_Cuenta
     FROM inserted i;
 
-    -- Actualizar la fecha de última actualización a la fecha actual
+    -- Actualizar la fecha de ï¿½ltima actualizaciï¿½n a la fecha actual
     UPDATE Cuenta
     SET Fecha_Ultima_Actualizacion = GETDATE()
     WHERE ID_Cuenta = @ID_Cuenta;
@@ -220,7 +220,7 @@ END;
 GO
 
 -- Trigger: tr_ActualizarEdadPaciente
--- Propósito: Actualizar automáticamente la edad del paciente basado en su fecha de nacimiento.
+-- Propï¿½sito: Actualizar automï¿½ticamente la edad del paciente basado en su fecha de nacimiento.
 
 CREATE TRIGGER tr_ActualizarEdadPaciente
 ON Paciente
@@ -229,11 +229,11 @@ AS
 BEGIN
     DECLARE @ID_Paciente CHAR(8), @Fecha_Nacimiento DATE, @Edad INT;
 
-    -- Obtener los datos del paciente recién insertado o actualizado
+    -- Obtener los datos del paciente reciï¿½n insertado o actualizado
     SELECT @ID_Paciente = i.ID_Paciente, @Fecha_Nacimiento = i.Fecha_Nacimiento_Pac
     FROM inserted i;
 
-    -- Calcular la edad en años
+    -- Calcular la edad en aï¿½os
     SET @Edad = DATEDIFF(YEAR, @Fecha_Nacimiento, GETDATE());
 
     -- Actualizar la edad del paciente
@@ -246,7 +246,7 @@ GO
 
 
 -- Trigger: tr_ValidarCorreoElectronico
--- Propósito: Validar que el correo electrónico del paciente tenga un formato válido (contenga "@" y ".").
+-- Propï¿½sito: Validar que el correo electrï¿½nico del paciente tenga un formato vï¿½lido (contenga "@" y ".").
 
 CREATE TRIGGER tr_ValidarCorreoElectronico
 ON Paciente
@@ -255,7 +255,7 @@ AS
 BEGIN
     DECLARE @Correo VARCHAR(100);
 
-    -- Obtener el correo electrónico de la fila insertada o actualizada
+    -- Obtener el correo electrï¿½nico de la fila insertada o actualizada
     SELECT @Correo = i.Correo_Pac
     FROM inserted i;
 
@@ -263,7 +263,7 @@ BEGIN
     IF @Correo NOT LIKE '%@%.%'
     BEGIN
         -- Lanzar un error si el formato del correo es incorrecto
-        RAISERROR('El formato del correo electrónico es inválido.', 16, 1);
+        RAISERROR('El formato del correo electrï¿½nico es invï¿½lido.', 16, 1);
         ROLLBACK TRANSACTION;
     END;
 END;
@@ -273,7 +273,7 @@ GO
 
 
 -- Trigger: tr_EvitarCitasDiasNoLaborales
--- Propósito: Evitar que se inserten citas en días no laborables (por ejemplo, fines de semana).
+-- Propï¿½sito: Evitar que se inserten citas en dï¿½as no laborables (por ejemplo, fines de semana).
 
 CREATE TRIGGER tr_EvitarCitasDiasNoLaborales
 ON Cita
@@ -286,10 +286,10 @@ BEGIN
     SELECT @Fecha_Cita = i.Fecha_Cita
     FROM inserted i;
 
-    -- Verificar si la fecha es un sábado o domingo
+    -- Verificar si la fecha es un sï¿½bado o domingo
     IF DATENAME(WEEKDAY, @Fecha_Cita) IN ('Saturday', 'Sunday')
     BEGIN
-        -- Si es un día no laborable, cancelar la cita
+        -- Si es un dï¿½a no laborable, cancelar la cita
         RAISERROR('No se pueden agendar citas los fines de semana.', 16, 1);
         DELETE FROM Cita WHERE Fecha_Cita = @Fecha_Cita;
     END;
@@ -301,7 +301,7 @@ GO
 
 
 -- Trigger: tr_EvitarPagosNegativos
--- Propósito: Evitar la inserción de pagos con montos negativos.
+-- Propï¿½sito: Evitar la inserciï¿½n de pagos con montos negativos.
 
 CREATE TRIGGER tr_EvitarPagosNegativos
 ON Pago
@@ -326,7 +326,7 @@ GO
 
 
 -- Trigger: tr_EvitarPagosDuplicados
--- Propósito: Evitar que se inserten pagos duplicados para la misma factura en la misma fecha.
+-- Propï¿½sito: Evitar que se inserten pagos duplicados para la misma factura en la misma fecha.
 
 CREATE TRIGGER tr_EvitarPagosDuplicados
 ON Pago
@@ -358,7 +358,7 @@ GO
 
 
 -- Trigger: tr_CancelarCitasPasadas
--- Propósito: Cambiar el estado de la cita a 'Cancelada' si la fecha de la cita ha pasado y aún no se ha cambiado el estado.
+-- Propï¿½sito: Cambiar el estado de la cita a 'Cancelada' si la fecha de la cita ha pasado y aï¿½n no se ha cambiado el estado.
 
 CREATE TRIGGER tr_CancelarCitasPasadas
 ON Cita
@@ -371,8 +371,8 @@ BEGIN
     SELECT @ID_Cita = i.ID_Cita, @Fecha_Cita = i.Fecha_Cita, @Estado = i.ID_EstadoCita
     FROM inserted i;
 
-    -- Si la cita ya pasó y no ha sido actualizada, cambiar el estado a 'Cancelada'
-    IF @Fecha_Cita < GETDATE() AND @Estado NOT IN ('CANCELADA', 'COMPLETADA') -- Ajusta los valores según tu tabla Estado_Citas
+    -- Si la cita ya pasï¿½ y no ha sido actualizada, cambiar el estado a 'Cancelada'
+    IF @Fecha_Cita < GETDATE() AND @Estado NOT IN ('CANCELADA', 'COMPLETADA') -- Ajusta los valores segï¿½n tu tabla Estado_Citas
     BEGIN
         UPDATE Cita
         SET ID_EstadoCita = 'CANCELADA'  -- Suponiendo que 'CANCELADA' es el estado para citas canceladas

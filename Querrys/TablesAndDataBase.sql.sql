@@ -261,3 +261,13 @@ ADD CONSTRAINT FK_Cita_EstadoCita
 FOREIGN KEY (ID_EstadoCita) REFERENCES Estado_Citas(ID_EstadoCita);
 
 GO
+
+-- Tabla Intermedia: Historial_Tratamiento
+CREATE TABLE Historial_Tratamiento (
+    ID_Historial_Tratamiento CHAR(8) PRIMARY KEY,
+    ID_HistorialMedico CHAR(8) NOT NULL,
+    ID_Tratamiento CHAR(8) NOT NULL,
+    Fecha_Tratamiento DATE,
+    FOREIGN KEY (ID_HistorialMedico) REFERENCES Historial_Medico(ID_HistorialMedico),
+    FOREIGN KEY (ID_Tratamiento) REFERENCES Tratamiento(ID_Tratamiento)
+);
