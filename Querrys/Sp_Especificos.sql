@@ -26,38 +26,54 @@ CREATE PROCEDURE sp_AgendarCita
     @ID_EstadoCita CHAR(8)
 AS
 BEGIN
-    IF @ID_Cita = '' OR @Fecha_Cita IS NULL OR @Hora_Inicio IS NULL OR @Hora_Fin IS NULL OR @ID_Paciente = '' OR @ID_Dentista = '' OR @ID_Funcionario = '' OR @ID_EstadoCita = ''
-    BEGIN
-        RAISERROR('No se permiten valores nulos o vacíos', 16, 1);
-        RETURN;
-    END
+    BEGIN TRY
+        BEGIN TRANSACTION;
 
-    IF @Hora_Fin <= @Hora_Inicio
-    BEGIN
-        RAISERROR('La hora de fin no puede ser anterior o igual a la hora de inicio', 16, 1);
-        RETURN;
-    END
+        IF @ID_Cita = '' OR @Fecha_Cita IS NULL OR @Hora_Inicio IS NULL OR @Hora_Fin IS NULL OR @ID_Paciente = '' OR @ID_Dentista = '' OR @ID_Funcionario = '' OR @ID_EstadoCita = ''
+        BEGIN
+            RAISERROR('No se permiten valores nulos o vacíos', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
 
-    IF @Fecha_Cita < CAST(GETDATE() AS DATE)
-    BEGIN
-        RAISERROR('No se pueden agendar citas en fechas anteriores a la fecha actual', 16, 1);
-        RETURN;
-    END
+        IF @Hora_Fin <= @Hora_Inicio
+        BEGIN
+            RAISERROR('La hora de fin no puede ser anterior o igual a la hora de inicio', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
 
-    -- Comprobar conflictos de horarios
-    IF EXISTS (
-        SELECT 1 FROM Cita
-        WHERE ID_Dentista = @ID_Dentista
-        AND Fecha_Cita = @Fecha_Cita
-        AND ((Hora_Inicio <= @Hora_Inicio AND Hora_Fin > @Hora_Inicio) OR (Hora_Inicio < @Hora_Fin AND Hora_Fin >= @Hora_Fin))
-    )
-    BEGIN
-        RAISERROR('Conflicto de horarios para el dentista', 16, 1);
-        RETURN;
-    END
+        IF @Fecha_Cita < CAST(GETDATE() AS DATE)
+        BEGIN
+            RAISERROR('No se pueden agendar citas en fechas anteriores a la fecha actual', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
 
-    INSERT INTO Cita (ID_Cita, Fecha_Cita, Hora_Inicio, Hora_Fin, ID_Paciente, ID_Dentista, ID_Funcionario, ID_EstadoCita)
-    VALUES (@ID_Cita, @Fecha_Cita, @Hora_Inicio, @Hora_Fin, @ID_Paciente, @ID_Dentista, @ID_Funcionario, @ID_EstadoCita);
+        -- Comprobar conflictos de horarios
+        IF EXISTS (
+            SELECT 1 FROM Cita
+            WHERE ID_Dentista = @ID_Dentista
+            AND Fecha_Cita = @Fecha_Cita
+            AND ((Hora_Inicio <= @Hora_Inicio AND Hora_Fin > @Hora_Inicio) OR (Hora_Inicio < @Hora_Fin AND Hora_Fin >= @Hora_Fin))
+        )
+        BEGIN
+            RAISERROR('Conflicto de horarios para el dentista', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        INSERT INTO Cita (ID_Cita, Fecha_Cita, Hora_Inicio, Hora_Fin, ID_Paciente, ID_Dentista, ID_Funcionario, ID_EstadoCita)
+        VALUES (@ID_Cita, @Fecha_Cita, @Hora_Inicio, @Hora_Fin, @ID_Paciente, @ID_Dentista, @ID_Funcionario, @ID_EstadoCita);
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        DECLARE @ErrorMessage NVARCHAR(4000), @ErrorSeverity INT, @ErrorState INT;
+        SELECT @ErrorMessage = ERROR_MESSAGE(), @ErrorSeverity = ERROR_SEVERITY(), @ErrorState = ERROR_STATE();
+        RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState);
+    END CATCH
 END;
 GO
 
@@ -106,44 +122,60 @@ CREATE PROCEDURE sp_ReprogramarCita
     @Nueva_Hora_Fin TIME
 AS
 BEGIN
-    IF @ID_Cita = '' OR @Nueva_Fecha_Cita IS NULL OR @Nueva_Hora_Inicio IS NULL OR @Nueva_Hora_Fin IS NULL
-    BEGIN
-        RAISERROR('No se permiten valores nulos o vacíos', 16, 1);
-        RETURN;
-    END
+    BEGIN TRY
+        BEGIN TRANSACTION;
 
-    IF @Nueva_Hora_Fin <= @Nueva_Hora_Inicio
-    BEGIN
-        RAISERROR('La hora de fin no puede ser anterior o igual a la hora de inicio', 16, 1);
-        RETURN;
-    END
+        IF @ID_Cita = '' OR @Nueva_Fecha_Cita IS NULL OR @Nueva_Hora_Inicio IS NULL OR @Nueva_Hora_Fin IS NULL
+        BEGIN
+            RAISERROR('No se permiten valores nulos o vacíos', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
 
-    IF @Nueva_Fecha_Cita < CAST(GETDATE() AS DATE)
-    BEGIN
-        RAISERROR('No se pueden reprogramar citas a fechas anteriores a la fecha actual', 16, 1);
-        RETURN;
-    END
+        IF @Nueva_Hora_Fin <= @Nueva_Hora_Inicio
+        BEGIN
+            RAISERROR('La hora de fin no puede ser anterior o igual a la hora de inicio', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
 
-    -- Comprobar conflictos de horarios
-    DECLARE @ID_Dentista CHAR(8);
-    SELECT @ID_Dentista = ID_Dentista FROM Cita WHERE ID_Cita = @ID_Cita;
+        IF @Nueva_Fecha_Cita < CAST(GETDATE() AS DATE)
+        BEGIN
+            RAISERROR('No se pueden reprogramar citas a fechas anteriores a la fecha actual', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
 
-    IF EXISTS (
-        SELECT 1 FROM Cita
-        WHERE ID_Dentista = @ID_Dentista
-        AND Fecha_Cita = @Nueva_Fecha_Cita
-        AND ((Hora_Inicio <= @Nueva_Hora_Inicio AND Hora_Fin > @Nueva_Hora_Inicio) OR (Hora_Inicio < @Nueva_Hora_Fin AND Hora_Fin >= @Nueva_Hora_Fin))
-    )
-    BEGIN
-        RAISERROR('Conflicto de horarios para el dentista', 16, 1);
-        RETURN;
-    END
+        -- Comprobar conflictos de horarios
+        DECLARE @ID_Dentista CHAR(8);
+        SELECT @ID_Dentista = ID_Dentista FROM Cita WHERE ID_Cita = @ID_Cita;
 
-    UPDATE Cita
-    SET Fecha_Cita = @Nueva_Fecha_Cita,
-        Hora_Inicio = @Nueva_Hora_Inicio,
-        Hora_Fin = @Nueva_Hora_Fin
-    WHERE ID_Cita = @ID_Cita;
+        IF EXISTS (
+            SELECT 1 FROM Cita
+            WHERE ID_Dentista = @ID_Dentista
+            AND Fecha_Cita = @Nueva_Fecha_Cita
+            AND ((Hora_Inicio <= @Nueva_Hora_Inicio AND Hora_Fin > @Nueva_Hora_Inicio) OR (Hora_Inicio < @Nueva_Hora_Fin AND Hora_Fin >= @Nueva_Hora_Fin))
+        )
+        BEGIN
+            RAISERROR('Conflicto de horarios para el dentista', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        UPDATE Cita
+        SET Fecha_Cita = @Nueva_Fecha_Cita,
+            Hora_Inicio = @Nueva_Hora_Inicio,
+            Hora_Fin = @Nueva_Hora_Fin
+        WHERE ID_Cita = @ID_Cita;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        DECLARE @ErrorMessage NVARCHAR(4000), @ErrorSeverity INT, @ErrorState INT;
+        SELECT @ErrorMessage = ERROR_MESSAGE(), @ErrorSeverity = ERROR_SEVERITY(), @ErrorState = ERROR_STATE();
+        RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState);
+    END CATCH
 END;
 GO
 
@@ -190,18 +222,32 @@ CREATE PROCEDURE sp_GenerarFactura
     @ID_Cuenta CHAR(8)
 AS
 BEGIN
-    IF @ID_Factura = '' OR @MontoTotal IS NULL OR @FechaEmision IS NULL OR @ID_EstadoPago = '' OR @ID_Cuenta = ''
-    BEGIN
-        RAISERROR('No se permiten valores nulos o vacíos', 16, 1);
-        RETURN;
-    END
+    BEGIN TRY
+        BEGIN TRANSACTION;
 
-    INSERT INTO Factura (ID_Factura, MontoTotal_Fa, FechaEmision_Fa, ID_EstadoPago)
-    VALUES (@ID_Factura, @MontoTotal, @FechaEmision, @ID_EstadoPago);
+        IF @ID_Factura = '' OR @MontoTotal IS NULL OR @FechaEmision IS NULL OR @ID_EstadoPago = '' OR @ID_Cuenta = ''
+        BEGIN
+            RAISERROR('No se permiten valores nulos o vacíos', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
 
-    -- Relacionar la factura con la cuenta
-    INSERT INTO Cuenta (ID_Cuenta, ID_Factura)
-    VALUES (@ID_Cuenta, @ID_Factura);
+        INSERT INTO Factura (ID_Factura, MontoTotal_Fa, FechaEmision_Fa, ID_EstadoPago)
+        VALUES (@ID_Factura, @MontoTotal, @FechaEmision, @ID_EstadoPago);
+
+        -- Relacionar la factura con la cuenta
+        UPDATE Cuenta
+        SET ID_Factura = @ID_Factura
+        WHERE ID_Cuenta = @ID_Cuenta;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        DECLARE @ErrorMessage NVARCHAR(4000), @ErrorSeverity INT, @ErrorState INT;
+        SELECT @ErrorMessage = ERROR_MESSAGE(), @ErrorSeverity = ERROR_SEVERITY(), @ErrorState = ERROR_STATE();
+        RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState);
+    END CATCH
 END;
 GO
 
@@ -214,14 +260,27 @@ CREATE PROCEDURE sp_RegistrarPago
     @ID_Tipo_Pago CHAR(8)
 AS
 BEGIN
-    IF @ID_Pago IS NULL OR @ID_Factura = '' OR @Monto_Pago IS NULL OR @Fecha_Pago IS NULL OR @ID_Tipo_Pago = ''
-    BEGIN
-        RAISERROR('No se permiten valores nulos o vacíos', 16, 1);
-        RETURN;
-    END
+    BEGIN TRY
+        BEGIN TRANSACTION;
 
-    INSERT INTO Pago (ID_Pago, ID_Factura, Monto_Pago, Fecha_Pago, ID_Tipo_Pago)
-    VALUES (@ID_Pago, @ID_Factura, @Monto_Pago, @Fecha_Pago, @ID_Tipo_Pago);
+        IF @ID_Pago IS NULL OR @ID_Factura = '' OR @Monto_Pago IS NULL OR @Fecha_Pago IS NULL OR @ID_Tipo_Pago = ''
+        BEGIN
+            RAISERROR('No se permiten valores nulos o vacíos', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        INSERT INTO Pago (ID_Pago, ID_Factura, Monto_Pago, Fecha_Pago, ID_Tipo_Pago)
+        VALUES (@ID_Pago, @ID_Factura, @Monto_Pago, @Fecha_Pago, @ID_Tipo_Pago);
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        DECLARE @ErrorMessage NVARCHAR(4000), @ErrorSeverity INT, @ErrorState INT;
+        SELECT @ErrorMessage = ERROR_MESSAGE(), @ErrorSeverity = ERROR_SEVERITY(), @ErrorState = ERROR_STATE();
+        RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState);
+    END CATCH
 END;
 GO
 
