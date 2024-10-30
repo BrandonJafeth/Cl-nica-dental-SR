@@ -239,6 +239,7 @@ CREATE TABLE Cita (
     Fecha_Cita DATE,
     Motivo VARCHAR(200),
     Hora_Inicio TIME,
+    Hora_Fin TIME,
     ID_Paciente CHAR(8),
     ID_Dentista CHAR(8),
     ID_Funcionario CHAR(8),
@@ -247,6 +248,9 @@ CREATE TABLE Cita (
     FOREIGN KEY (ID_Dentista) REFERENCES Dentista(ID_Dentista),
     FOREIGN KEY (ID_Funcionario) REFERENCES Funcionario(ID_Funcionario)
 );
+
+--ALTER TABLE Cita
+--ADD Hora_Fin TIME;
 
 -- Tabla: Estado_Citas
 CREATE TABLE Estado_Citas (
