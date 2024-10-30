@@ -284,25 +284,6 @@ BEGIN
 END;
 GO
 
--- Procedimiento almacenado para registrar una acción de usuario
-CREATE PROCEDURE sp_RegistrarAccion
-    @ID_Accion CHAR(8),
-    @ID_Usuario CHAR(8),
-    @Fecha_Hora DATETIME,
-    @Descripcion VARCHAR(200)
-AS
-BEGIN
-    IF @ID_Accion = '' OR @ID_Usuario = '' OR @Fecha_Hora IS NULL OR @Descripcion = ''
-    BEGIN
-        RAISERROR('No se permiten valores nulos o vacíos', 16, 1);
-        RETURN;
-    END
-
-    INSERT INTO Auditoria (ID_Accion, ID_Usuario, Fecha_Hora, Descripcion)
-    VALUES (@ID_Accion, @ID_Usuario, @Fecha_Hora, @Descripcion);
-END;
-GO
-
 -- Procedimiento almacenado para actualizar el saldo de la cuenta del paciente
 CREATE PROCEDURE sp_ActualizarSaldoCuenta
     @ID_Cuenta CHAR(8)
@@ -373,9 +354,11 @@ BEGIN
         RETURN;
     END
 
-    SELECT f.ID_Factura, f.ID_Paciente, f.MontoTotal_Fa, f.FechaEmision_Fa, p.Nombre_Pac, p.Apellido1_Pac, p.Apellido2_Pac
+    SELECT f.ID_Factura, f.MontoTotal_Fa, f.FechaEmision_Fa,
+           p.Nombre_Pac, p.Apellido1_Pac, p.Apellido2_Pac
     FROM Factura f
-    JOIN Paciente p ON f.ID_Paciente = p.ID_Paciente
+    JOIN Cuenta c ON c.ID_Factura = f.ID_Factura
+    JOIN Paciente p ON p.ID_Paciente = c.ID_Paciente
     WHERE f.FechaEmision_Fa BETWEEN @FechaInicio AND @FechaFin;
 END;
 GO
