@@ -1,0 +1,12 @@
+C:\UNA\Administración de Base de datos\Proyecto AD de Base de Datos\Clinica-dental-SP\Domain\bin\Debug\net8.0\Domain.deps.json
+C:\UNA\Administración de Base de datos\Proyecto AD de Base de Datos\Clinica-dental-SP\Domain\bin\Debug\net8.0\Domain.dll
+C:\UNA\Administración de Base de datos\Proyecto AD de Base de Datos\Clinica-dental-SP\Domain\bin\Debug\net8.0\Domain.pdb
+C:\UNA\Administración de Base de datos\Proyecto AD de Base de Datos\Clinica-dental-SP\Domain\obj\Debug\net8.0\Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\UNA\Administración de Base de datos\Proyecto AD de Base de Datos\Clinica-dental-SP\Domain\obj\Debug\net8.0\Domain.AssemblyInfoInputs.cache
+C:\UNA\Administración de Base de datos\Proyecto AD de Base de Datos\Clinica-dental-SP\Domain\obj\Debug\net8.0\Domain.AssemblyInfo.cs
+C:\UNA\Administración de Base de datos\Proyecto AD de Base de Datos\Clinica-dental-SP\Domain\obj\Debug\net8.0\Domain.csproj.CoreCompileInputs.cache
+C:\UNA\Administración de Base de datos\Proyecto AD de Base de Datos\Clinica-dental-SP\Domain\obj\Debug\net8.0\Domain.sourcelink.json
+C:\UNA\Administración de Base de datos\Proyecto AD de Base de Datos\Clinica-dental-SP\Domain\obj\Debug\net8.0\Domain.dll
+C:\UNA\Administración de Base de datos\Proyecto AD de Base de Datos\Clinica-dental-SP\Domain\obj\Debug\net8.0\refint\Domain.dll
+C:\UNA\Administración de Base de datos\Proyecto AD de Base de Datos\Clinica-dental-SP\Domain\obj\Debug\net8.0\Domain.pdb
+C:\UNA\Administración de Base de datos\Proyecto AD de Base de Datos\Clinica-dental-SP\Domain\obj\Debug\net8.0\ref\Domain.dll
