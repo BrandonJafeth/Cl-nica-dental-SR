@@ -196,22 +196,22 @@ END;
 GO
 
 -- Procedimiento almacenado para actualizar el estado de un tratamiento
-CREATE PROCEDURE sp_ActualizarEstadoTratamiento
-    @ID_Tratamiento CHAR(8),
-    @Nuevo_Estado VARCHAR(20)
-AS
-BEGIN
-    IF @ID_Tratamiento = '' OR @Nuevo_Estado = ''
-    BEGIN
-        RAISERROR('No se permiten valores nulos o vacíos', 16, 1);
-        RETURN;
-    END
-
-    UPDATE Tratamiento
-    SET Estado = @Nuevo_Estado 
-    WHERE ID_Tratamiento = @ID_Tratamiento;
-END;
-GO
+--CREATE PROCEDURE sp_ActualizarEstadoTratamiento
+--    @ID_Tratamiento CHAR(8),
+--    @Nuevo_Estado VARCHAR(20)
+--AS
+--BEGIN
+--    IF @ID_Tratamiento = '' OR @Nuevo_Estado = ''
+--    BEGIN
+--        RAISERROR('No se permiten valores nulos o vacíos', 16, 1);
+--        RETURN;
+--    END
+--
+--    UPDATE Tratamiento
+--    SET Estado = @Nuevo_Estado 
+--    WHERE ID_Tratamiento = @ID_Tratamiento;
+--END;
+--GO
 
 -- Procedimiento almacenado para generar una factura
 CREATE PROCEDURE sp_GenerarFactura
@@ -293,9 +293,10 @@ BEGIN
 
     -- Calcular el nuevo saldo basado en las facturas y pagos asociados a la cuenta
     SELECT @NuevoSaldo = SUM(f.MontoTotal_Fa) - ISNULL(SUM(p.Monto_Pago), 0)
-    FROM Factura f
+    FROM Cuenta c
+    JOIN Factura f ON c.ID_Factura = f.ID_Factura
     LEFT JOIN Pago p ON f.ID_Factura = p.ID_Factura
-    WHERE f.ID_Cuenta = @ID_Cuenta;
+    WHERE c.ID_Cuenta = @ID_Cuenta;
 
     -- Actualizar el saldo en la cuenta
     UPDATE Cuenta
