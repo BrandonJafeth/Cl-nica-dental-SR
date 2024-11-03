@@ -1,11 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import HomePage from '../pages/HomePage';
+import HomePage from '../pages/Informative/HomePage';
 import ClientsPage from '../pages/Managing/ClientsPage';
 import AppointmentsPage from '../pages/Managing/AppointmentsPage';
 import BillingPage from '../pages/Managing/BillingPage';
 import PandTPage from '../pages/Managing/P&TPage';
-import ContactPage from '../pages/ContactPage';
+import ContactPage from '../pages/Informative/ContactPage';
 
 
 const AppRouter: React.FC = () => {
