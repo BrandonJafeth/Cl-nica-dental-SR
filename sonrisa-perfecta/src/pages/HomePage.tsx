@@ -1,8 +1,12 @@
+import Navbar from "../components/Navbar";
 
 
 function HomePage() {
   return (
-    <div>Hello world</div>
+    <>
+    <Navbar />
+    <div>Hello world hola</div>
+    </>
   )
 }
 
