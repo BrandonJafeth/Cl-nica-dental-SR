@@ -1,0 +1,182 @@
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+*.dll
+*.exe
+*.exe.config
+*.runtimeconfig.json
+*.runtimeconfig.dev.json
+*.deps.json
+*.pdb
+*.mdb
+*.csproj.user
+*.csproj.DotSettings.user
+*.userosscache
+*.suo
+*.userprefs
+*.pidb
+*.svd
+.vscode/
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa]rm/
+[Aa]rm64/
+bld/
+[Bb]in/
+[Oo]bj/
+TestResults/
+__pycache__/
+*.vs/
+.vs/
+
+# Config files
+appsettings.json
+appsettings.*.json
+
+# Mono Auto Generated Files
+mono_crash.*
+
+# Resharper
+_ReSharper.Caches/
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+# Rider
+.idea/
+.idea_modules/
+.idea.workspace/
+.idea/.idea_modules/
+.idea/.idea_workspace/
+.idea/runConfigurations/
+.idea/.idea.runConfigurations/
+.idea/.idea.plugins/
+.idea/.idea.scopes/
+.idea/.idea.module/
+.idea/.idea.codeStyle/
+
+# User-specific files
+*.rsuser
+*.user
+*.userosscache
+*.suo
+*.dotsettings.user
+
+# Dependency directories
+node_modules/
+bower_components/
+jspm_packages/
+
+# Microsoft Visual Studio
+.vscode/
+*.vscode/
+.vscode/**/*
+.vscode/launch.json
+.vscode/tasks.json
+
+# Logs
+logs/
+*.log
+
+# Compiled source
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+*.dylib
+*.lib
+*.out
+
+# Coverage reports
+coverage/
+*.lcov
+
+# External folders
+ext/
+
+# Assembly output files
+*.il
+*.out
+*.resources
+
+# NuGet packages
+*.nupkg
+# The packages folder can be ignored because of Package Restore
+**/packages/*
+# except build/, which is used as an MSBuild target.
+!**/packages/build/
+# Uncomment if necessary however generally it will be regenerated when needed
+#!**/packages/repositories.config
+
+# Cake
+# Uncomment if you are using it
+# tools/**/*
+# !tools/packages.config
+
+# Tabs Studio
+*.tss
+
+# StyleCop
+StyleCopReport.xml
+
+
+# Archivos temporales de Visual Studio
+*.tmp
+*.temp
+*.bak
+*.swp
+
+# Archivos de caché de Visual Studio
+.vs/
+.vscode/
+*.vscode/
+.vscode/**/*
+.vscode/launch.json
+.vscode/tasks.json
+
+# Archivos de caché de Rider
+.idea/
+.idea_modules/
+.idea.workspace/
+.idea/.idea_modules/
+.idea/.idea_workspace/
+.idea/runConfigurations/
+.idea/.idea.runConfigurations/
+.idea/.idea.plugins/
+.idea/.idea.scopes/
+.idea/.idea.module/
+.idea/.idea.codeStyle/
+
+# Archivos de caché de usuario
+*.rsuser
+*.user
+*.userosscache
+*.suo
+*.dotsettings.user
+
+# Archivos de caché de NuGet
+.nuget/
+packages/
