@@ -5,7 +5,6 @@ CREATE PROCEDURE InsertPaciente
     @Apellido1_Pac VARCHAR(20),
     @Apellido2_Pac VARCHAR(20),
     @Fecha_Nacimiento_Pac DATE,
-    @Edad_Pac INT,
     @Telefono_Pac VARCHAR(20),
     @Correo_Pac VARCHAR(30),
     @Direccion_Pac VARCHAR(200),
@@ -13,7 +12,7 @@ CREATE PROCEDURE InsertPaciente
 AS
 BEGIN
     -- Validar que ninguno de los parámetros sea nulo o vacío
-    IF @ID_Paciente = '' OR @Nombre_Pac = '' OR @Apellido1_Pac = '' OR @Apellido2_Pac = '' OR @Fecha_Nacimiento_Pac IS NULL OR @Edad_Pac IS NULL OR @Telefono_Pac = '' OR @Correo_Pac = '' OR @Direccion_Pac = '' OR @ID_HistorialMedico = ''
+    IF @ID_Paciente = '' OR @Nombre_Pac = '' OR @Apellido1_Pac = '' OR @Apellido2_Pac = '' OR @Fecha_Nacimiento_Pac is NULL OR @Telefono_Pac = '' OR @Correo_Pac = '' OR @Direccion_Pac = '' OR @ID_HistorialMedico = ''
     BEGIN
         -- Lanzar un error si algún parámetro es nulo o vacío
         RAISERROR('No se permiten valores nulos o vacíos', 16, 1);
@@ -21,8 +20,8 @@ BEGIN
     END
 
     -- Insertar el nuevo registro en la tabla Paciente
-    INSERT INTO Paciente (ID_Paciente, Nombre_Pac, Apellido1_Pac, Apellido2_Pac, Fecha_Nacimiento_Pac, Edad_Pac, Telefono_Pac, Correo_Pac, Direccion_Pac, ID_HistorialMedico)
-    VALUES (@ID_Paciente, @Nombre_Pac, @Apellido1_Pac, @Apellido2_Pac, @Fecha_Nacimiento_Pac, @Edad_Pac, @Telefono_Pac, @Correo_Pac, @Direccion_Pac, @ID_HistorialMedico);
+    INSERT INTO Paciente (ID_Paciente, Nombre_Pac, Apellido1_Pac, Apellido2_Pac, Fecha_Nacimiento_Pac, Telefono_Pac, Correo_Pac, Direccion_Pac, ID_HistorialMedico)
+    VALUES (@ID_Paciente, @Nombre_Pac, @Apellido1_Pac, @Apellido2_Pac, @Fecha_Nacimiento_Pac, @Telefono_Pac, @Correo_Pac, @Direccion_Pac, @ID_HistorialMedico);
 END;
 GO
 
@@ -33,7 +32,6 @@ CREATE PROCEDURE UpdatePaciente
     @Apellido1_Pac VARCHAR(20),
     @Apellido2_Pac VARCHAR(20),
     @Fecha_Nacimiento_Pac DATE,
-    @Edad_Pac INT,
     @Telefono_Pac VARCHAR(20),
     @Correo_Pac VARCHAR(30),
     @Direccion_Pac VARCHAR(200),
@@ -41,7 +39,7 @@ CREATE PROCEDURE UpdatePaciente
 AS
 BEGIN
     -- Validar que ninguno de los parámetros sea nulo o vacío
-    IF @ID_Paciente = '' OR @Nombre_Pac = '' OR @Apellido1_Pac = '' OR @Apellido2_Pac = '' OR @Fecha_Nacimiento_Pac IS NULL OR @Edad_Pac IS NULL OR @Telefono_Pac = '' OR @Correo_Pac = '' OR @Direccion_Pac = '' OR @ID_HistorialMedico = ''
+    IF @ID_Paciente = '' OR @Nombre_Pac = '' OR @Apellido1_Pac = '' OR @Apellido2_Pac = '' OR @Fecha_Nacimiento_Pac IS NULL OR  @Telefono_Pac = '' OR @Correo_Pac = '' OR @Direccion_Pac = '' OR @ID_HistorialMedico = ''
     BEGIN
         -- Lanzar un error si algún parámetro es nulo o vacío
         RAISERROR('No se permiten valores nulos o vacíos', 16, 1);
@@ -54,7 +52,6 @@ BEGIN
         Apellido1_Pac = @Apellido1_Pac,
         Apellido2_Pac = @Apellido2_Pac,
         Fecha_Nacimiento_Pac = @Fecha_Nacimiento_Pac,
-        Edad_Pac = @Edad_Pac,
         Telefono_Pac = @Telefono_Pac,
         Correo_Pac = @Correo_Pac,
         Direccion_Pac = @Direccion_Pac,
