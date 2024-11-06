@@ -195,23 +195,38 @@ BEGIN
 END;
 GO
 
--- Procedimiento almacenado para actualizar el estado de un tratamiento
---CREATE PROCEDURE sp_ActualizarEstadoTratamiento
---    @ID_Tratamiento CHAR(8),
---    @Nuevo_Estado VARCHAR(20)
---AS
---BEGIN
---    IF @ID_Tratamiento = '' OR @Nuevo_Estado = ''
---    BEGIN
---        RAISERROR('No se permiten valores nulos o vacíos', 16, 1);
---        RETURN;
---    END
---
---    UPDATE Tratamiento
---    SET Estado = @Nuevo_Estado 
---    WHERE ID_Tratamiento = @ID_Tratamiento;
---END;
---GO
+CREATE PROCEDURE sp_ActualizarEstadoTratamiento
+    @ID_Tratamiento CHAR(8),
+    @Nuevo_Estado VARCHAR(20)
+AS
+BEGIN
+    -- Validar que los parámetros no sean nulos o vacíos
+    IF @ID_Tratamiento = '' OR @Nuevo_Estado = ''
+    BEGIN
+        RAISERROR('No se permiten valores nulos o vacíos', 16, 1);
+        RETURN;
+    END
+
+    DECLARE @ID_EstadoTratamiento CHAR(8);
+
+    -- Obtener el ID_EstadoTratamiento basado en el nombre del estado
+    SELECT @ID_EstadoTratamiento = ID_EstadoTratamiento
+    FROM Estado_Tratamiento
+    WHERE Nombre_Estado = @Nuevo_Estado;
+
+    -- Verificar si el estado existe
+    IF @ID_EstadoTratamiento IS NULL
+    BEGIN
+        RAISERROR('El estado especificado no existe', 16, 1);
+        RETURN;
+    END
+
+    -- Actualizar el estado del tratamiento
+    UPDATE Tratamiento
+    SET ID_EstadoTratamiento = @ID_EstadoTratamiento
+    WHERE ID_Tratamiento = @ID_Tratamiento;
+END;
+GO
 
 -- Procedimiento almacenado para generar una factura
 CREATE PROCEDURE sp_GenerarFactura
