@@ -93,13 +93,22 @@ CREATE TABLE Tipo_Tratamiento (
     Descripcion_Tipo_Tratamiento VARCHAR(200)
 ) ON TratamientosFileGroup;
 
+-- Tabla: Estado_Tratamiento
+CREATE TABLE Estado_Tratamiento (
+    ID_EstadoTratamiento CHAR(8) PRIMARY KEY,
+    Nombre_Estado VARCHAR(20),
+    Descripcion_Estado VARCHAR(200)
+) ON TratamientosFileGroup;
+
 -- Tabla: Tratamiento
 CREATE TABLE Tratamiento (
     ID_Tratamiento CHAR(8) PRIMARY KEY,
     Nombre_Tra VARCHAR(20),
     Descripcion_Tra VARCHAR(200),
     ID_TipoTratamiento CHAR(8),
-    FOREIGN KEY (ID_TipoTratamiento) REFERENCES Tipo_Tratamiento(ID_TipoTratamiento)
+    ID_EstadoTratamiento CHAR(8),
+    FOREIGN KEY (ID_TipoTratamiento) REFERENCES Tipo_Tratamiento(ID_TipoTratamiento),
+    FOREIGN KEY (ID_EstadoTratamiento) REFERENCES Estado_Tratamiento(ID_EstadoTratamiento)
 ) ON TratamientosFileGroup;
 
 -- Tabla: Procedimiento
@@ -113,9 +122,16 @@ CREATE TABLE Procedimiento (
     FOREIGN KEY (ID_Tratamiento) REFERENCES Tratamiento(ID_Tratamiento)
 ) ON TratamientosFileGroup;
 
+-- Tabla: Estado_Cuenta
+CREATE TABLE Estado_Cuenta (
+    ID_Estado_Cuenta CHAR(8) PRIMARY KEY,
+    Nombre_EC VARCHAR(20),
+    Descripcion_EC VARCHAR(200)
+) ON FinancierosFileGroup;
+
 -- Tabla: Factura
 CREATE TABLE Factura (
-    ID_Factura CHAR(8) PRIMARY KEY,
+    ID_Factura UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
     MontoTotal_Fa MONEY,
     FechaEmision_Fa DATE,
     ID_EstadoPago CHAR(8),
@@ -134,17 +150,10 @@ CREATE TABLE Pago (
     ID_Pago UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
     Monto_Pago MONEY,
     Fecha_Pago DATE,
-    ID_Factura CHAR(8),
+    ID_Factura UNIQUEIDENTIFIER,
     ID_Tipo_Pago CHAR(8),
     FOREIGN KEY (ID_Factura) REFERENCES Factura(ID_Factura),
     FOREIGN KEY (ID_Tipo_Pago) REFERENCES Tipo_Pago(ID_Tipo_Pago)
-) ON FinancierosFileGroup;
-
--- Tabla: Estado_Cuenta
-CREATE TABLE Estado_Cuenta (
-    ID_Estado_Cuenta CHAR(8) PRIMARY KEY,
-    Nombre_EC VARCHAR(20),
-    Descripcion_EC VARCHAR(200)
 ) ON FinancierosFileGroup;
 
 -- Tabla: Paciente
@@ -182,7 +191,7 @@ CREATE TABLE Cuenta (
     Fecha_Ultima_Actualizacion DATE,
     Observaciones VARCHAR(255),
     ID_Estado_Cuenta CHAR(8),
-    ID_Factura CHAR(8),
+    ID_Factura UNIQUEIDENTIFIER,
     ID_Paciente CHAR(8),
     FOREIGN KEY (ID_Estado_Cuenta) REFERENCES Estado_Cuenta(ID_Estado_Cuenta),
     FOREIGN KEY (ID_Factura) REFERENCES Factura(ID_Factura),
@@ -191,8 +200,8 @@ CREATE TABLE Cuenta (
 
 -- Tabla: Factura_Procedimiento
 CREATE TABLE Factura_Procedimiento (
-    ID_Factura_Procedimiento CHAR(8) PRIMARY KEY,
-    ID_Factura CHAR(8),
+    ID_Factura_Procedimiento UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    ID_Factura UNIQUEIDENTIFIER,
     ID_Procedimiento CHAR(8),
     FOREIGN KEY (ID_Factura) REFERENCES Factura(ID_Factura),
     FOREIGN KEY (ID_Procedimiento) REFERENCES Procedimiento(ID_Procedimiento)
@@ -200,8 +209,8 @@ CREATE TABLE Factura_Procedimiento (
 
 -- Tabla: Factura_Tratamiento
 CREATE TABLE Factura_Tratamiento (
-    ID_Factura_Tratamiento CHAR(8) PRIMARY KEY,
-    ID_Factura CHAR(8),
+    ID_Factura_Tratamiento UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    ID_Factura UNIQUEIDENTIFIER,
     ID_Tratamiento CHAR(8),
     FOREIGN KEY (ID_Factura) REFERENCES Factura(ID_Factura),
     FOREIGN KEY (ID_Tratamiento) REFERENCES Tratamiento(ID_Tratamiento)
@@ -211,11 +220,10 @@ CREATE TABLE Factura_Tratamiento (
 CREATE TABLE Auditoria (
     ID_Auditoria UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
     Fecha_Hora_Accion DATETIME NOT NULL,
-    Acción VARCHAR(255) NOT NULL,
+    Accion VARCHAR(255) NOT NULL,
     DispositivoQueRealizo VARCHAR(50) NOT NULL,
     Usuario VARCHAR(128) NOT NULL
 ) ON AuditoriaFileGroup;
-GO
 
 -- Tabla: Funcionario
 CREATE TABLE Funcionario (
