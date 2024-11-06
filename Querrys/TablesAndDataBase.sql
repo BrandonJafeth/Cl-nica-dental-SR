@@ -1,21 +1,73 @@
-use master 
-go
-drop database ClinicaDental
-go
+USE master;
+GO
+DROP DATABASE IF EXISTS ClinicaDental;
+GO
 
---1. Crear la base de datos
+/*
+    Justificación de los Tamaños de la Base de Datos y Filegroups:
+    - PacientesFileGroup: Para almacenar datos de pacientes, proyectando 1,000 pacientes nuevos por año y 500 bytes de almacenamiento por paciente. Tamaño inicial: 50MB.
+    - CitasFileGroup: Para almacenar citas. Se estima almacenar 50,000 citas en 10 años, con un tamaño de 30MB para crecimiento.
+    - TratamientosFileGroup: Para tratamientos y procedimientos, estimado en 50MB.
+    - FinancierosFileGroup: Para facturación y pagos, asignado 30MB.
+    - AuditoriaFileGroup: Para registros de auditoría, asignado 20MB.
+    - RolesPermisosFileGroup: Para datos de roles y permisos, asignado 10MB.
+*/
+
+-- 1. Crear la base de datos con Filegroups adecuados
 CREATE DATABASE ClinicaDental
 ON PRIMARY (
     NAME = 'ClinicaDental_Data',       
     FILENAME = 'C:\SQLData\ClinicaDental_Data.mdf',  
-    SIZE = 10MB,                      
-    MAXSIZE = 100MB,                  
+    SIZE = 50MB,                       
+    MAXSIZE = 500MB,                   
+    FILEGROWTH = 20MB                  
+),
+FILEGROUP PacientesFileGroup (
+    NAME = 'Pacientes_Data',       
+    FILENAME = 'C:\SQLData\Pacientes_Data.ndf',  
+    SIZE = 50MB,                       
+    MAXSIZE = 200MB,                   
+    FILEGROWTH = 10MB                   
+),
+FILEGROUP CitasFileGroup (
+    NAME = 'Citas_Data',       
+    FILENAME = 'C:\SQLData\Citas_Data.ndf',  
+    SIZE = 30MB,                       
+    MAXSIZE = 100MB,                   
+    FILEGROWTH = 10MB                   
+),
+FILEGROUP TratamientosFileGroup (
+    NAME = 'Tratamientos_Data',       
+    FILENAME = 'C:\SQLData\Tratamientos_Data.ndf',  
+    SIZE = 50MB,                       
+    MAXSIZE = 150MB,                   
+    FILEGROWTH = 10MB                   
+),
+FILEGROUP FinancierosFileGroup (
+    NAME = 'Financieros_Data',       
+    FILENAME = 'C:\SQLData\Financieros_Data.ndf',  
+    SIZE = 30MB,                       
+    MAXSIZE = 100MB,                   
+    FILEGROWTH = 10MB                   
+),
+FILEGROUP AuditoriaFileGroup (
+    NAME = 'Auditoria_Data',       
+    FILENAME = 'C:\SQLData\Auditoria_Data.ndf',  
+    SIZE = 20MB,                       
+    MAXSIZE = 50MB,                    
+    FILEGROWTH = 5MB                   
+),
+FILEGROUP RolesPermisosFileGroup (
+    NAME = 'RolesPermisos_Data',       
+    FILENAME = 'C:\SQLData\RolesPermisos_Data.ndf',  
+    SIZE = 10MB,                       
+    MAXSIZE = 50MB,                    
     FILEGROWTH = 5MB                   
 )
 LOG ON (
     NAME = 'ClinicaDental_Log',        
     FILENAME = 'C:\SQLLog\ClinicaDental_Log.ldf',   
-    SIZE = 5MB,                        
+    SIZE = 10MB,                       
     MAXSIZE = 50MB,                    
     FILEGROWTH = 5MB                   
 );
@@ -25,30 +77,39 @@ GO
 USE ClinicaDental;
 GO
 
--- 3. Crear tablas en el orden correcto
+-- 3. Crear tablas en los filegroups correspondientes
 
 -- Tabla: Estado_Pago
 CREATE TABLE Estado_Pago (
     ID_EstadoPago CHAR(8) PRIMARY KEY,
     Nombre_EP VARCHAR(20),
     Descripcion_EP VARCHAR(200)
-);
+) ON FinancierosFileGroup;
 
 -- Tabla: Tipo_Tratamiento
 CREATE TABLE Tipo_Tratamiento (
     ID_TipoTratamiento CHAR(8) PRIMARY KEY,
     Nombre_Tipo_Tratamiento VARCHAR(20),
     Descripcion_Tipo_Tratamiento VARCHAR(200)
-);
+) ON TratamientosFileGroup;
 
--- Tabla: Tratamiento
+-- Crear tabla Estado_Tratamiento 
+CREATE TABLE Estado_Tratamiento (
+    ID_EstadoTratamiento CHAR(8) PRIMARY KEY,
+    Nombre_Estado VARCHAR(20),
+    Descripcion_Estado VARCHAR(200)
+) ON TratamientosFileGroup;
+
+-- Crear tabla Tratamiento para incluir el ID_EstadoTratamiento
 CREATE TABLE Tratamiento (
     ID_Tratamiento CHAR(8) PRIMARY KEY,
     Nombre_Tra VARCHAR(20),
     Descripcion_Tra VARCHAR(200),
     ID_TipoTratamiento CHAR(8),
-    FOREIGN KEY (ID_TipoTratamiento) REFERENCES Tipo_Tratamiento(ID_TipoTratamiento)
-);
+    ID_EstadoTratamiento CHAR(8),
+    FOREIGN KEY (ID_TipoTratamiento) REFERENCES Tipo_Tratamiento(ID_TipoTratamiento),
+    FOREIGN KEY (ID_EstadoTratamiento) REFERENCES Estado_Tratamiento(ID_EstadoTratamiento)
+) ON TratamientosFileGroup;
 
 -- Tabla: Procedimiento
 CREATE TABLE Procedimiento (
@@ -59,7 +120,14 @@ CREATE TABLE Procedimiento (
     Hora_Fin_Proc TIME,
     ID_Tratamiento CHAR(8),
     FOREIGN KEY (ID_Tratamiento) REFERENCES Tratamiento(ID_Tratamiento)
-);
+) ON TratamientosFileGroup;
+
+-- Tabla: Estado_Cuenta
+CREATE TABLE Estado_Cuenta (
+    ID_Estado_Cuenta CHAR(8) PRIMARY KEY,
+    Nombre_EC VARCHAR(20),
+    Descripcion_EC VARCHAR(200)
+) ON FinancierosFileGroup;
 
 -- Tabla: Factura
 CREATE TABLE Factura (
@@ -68,14 +136,14 @@ CREATE TABLE Factura (
     FechaEmision_Fa DATE,
     ID_EstadoPago CHAR(8),
     FOREIGN KEY (ID_EstadoPago) REFERENCES Estado_Pago(ID_EstadoPago)
-);
+) ON FinancierosFileGroup;
 
 -- Tabla: Tipo_Pago
 CREATE TABLE Tipo_Pago (
     ID_Tipo_Pago CHAR(8) PRIMARY KEY,
     Nombre_TP VARCHAR(20),
     Descripcion_TP VARCHAR(200)
-);
+) ON FinancierosFileGroup;
 
 -- Tabla: Pago
 CREATE TABLE Pago (
@@ -86,14 +154,7 @@ CREATE TABLE Pago (
     ID_Tipo_Pago CHAR(8),
     FOREIGN KEY (ID_Factura) REFERENCES Factura(ID_Factura),
     FOREIGN KEY (ID_Tipo_Pago) REFERENCES Tipo_Pago(ID_Tipo_Pago)
-);
-
--- Tabla: Estado_Cuenta
-CREATE TABLE Estado_Cuenta (
-    ID_Estado_Cuenta CHAR(8) PRIMARY KEY,
-    Nombre_EC VARCHAR(20),
-    Descripcion_EC VARCHAR(200)
-);
+) ON FinancierosFileGroup;
 
 -- Tabla: Paciente
 CREATE TABLE Paciente (
@@ -106,7 +167,7 @@ CREATE TABLE Paciente (
     Correo_Pac VARCHAR(30),
     Direccion_Pac VARCHAR(200),
     ID_HistorialMedico CHAR(8)
-);
+) ON PacientesFileGroup;
 
 -- Tabla: Historial_Medico
 CREATE TABLE Historial_Medico (
@@ -114,7 +175,7 @@ CREATE TABLE Historial_Medico (
     Fecha_Historial DATE,
     Diagnostico VARCHAR(100),
     Tratamientos_Medicos VARCHAR(200)
-);
+) ON PacientesFileGroup;
 
 -- Clave foránea de Historial_Medico en Paciente
 ALTER TABLE Paciente
@@ -135,7 +196,7 @@ CREATE TABLE Cuenta (
     FOREIGN KEY (ID_Estado_Cuenta) REFERENCES Estado_Cuenta(ID_Estado_Cuenta),
     FOREIGN KEY (ID_Factura) REFERENCES Factura(ID_Factura),
     FOREIGN KEY (ID_Paciente) REFERENCES Paciente(ID_Paciente)
-);
+) ON FinancierosFileGroup;
 
 -- Tabla: Factura_Procedimiento
 CREATE TABLE Factura_Procedimiento (
@@ -144,7 +205,7 @@ CREATE TABLE Factura_Procedimiento (
     ID_Procedimiento CHAR(8),
     FOREIGN KEY (ID_Factura) REFERENCES Factura(ID_Factura),
     FOREIGN KEY (ID_Procedimiento) REFERENCES Procedimiento(ID_Procedimiento)
-);
+) ON FinancierosFileGroup;
 
 -- Tabla: Factura_Tratamiento
 CREATE TABLE Factura_Tratamiento (
@@ -153,9 +214,8 @@ CREATE TABLE Factura_Tratamiento (
     ID_Tratamiento CHAR(8),
     FOREIGN KEY (ID_Factura) REFERENCES Factura(ID_Factura),
     FOREIGN KEY (ID_Tratamiento) REFERENCES Tratamiento(ID_Tratamiento)
-);
+) ON FinancierosFileGroup;
 
--- Tabla: Auditoria
 -- Tabla: Auditoria
 CREATE TABLE Auditoria (
     ID_Auditoria CHAR(8) PRIMARY KEY,
@@ -165,15 +225,15 @@ CREATE TABLE Auditoria (
     ID_TipoAccion CHAR(8),
     ID_Usuario CHAR(8) NULL,
     ID_DBUser CHAR(8) NULL
-);
-GO
+) ON AuditoriaFileGroup;
 
 -- Tabla: Tipo_Accion
 CREATE TABLE Tipo_Accion (
     ID_TipoAccion CHAR(8) PRIMARY KEY,
     Nombre_Accion VARCHAR(20),
     Descripcion_Tipo_Accion VARCHAR(200)
-);
+) ON AuditoriaFileGroup;
+
 -- Tabla: Funcionario
 CREATE TABLE Funcionario (
     ID_Funcionario CHAR(8) PRIMARY KEY,
@@ -182,7 +242,7 @@ CREATE TABLE Funcionario (
     Apellido2 VARCHAR(200),
     Email VARCHAR(20),
     Contraseña CHAR(12)
-);
+) ON AuditoriaFileGroup;
 
 -- Tabla: Usuarios
 CREATE TABLE Usuarios (
@@ -195,31 +255,14 @@ CREATE TABLE Usuarios (
     Token VARCHAR(100),
     ID_Funcionario CHAR(8),
     FOREIGN KEY (ID_Funcionario) REFERENCES Funcionario(ID_Funcionario)
-);
-
--- 4. Añadir nuevas tablas de Roles y Permisos
+) ON AuditoriaFileGroup;
 
 -- Tabla: DB_User
 CREATE TABLE DB_User (
     ID_DBUser CHAR(8) PRIMARY KEY,
     DBUserName VARCHAR(20),
     Contrasena CHAR(12)
-);
-
-
--- Clave foránea en Auditoria hacia Tipo_Accion y Usuario
-ALTER TABLE Auditoria
-ADD CONSTRAINT FK_Auditoria_TipoAccion
-FOREIGN KEY (ID_TipoAccion) REFERENCES Tipo_Accion(ID_TipoAccion);
-
-ALTER TABLE Auditoria
-ADD CONSTRAINT FK_Auditoria_Usuario
-FOREIGN KEY (ID_Usuario) REFERENCES Usuarios(ID_Usuario);
-
-ALTER TABLE Auditoria
-ADD CONSTRAINT FK_Auditoria_DBUser
-FOREIGN KEY (ID_DBUser) REFERENCES DB_User(ID_DBUser);
-GO
+) ON RolesPermisosFileGroup;
 
 -- Tabla: Dentista
 CREATE TABLE Dentista (
@@ -233,13 +276,15 @@ CREATE TABLE Dentista (
     Correo_Den VARCHAR(30),
     ID_Funcionario CHAR(8),
     FOREIGN KEY (ID_Funcionario) REFERENCES Funcionario(ID_Funcionario)
-);
+) ON CitasFileGroup;
+
 -- Tabla: Especialidad
 CREATE TABLE Especialidad (
     ID_Especialidad CHAR(8) PRIMARY KEY,
     Nombre_Esp VARCHAR(20),
     Descripcion_Esp VARCHAR(200)
-);
+) ON CitasFileGroup;
+
 -- Tabla: Dentista_Especialidad
 CREATE TABLE Dentista_Especialidad (
     ID_Dentista_Especialidad CHAR(8) PRIMARY KEY,
@@ -247,9 +292,14 @@ CREATE TABLE Dentista_Especialidad (
     ID_Especialidad CHAR(8),
     FOREIGN KEY (ID_Dentista) REFERENCES Dentista(ID_Dentista),
     FOREIGN KEY (ID_Especialidad) REFERENCES Especialidad(ID_Especialidad)
-);
+) ON CitasFileGroup;
 
-
+-- Tabla: Estado_Citas
+CREATE TABLE Estado_Citas (
+    ID_EstadoCita CHAR(8) PRIMARY KEY,
+    Nombre_Estado VARCHAR(20),
+    Descripcion_Estado VARCHAR(200)
+) ON CitasFileGroup;
 
 -- Tabla: Cita
 CREATE TABLE Cita (
@@ -265,26 +315,13 @@ CREATE TABLE Cita (
     FOREIGN KEY (ID_Paciente) REFERENCES Paciente(ID_Paciente),
     FOREIGN KEY (ID_Dentista) REFERENCES Dentista(ID_Dentista),
     FOREIGN KEY (ID_Funcionario) REFERENCES Funcionario(ID_Funcionario)
-);
+) ON CitasFileGroup;
 
---ALTER TABLE Cita
---ADD Hora_Fin TIME;
-
--- Tabla: Estado_Citas
-CREATE TABLE Estado_Citas (
-    ID_EstadoCita CHAR(8) PRIMARY KEY,
-    Nombre_Estado VARCHAR(20),
-    Descripcion_Estado VARCHAR(200)
-);
-
--- Clave foránea en Cita hacia Estado_Citas
 ALTER TABLE Cita
 ADD CONSTRAINT FK_Cita_EstadoCita
 FOREIGN KEY (ID_EstadoCita) REFERENCES Estado_Citas(ID_EstadoCita);
 
-GO
-
--- Tabla Intermedia: Historial_Tratamiento
+-- Tabla: Historial_Tratamiento
 CREATE TABLE Historial_Tratamiento (
     ID_Historial_Tratamiento CHAR(8) PRIMARY KEY,
     ID_HistorialMedico CHAR(8) NOT NULL,
@@ -292,24 +329,34 @@ CREATE TABLE Historial_Tratamiento (
     Fecha_Tratamiento DATE,
     FOREIGN KEY (ID_HistorialMedico) REFERENCES Historial_Medico(ID_HistorialMedico),
     FOREIGN KEY (ID_Tratamiento) REFERENCES Tratamiento(ID_Tratamiento)
-);
+) ON TratamientosFileGroup;
 
+-- Relaciones de Auditoría
+ALTER TABLE Auditoria
+ADD CONSTRAINT FK_Auditoria_TipoAccion
+FOREIGN KEY (ID_TipoAccion) REFERENCES Tipo_Accion(ID_TipoAccion);
 
+ALTER TABLE Auditoria
+ADD CONSTRAINT FK_Auditoria_Usuario
+FOREIGN KEY (ID_Usuario) REFERENCES Usuarios(ID_Usuario);
 
+ALTER TABLE Auditoria
+ADD CONSTRAINT FK_Auditoria_DBUser
+FOREIGN KEY (ID_DBUser) REFERENCES DB_User(ID_DBUser);
 
 -- Tabla: Roles
 CREATE TABLE Roles (
     ID_Roles CHAR(8) PRIMARY KEY,
     Nombre VARCHAR(20),
     Descripcion VARCHAR(200)
-);
+) ON RolesPermisosFileGroup;
 
 -- Tabla: Permisos
 CREATE TABLE Permisos (
     ID_Permisos CHAR(8) PRIMARY KEY,
     Nombre VARCHAR(20),
     Descripcion VARCHAR(200)
-);
+) ON RolesPermisosFileGroup;
 
 -- Tabla: Roles_DBUser (relación muchos a muchos entre DB_User y Roles)
 CREATE TABLE Roles_DBUser (
@@ -318,7 +365,7 @@ CREATE TABLE Roles_DBUser (
     ID_DBUser CHAR(8),
     FOREIGN KEY (ID_Roles) REFERENCES Roles(ID_Roles),
     FOREIGN KEY (ID_DBUser) REFERENCES DB_User(ID_DBUser)
-);
+) ON RolesPermisosFileGroup;
 
 -- Tabla: Roles_Permisos (relación muchos a muchos entre Roles y Permisos)
 CREATE TABLE Roles_Permisos (
@@ -327,7 +374,7 @@ CREATE TABLE Roles_Permisos (
     ID_Permisos CHAR(8),
     FOREIGN KEY (ID_Roles) REFERENCES Roles(ID_Roles),
     FOREIGN KEY (ID_Permisos) REFERENCES Permisos(ID_Permisos)
-);
+) ON RolesPermisosFileGroup;
 
 -- Tabla: Usuario_Roles (relación entre los usuarios y sus roles)
 CREATE TABLE Usuario_Roles (
@@ -336,6 +383,6 @@ CREATE TABLE Usuario_Roles (
     ID_Roles CHAR(8),
     FOREIGN KEY (ID_Usuario) REFERENCES Usuarios(ID_Usuario),
     FOREIGN KEY (ID_Roles) REFERENCES Roles(ID_Roles)
-);
+) ON RolesPermisosFileGroup;
 
 GO
