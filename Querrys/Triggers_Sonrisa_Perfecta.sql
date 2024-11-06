@@ -1,62 +1,99 @@
-use ClinicaDental
-go
+-- Función: fn_UsuarioActual
+-- Descripción: Devuelve el nombre del usuario actual conectado a la base de datos.
+USE ClinicaDental;
+GO
 
+-- Eliminar la función si existe en el esquema dbo
+DROP FUNCTION IF EXISTS dbo.fn_UsuarioActual;
+GO
+
+-- Crear la función en el esquema dbo
+CREATE FUNCTION dbo.fn_UsuarioActual()
+RETURNS VARCHAR(128)
+AS
+BEGIN
+    RETURN SYSTEM_USER;
+END;
+GO
+
+
+USE ClinicaDental;
+GO
 
 -- Trigger: tr_AuditarInsercionPaciente
-CREATE TRIGGER tr_AuditarInsercionPaciente
+CREATE OR ALTER TRIGGER tr_AuditarInsercionPaciente
 ON Paciente
 AFTER INSERT
 AS
 BEGIN
-    DECLARE @ID_Paciente CHAR(8), @Nombre VARCHAR(20), @Apellido1 VARCHAR(20), @Apellido2 VARCHAR(20), @Fecha_Hora DATETIME, @ID_Usuario CHAR(8);
+    SET NOCOUNT ON;
 
-    -- Obtener datos del paciente insertado
-    SELECT @ID_Paciente = i.ID_Paciente, @Nombre = i.Nombre_Pac, @Apellido1 = i.Apellido1_Pac, @Apellido2 = i.Apellido2_Pac, @Fecha_Hora = GETDATE(), @ID_Usuario = 'ID_ADMIN'
+    INSERT INTO Auditoria (
+        ID_Auditoria, 
+        Fecha_Hora_Accion, 
+        Acción, 
+        DispositivoQueRealizo, 
+        Usuario
+    )
+    SELECT
+        NEWID(),
+        GETDATE(),
+        'Inserción de paciente: ' + i.Nombre_Pac + ' ' + i.Apellido1_Pac + ' ' + i.Apellido2_Pac,
+        HOST_NAME(),
+        dbo.fn_UsuarioActual()
     FROM inserted i;
-
-    -- Insertar en Auditoria
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Descripcion_Accion, ID_TipoAccion, ID_Usuario)
-    VALUES (NEWID(), @Fecha_Hora, 'Inserción de paciente: ' + @Nombre + ' ' + @Apellido1 + ' ' + @Apellido2, 'INSERCION', @ID_Usuario);
 END;
 GO
 
 -- Trigger: tr_AuditarActualizacionPaciente
-CREATE TRIGGER tr_AuditarActualizacionPaciente
+CREATE OR ALTER TRIGGER tr_AuditarActualizacionPaciente
 ON Paciente
 AFTER UPDATE
 AS
 BEGIN
-    DECLARE @ID_Paciente CHAR(8), @NombreAntiguo VARCHAR(20), @NombreNuevo VARCHAR(20), @Fecha_Hora DATETIME, @ID_Usuario CHAR(8);
+    SET NOCOUNT ON;
 
-    -- Obtener ID del paciente y nombres antiguos y nuevos
-    SELECT @ID_Paciente = i.ID_Paciente, @NombreAntiguo = d.Nombre_Pac, @NombreNuevo = i.Nombre_Pac, @Fecha_Hora = GETDATE(), @ID_Usuario = 'ID_ADMIN'
+    INSERT INTO Auditoria (
+        ID_Auditoria, 
+        Fecha_Hora_Accion, 
+        Acción, 
+        DispositivoQueRealizo, 
+        Usuario
+    )
+    SELECT
+        NEWID(),
+        GETDATE(),
+        'Actualización de paciente: Cambio de Nombre de ' + d.Nombre_Pac + ' a ' + i.Nombre_Pac,
+        HOST_NAME(),
+        dbo.fn_UsuarioActual()
     FROM inserted i
-    JOIN deleted d ON i.ID_Paciente = d.ID_Paciente;
-
-    -- Auditar si el nombre cambió
-    IF @NombreAntiguo <> @NombreNuevo
-    BEGIN
-        INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Descripcion_Accion, ID_TipoAccion, ID_Usuario)
-        VALUES (NEWID(), @Fecha_Hora, 'Actualización de paciente: Cambio de Nombre de ' + @NombreAntiguo + ' a ' + @NombreNuevo, 'ACTUALIZACION', @ID_Usuario);
-    END;
+    JOIN deleted d ON i.ID_Paciente = d.ID_Paciente
+    WHERE d.Nombre_Pac <> i.Nombre_Pac;
 END;
 GO
 
 -- Trigger: tr_AuditarEliminacionPaciente
-CREATE TRIGGER tr_AuditarEliminacionPaciente
+CREATE OR ALTER TRIGGER tr_AuditarEliminacionPaciente
 ON Paciente
 AFTER DELETE
 AS
 BEGIN
-    DECLARE @ID_Paciente CHAR(8), @Nombre VARCHAR(20), @Apellido1 VARCHAR(20), @Fecha_Hora DATETIME, @ID_Usuario CHAR(8);
+    SET NOCOUNT ON;
 
-    -- Obtener datos del paciente eliminado
-    SELECT @ID_Paciente = d.ID_Paciente, @Nombre = d.Nombre_Pac, @Apellido1 = d.Apellido1_Pac, @Fecha_Hora = GETDATE(), @ID_Usuario = 'ID_ADMIN'
+    INSERT INTO Auditoria (
+        ID_Auditoria, 
+        Fecha_Hora_Accion, 
+        Acción, 
+        DispositivoQueRealizo, 
+        Usuario
+    )
+    SELECT
+        NEWID(),
+        GETDATE(),
+        'Eliminación de paciente: ' + d.Nombre_Pac + ' ' + d.Apellido1_Pac,
+        HOST_NAME(),
+        dbo.fn_UsuarioActual()
     FROM deleted d;
-
-    -- Insertar en Auditoria
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Descripcion_Accion, ID_TipoAccion, ID_Usuario)
-    VALUES (NEWID(), @Fecha_Hora, 'Eliminación de paciente: ' + @Nombre + ' ' + @Apellido1, 'ELIMINACION', @ID_Usuario);
 END;
 GO
 
@@ -114,23 +151,29 @@ BEGIN
 END;
 GO
 
+
 -- Trigger: tr_ActualizarEstadoFactura
-CREATE TRIGGER tr_ActualizarEstadoFactura
+CREATE OR ALTER TRIGGER tr_ActualizarEstadoFactura
 ON Pago
 AFTER INSERT
 AS
 BEGIN
-    DECLARE @ID_Factura CHAR(8), @MontoTotal MONEY, @MontoPagado MONEY;
+    SET NOCOUNT ON;
+
+    DECLARE @ID_Factura CHAR(8), 
+            @MontoTotal MONEY, 
+            @MontoPagado MONEY;
 
     -- Obtener ID de factura pagada
     SELECT @ID_Factura = i.ID_Factura
     FROM inserted i;
 
-    -- Obtener monto total de la factura y pagos realizados
+    -- Obtener monto total de la factura
     SELECT @MontoTotal = MontoTotal_Fa
     FROM Factura
     WHERE ID_Factura = @ID_Factura;
 
+    -- Calcular monto pagado
     SELECT @MontoPagado = SUM(Monto_Pago)
     FROM Pago
     WHERE ID_Factura = @ID_Factura;
@@ -141,6 +184,21 @@ BEGIN
         UPDATE Factura
         SET ID_EstadoPago = 'PAGADO'
         WHERE ID_Factura = @ID_Factura;
+
+        INSERT INTO Auditoria (
+            ID_Auditoria, 
+            Fecha_Hora_Accion, 
+            Acción, 
+            DispositivoQueRealizo, 
+            Usuario
+        )
+        VALUES (
+            NEWID(), 
+            GETDATE(), 
+            'Actualizar Estado Factura ID: ' + @ID_Factura, 
+            HOST_NAME(), 
+            dbo.fn_UsuarioActual()
+        );
     END;
 END;
 GO

@@ -93,22 +93,13 @@ CREATE TABLE Tipo_Tratamiento (
     Descripcion_Tipo_Tratamiento VARCHAR(200)
 ) ON TratamientosFileGroup;
 
--- Crear tabla Estado_Tratamiento 
-CREATE TABLE Estado_Tratamiento (
-    ID_EstadoTratamiento CHAR(8) PRIMARY KEY,
-    Nombre_Estado VARCHAR(20),
-    Descripcion_Estado VARCHAR(200)
-) ON TratamientosFileGroup;
-
--- Crear tabla Tratamiento para incluir el ID_EstadoTratamiento
+-- Tabla: Tratamiento
 CREATE TABLE Tratamiento (
     ID_Tratamiento CHAR(8) PRIMARY KEY,
     Nombre_Tra VARCHAR(20),
     Descripcion_Tra VARCHAR(200),
     ID_TipoTratamiento CHAR(8),
-    ID_EstadoTratamiento CHAR(8),
-    FOREIGN KEY (ID_TipoTratamiento) REFERENCES Tipo_Tratamiento(ID_TipoTratamiento),
-    FOREIGN KEY (ID_EstadoTratamiento) REFERENCES Estado_Tratamiento(ID_EstadoTratamiento)
+    FOREIGN KEY (ID_TipoTratamiento) REFERENCES Tipo_Tratamiento(ID_TipoTratamiento)
 ) ON TratamientosFileGroup;
 
 -- Tabla: Procedimiento
@@ -121,13 +112,6 @@ CREATE TABLE Procedimiento (
     ID_Tratamiento CHAR(8),
     FOREIGN KEY (ID_Tratamiento) REFERENCES Tratamiento(ID_Tratamiento)
 ) ON TratamientosFileGroup;
-
--- Tabla: Estado_Cuenta
-CREATE TABLE Estado_Cuenta (
-    ID_Estado_Cuenta CHAR(8) PRIMARY KEY,
-    Nombre_EC VARCHAR(20),
-    Descripcion_EC VARCHAR(200)
-) ON FinancierosFileGroup;
 
 -- Tabla: Factura
 CREATE TABLE Factura (
@@ -147,13 +131,20 @@ CREATE TABLE Tipo_Pago (
 
 -- Tabla: Pago
 CREATE TABLE Pago (
-    ID_Pago INT PRIMARY KEY,
+    ID_Pago UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
     Monto_Pago MONEY,
     Fecha_Pago DATE,
     ID_Factura CHAR(8),
     ID_Tipo_Pago CHAR(8),
     FOREIGN KEY (ID_Factura) REFERENCES Factura(ID_Factura),
     FOREIGN KEY (ID_Tipo_Pago) REFERENCES Tipo_Pago(ID_Tipo_Pago)
+) ON FinancierosFileGroup;
+
+-- Tabla: Estado_Cuenta
+CREATE TABLE Estado_Cuenta (
+    ID_Estado_Cuenta CHAR(8) PRIMARY KEY,
+    Nombre_EC VARCHAR(20),
+    Descripcion_EC VARCHAR(200)
 ) ON FinancierosFileGroup;
 
 -- Tabla: Paciente
@@ -218,21 +209,13 @@ CREATE TABLE Factura_Tratamiento (
 
 -- Tabla: Auditoria
 CREATE TABLE Auditoria (
-    ID_Auditoria CHAR(8) PRIMARY KEY,
-    Fecha_Hora_Accion DATETIME,
-    Descripcion_Accion VARCHAR(200),
-    DispositivoQueRealizo VARCHAR(50),
-    ID_TipoAccion CHAR(8),
-    ID_Usuario CHAR(8) NULL,
-    ID_DBUser CHAR(8) NULL
+    ID_Auditoria UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    Fecha_Hora_Accion DATETIME NOT NULL,
+    Acción VARCHAR(255) NOT NULL,
+    DispositivoQueRealizo VARCHAR(50) NOT NULL,
+    Usuario VARCHAR(128) NOT NULL
 ) ON AuditoriaFileGroup;
-
--- Tabla: Tipo_Accion
-CREATE TABLE Tipo_Accion (
-    ID_TipoAccion CHAR(8) PRIMARY KEY,
-    Nombre_Accion VARCHAR(20),
-    Descripcion_Tipo_Accion VARCHAR(200)
-) ON AuditoriaFileGroup;
+GO
 
 -- Tabla: Funcionario
 CREATE TABLE Funcionario (
@@ -256,13 +239,6 @@ CREATE TABLE Usuarios (
     ID_Funcionario CHAR(8),
     FOREIGN KEY (ID_Funcionario) REFERENCES Funcionario(ID_Funcionario)
 ) ON AuditoriaFileGroup;
-
--- Tabla: DB_User
-CREATE TABLE DB_User (
-    ID_DBUser CHAR(8) PRIMARY KEY,
-    DBUserName VARCHAR(20),
-    Contrasena CHAR(12)
-) ON RolesPermisosFileGroup;
 
 -- Tabla: Dentista
 CREATE TABLE Dentista (
@@ -331,19 +307,6 @@ CREATE TABLE Historial_Tratamiento (
     FOREIGN KEY (ID_Tratamiento) REFERENCES Tratamiento(ID_Tratamiento)
 ) ON TratamientosFileGroup;
 
--- Relaciones de Auditoría
-ALTER TABLE Auditoria
-ADD CONSTRAINT FK_Auditoria_TipoAccion
-FOREIGN KEY (ID_TipoAccion) REFERENCES Tipo_Accion(ID_TipoAccion);
-
-ALTER TABLE Auditoria
-ADD CONSTRAINT FK_Auditoria_Usuario
-FOREIGN KEY (ID_Usuario) REFERENCES Usuarios(ID_Usuario);
-
-ALTER TABLE Auditoria
-ADD CONSTRAINT FK_Auditoria_DBUser
-FOREIGN KEY (ID_DBUser) REFERENCES DB_User(ID_DBUser);
-
 -- Tabla: Roles
 CREATE TABLE Roles (
     ID_Roles CHAR(8) PRIMARY KEY,
@@ -356,15 +319,6 @@ CREATE TABLE Permisos (
     ID_Permisos CHAR(8) PRIMARY KEY,
     Nombre VARCHAR(20),
     Descripcion VARCHAR(200)
-) ON RolesPermisosFileGroup;
-
--- Tabla: Roles_DBUser (relación muchos a muchos entre DB_User y Roles)
-CREATE TABLE Roles_DBUser (
-    ID_Roles_DBUser CHAR(8) PRIMARY KEY,
-    ID_Roles CHAR(8),
-    ID_DBUser CHAR(8),
-    FOREIGN KEY (ID_Roles) REFERENCES Roles(ID_Roles),
-    FOREIGN KEY (ID_DBUser) REFERENCES DB_User(ID_DBUser)
 ) ON RolesPermisosFileGroup;
 
 -- Tabla: Roles_Permisos (relación muchos a muchos entre Roles y Permisos)

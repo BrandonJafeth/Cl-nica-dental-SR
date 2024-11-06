@@ -4,6 +4,7 @@ VALUES ('FUNC0001', 'Pedro', 'López', 'Ramírez', 'pedro.lopez@mail.com', 'pass
 GO
 
 -- 2. Insertar Estado_Pago
+-- CORRECCIÓN: Añadir la columna ID_EstadoPago para que coincida con los valores proporcionados
 INSERT INTO Estado_Pago (ID_EstadoPago, Nombre_EP, Descripcion_EP)
 VALUES ('EST00001', 'Pendiente', 'Pago aún no realizado');
 GO
@@ -38,15 +39,6 @@ GO
 -- 8. Insertar Usuario
 INSERT INTO Usuarios (ID_Usuario, Nombre, Apellido1, Apellido2, Email, Contraseña, Token, ID_Funcionario)
 VALUES ('USER0001', 'Laura', 'González', 'Martínez', 'laura.gonzalez@mail.com', 'pwd12345', 'token123', 'FUNC0001');
-GO
-
--- Insertar datos de prueba en la tabla DB_User
-INSERT INTO DB_User (
-    ID_DBUser, DBUserName, Contrasena
-)
-VALUES (
-    'DBUSER01', 'dbadmin', 'password123'
-);
 GO
 
 -- 9. Insertar Historial_Medico
@@ -94,8 +86,8 @@ VALUES ('CITA0001', '2024-10-16', 'Revisión y ortodoncia',
 GO
 
 -- 16. Insertar Pago
-INSERT INTO Pago (ID_Pago, Monto_Pago, Fecha_Pago, ID_Factura, ID_Tipo_Pago)
-VALUES (1, 100.00, '2024-10-17', 'FAC00001', 'TIPO0002');
+INSERT INTO Pago (Monto_Pago, Fecha_Pago, ID_Factura, ID_Tipo_Pago)
+VALUES (100.00, '2024-10-17', 'FAC00001', 'TIPO0002');
 GO
 
 -- 17. Insertar Factura_Tratamiento
@@ -114,31 +106,14 @@ INSERT INTO Historial_Tratamiento (ID_Historial_Tratamiento, ID_HistorialMedico,
 VALUES ('HT000001', 'HIS00001', 'TRA00001', '2024-10-16');
 GO
 
--- Insertar Tipo_Accion (Corrección necesaria)
-INSERT INTO Tipo_Accion (ID_TipoAccion, Nombre_Accion, Descripcion_Tipo_Accion)
-VALUES ('TIPOACC1', 'Acceso', 'Acceso al sistema realizado');
-GO
+-- 20. (Número omitido en el script original)
 
-
--- 20. Insertar Auditoria
-INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Descripcion_Accion, 
-                       DispositivoQueRealizo, ID_TipoAccion, ID_Usuario)
-VALUES ('AUDIT001', GETDATE(), 'Acceso al sistema', 'PC-01', 'TIPOACC1', 'USER0001');
-GO
-
--- Insertar datos de prueba en la tabla Auditoria para un usuario de la base de datos
-INSERT INTO Auditoria (
-    ID_Auditoria, Fecha_Hora_Accion, Descripcion_Accion, DispositivoQueRealizo, ID_TipoAccion, ID_DBUser
-)
-VALUES (
-    'AUDIT002', GETDATE(), 'Acceso a la base de datos', 'PC-02', 'TIPOACC1', 'DBUSER01'
-);
-
--- 21. Insertar otro Paciente y su Historial_Medico
+-- 21. Insertar otro Historial_Medico
 INSERT INTO Historial_Medico (ID_HistorialMedico, Fecha_Historial, Diagnostico, Tratamientos_Medicos)
 VALUES ('HIS00002', '2024-10-12', 'Caries multiple', 'Obturaciones y limpieza');
 GO
 
+-- 22. Insertar otro Paciente
 INSERT INTO Paciente (ID_Paciente, Nombre_Pac, Apellido1_Pac, Apellido2_Pac, 
                       Fecha_Nacimiento_Pac, Telefono_Pac, Correo_Pac, 
                       Direccion_Pac, ID_HistorialMedico)
@@ -146,15 +121,14 @@ VALUES ('PAC00002', 'María', 'Rodríguez', 'Lopez', '1985-08-20',
         '555-7654321', 'maria.rodriguez@mail.com', 'Avenida Siempre Viva 742, Ciudad Y', 'HIS00002');
 GO
 
--- 22. Insertar Dentista adicional
+-- 23. Insertar Dentista adicional
 INSERT INTO Dentista (ID_Dentista, Nombre_Den, Apellido1_Den, Apellido2_Den, 
                       Direccion_Den, FechaNacimiento_Den, Telefono_Den, Correo_Den, ID_Funcionario)
 VALUES ('DEN00002', 'Ana', 'Martínez', 'Soto', 'Avenida Central 789, Ciudad Y', 
         '1985-07-15', '555-678901', 'ana.martinez@mail.com', 'FUNC0001');
 GO
 
-
--- Insertar más citas en orden cronológico
+-- 24. Insertar más citas en orden cronológico
 INSERT INTO Cita (
     ID_Cita, Fecha_Cita, Motivo, Hora_Inicio, Hora_Fin,
     ID_Paciente, ID_Dentista, ID_Funcionario, ID_EstadoCita

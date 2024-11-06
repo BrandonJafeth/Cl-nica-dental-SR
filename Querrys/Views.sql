@@ -177,6 +177,8 @@ GROUP BY
 WITH CHECK OPTION;
 GO
 
+
+
 -- Consultar la vista de Historial Completo de Pacientes
 SELECT * FROM vw_HistorialPaciente;
 GO
@@ -212,3 +214,6 @@ GO
 -- Consultar la vista de Dentistas con Más Tratamientos Realizados
 SELECT * FROM vw_DentistasConMasTratamientos;
 GO
+
+
+
