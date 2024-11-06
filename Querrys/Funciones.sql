@@ -119,42 +119,14 @@ BEGIN
 END;
 GO
 
--- Función: fn_UsuarioActual
--- Descripción: Devuelve el nombre del usuario actual conectado a la base de datos.
-DROP FUNCTION IF EXISTS fn_UsuarioActual;
-GO
-CREATE FUNCTION fn_UsuarioActual()
-RETURNS VARCHAR(128)
-AS
-BEGIN
-    RETURN SYSTEM_USER;
-END;
-GO
-
 -- Función: fn_UltimaAccionUsuario
 -- Descripción: Consulta la última acción registrada por un usuario específico en la tabla de auditoría.
--- Función para Usuarios del Sistema
-DROP FUNCTION IF EXISTS fn_UltimaAccionUsuario;
-GO
-CREATE FUNCTION fn_UltimaAccionUsuario (
-    @ID_Usuario CHAR(8)
-)
-RETURNS TABLE
-AS
-RETURN
-(
-    SELECT TOP 1 *
-    FROM Auditoria
-    WHERE ID_Usuario = @ID_Usuario
-    ORDER BY Fecha_Hora_Accion DESC
-);
+
+DROP FUNCTION IF EXISTS dbo.fn_UltimaAccionUsuario;
 GO
 
--- Función para Usuarios de la Base de Datos
-DROP FUNCTION IF EXISTS fn_UltimaAccionDBUser;
-GO
-CREATE FUNCTION fn_UltimaAccionDBUser (
-    @ID_DBUser CHAR(8)
+CREATE FUNCTION dbo.fn_UltimaAccionUsuario (
+    @Usuario VARCHAR(128)
 )
 RETURNS TABLE
 AS
@@ -162,7 +134,7 @@ RETURN
 (
     SELECT TOP 1 *
     FROM Auditoria
-    WHERE ID_DBUser = @ID_DBUser
+    WHERE Usuario = @Usuario
     ORDER BY Fecha_Hora_Accion DESC
 );
 GO
@@ -338,9 +310,6 @@ GO
 SELECT * FROM dbo.fn_UltimaAccionUsuario('USER0001');
 GO
 
--- Probar fn_UltimaAccionDBUser para un usuario de la base de datos
-SELECT * FROM dbo.fn_UltimaAccionDBUser('DBUSER01');
-GO
 
 -- Probar fn_NombreCompletoPaciente
 SELECT dbo.fn_NombreCompletoPaciente('PAC00001') AS NombreCompletoPaciente;
@@ -365,3 +334,6 @@ GO
 -- Probar fn_ResumenFacturacion
 SELECT * FROM fn_ResumenFacturacion('PAC00001');
 GO
+
+
+Select * from Auditoria

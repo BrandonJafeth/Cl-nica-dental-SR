@@ -3,6 +3,8 @@ go
 drop database ClinicaDental
 go
 
+
+
 --1. Crear la base de datos
 CREATE DATABASE ClinicaDental
 ON PRIMARY (
@@ -79,7 +81,7 @@ CREATE TABLE Tipo_Pago (
 
 -- Tabla: Pago
 CREATE TABLE Pago (
-    ID_Pago INT PRIMARY KEY,
+    ID_Pago uniqueidentifier PRIMARY KEY DEFAULT NEWID(),
     Monto_Pago MONEY,
     Fecha_Pago DATE,
     ID_Factura CHAR(8),
@@ -156,24 +158,16 @@ CREATE TABLE Factura_Tratamiento (
 );
 
 -- Tabla: Auditoria
--- Tabla: Auditoria
 CREATE TABLE Auditoria (
-    ID_Auditoria CHAR(8) PRIMARY KEY,
-    Fecha_Hora_Accion DATETIME,
-    Descripcion_Accion VARCHAR(200),
-    DispositivoQueRealizo VARCHAR(50),
-    ID_TipoAccion CHAR(8),
-    ID_Usuario CHAR(8) NULL,
-    ID_DBUser CHAR(8) NULL
+    ID_Auditoria uniqueidentifier PRIMARY KEY DEFAULT NEWID(),
+    Fecha_Hora_Accion DATETIME NOT NULL,
+    Acción VARCHAR(255) NOT NULL,
+    DispositivoQueRealizo VARCHAR(50) NOT NULL,
+    Usuario VARCHAR(128) NOT NULL
 );
 GO
 
--- Tabla: Tipo_Accion
-CREATE TABLE Tipo_Accion (
-    ID_TipoAccion CHAR(8) PRIMARY KEY,
-    Nombre_Accion VARCHAR(20),
-    Descripcion_Tipo_Accion VARCHAR(200)
-);
+
 -- Tabla: Funcionario
 CREATE TABLE Funcionario (
     ID_Funcionario CHAR(8) PRIMARY KEY,
@@ -199,27 +193,7 @@ CREATE TABLE Usuarios (
 
 -- 4. Añadir nuevas tablas de Roles y Permisos
 
--- Tabla: DB_User
-CREATE TABLE DB_User (
-    ID_DBUser CHAR(8) PRIMARY KEY,
-    DBUserName VARCHAR(20),
-    Contrasena CHAR(12)
-);
 
-
--- Clave foránea en Auditoria hacia Tipo_Accion y Usuario
-ALTER TABLE Auditoria
-ADD CONSTRAINT FK_Auditoria_TipoAccion
-FOREIGN KEY (ID_TipoAccion) REFERENCES Tipo_Accion(ID_TipoAccion);
-
-ALTER TABLE Auditoria
-ADD CONSTRAINT FK_Auditoria_Usuario
-FOREIGN KEY (ID_Usuario) REFERENCES Usuarios(ID_Usuario);
-
-ALTER TABLE Auditoria
-ADD CONSTRAINT FK_Auditoria_DBUser
-FOREIGN KEY (ID_DBUser) REFERENCES DB_User(ID_DBUser);
-GO
 
 -- Tabla: Dentista
 CREATE TABLE Dentista (
@@ -311,14 +285,7 @@ CREATE TABLE Permisos (
     Descripcion VARCHAR(200)
 );
 
--- Tabla: Roles_DBUser (relación muchos a muchos entre DB_User y Roles)
-CREATE TABLE Roles_DBUser (
-    ID_Roles_DBUser CHAR(8) PRIMARY KEY,
-    ID_Roles CHAR(8),
-    ID_DBUser CHAR(8),
-    FOREIGN KEY (ID_Roles) REFERENCES Roles(ID_Roles),
-    FOREIGN KEY (ID_DBUser) REFERENCES DB_User(ID_DBUser)
-);
+
 
 -- Tabla: Roles_Permisos (relación muchos a muchos entre Roles y Permisos)
 CREATE TABLE Roles_Permisos (
@@ -339,3 +306,5 @@ CREATE TABLE Usuario_Roles (
 );
 
 GO
+
+
