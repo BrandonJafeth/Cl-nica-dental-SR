@@ -100,6 +100,33 @@ CREATE TABLE Estado_Tratamiento (
     Descripcion_Estado VARCHAR(200)
 ) ON TratamientosFileGroup;
 
+-- Tabla: Paciente (sin clave foránea inicialmente)
+CREATE TABLE Paciente (
+    ID_Paciente CHAR(8) PRIMARY KEY,
+    Nombre_Pac VARCHAR(20),
+    Apellido1_Pac VARCHAR(20),
+    Apellido2_Pac VARCHAR(20),
+    Fecha_Nacimiento_Pac DATE,
+    Telefono_Pac VARCHAR(20),
+    Correo_Pac VARCHAR(30),
+    Direccion_Pac VARCHAR(200)
+) ON PacientesFileGroup;
+
+-- Tabla: Historial_Medico (sin clave foránea inicialmente)
+CREATE TABLE Historial_Medico (
+    ID_HistorialMedico CHAR(8) PRIMARY KEY,
+    Fecha_Historial DATE,
+    Diagnostico VARCHAR(100),
+    ID_Paciente CHAR(8) UNIQUE
+) ON PacientesFileGroup;
+
+-- Agregar claves foráneas después de crear ambas tablas
+ALTER TABLE Historial_Medico
+ADD CONSTRAINT FK_HistorialMedico_Paciente
+FOREIGN KEY (ID_Paciente) REFERENCES Paciente(ID_Paciente);
+
+
+
 -- Tabla: Tratamiento
 CREATE TABLE Tratamiento (
     ID_Tratamiento CHAR(8) PRIMARY KEY,
@@ -110,120 +137,6 @@ CREATE TABLE Tratamiento (
     FOREIGN KEY (ID_TipoTratamiento) REFERENCES Tipo_Tratamiento(ID_TipoTratamiento),
     FOREIGN KEY (ID_EstadoTratamiento) REFERENCES Estado_Tratamiento(ID_EstadoTratamiento)
 ) ON TratamientosFileGroup;
-
--- Tabla: Procedimiento
-CREATE TABLE Procedimiento (
-    ID_Procedimiento CHAR(8) PRIMARY KEY,
-    Fecha_Proc DATE,
-    Detalles_Proc VARCHAR(200),
-    Hora_Inicio_Proc TIME,
-    Hora_Fin_Proc TIME,
-    ID_Tratamiento CHAR(8),
-    FOREIGN KEY (ID_Tratamiento) REFERENCES Tratamiento(ID_Tratamiento)
-) ON TratamientosFileGroup;
-
--- Tabla: Estado_Cuenta
-CREATE TABLE Estado_Cuenta (
-    ID_Estado_Cuenta CHAR(8) PRIMARY KEY,
-    Nombre_EC VARCHAR(20),
-    Descripcion_EC VARCHAR(200)
-) ON FinancierosFileGroup;
-
--- Tabla: Factura
-CREATE TABLE Factura (
-    ID_Factura UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
-    MontoTotal_Fa MONEY,
-    FechaEmision_Fa DATE,
-    ID_EstadoPago CHAR(8),
-    FOREIGN KEY (ID_EstadoPago) REFERENCES Estado_Pago(ID_EstadoPago)
-) ON FinancierosFileGroup;
-
--- Tabla: Tipo_Pago
-CREATE TABLE Tipo_Pago (
-    ID_Tipo_Pago CHAR(8) PRIMARY KEY,
-    Nombre_TP VARCHAR(20),
-    Descripcion_TP VARCHAR(200)
-) ON FinancierosFileGroup;
-
--- Tabla: Pago
-CREATE TABLE Pago (
-    ID_Pago UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
-    Monto_Pago MONEY,
-    Fecha_Pago DATE,
-    ID_Factura UNIQUEIDENTIFIER,
-    ID_Tipo_Pago CHAR(8),
-    FOREIGN KEY (ID_Factura) REFERENCES Factura(ID_Factura),
-    FOREIGN KEY (ID_Tipo_Pago) REFERENCES Tipo_Pago(ID_Tipo_Pago)
-) ON FinancierosFileGroup;
-
--- Tabla: Paciente
-CREATE TABLE Paciente (
-    ID_Paciente CHAR(8) PRIMARY KEY,
-    Nombre_Pac VARCHAR(20),
-    Apellido1_Pac VARCHAR(20),
-    Apellido2_Pac VARCHAR(20),
-    Fecha_Nacimiento_Pac DATE,
-    Telefono_Pac VARCHAR(20),
-    Correo_Pac VARCHAR(30),
-    Direccion_Pac VARCHAR(200),
-    ID_HistorialMedico CHAR(8)
-) ON PacientesFileGroup;
-
--- Tabla: Historial_Medico
-CREATE TABLE Historial_Medico (
-    ID_HistorialMedico CHAR(8) PRIMARY KEY,
-    Fecha_Historial DATE,
-    Diagnostico VARCHAR(100),
-    Tratamientos_Medicos VARCHAR(200)
-) ON PacientesFileGroup;
-
--- Clave foránea de Historial_Medico en Paciente
-ALTER TABLE Paciente
-ADD CONSTRAINT FK_Paciente_HistorialMedico
-FOREIGN KEY (ID_HistorialMedico) REFERENCES Historial_Medico(ID_HistorialMedico);
-
--- Tabla: Cuenta
-CREATE TABLE Cuenta (
-    ID_Cuenta CHAR(8) PRIMARY KEY,
-    Saldo_Total MONEY,
-    Fecha_Apertura DATE,
-    Fecha_Cierre DATE,
-    Fecha_Ultima_Actualizacion DATE,
-    Observaciones VARCHAR(255),
-    ID_Estado_Cuenta CHAR(8),
-    ID_Factura UNIQUEIDENTIFIER,
-    ID_Paciente CHAR(8),
-    FOREIGN KEY (ID_Estado_Cuenta) REFERENCES Estado_Cuenta(ID_Estado_Cuenta),
-    FOREIGN KEY (ID_Factura) REFERENCES Factura(ID_Factura),
-    FOREIGN KEY (ID_Paciente) REFERENCES Paciente(ID_Paciente)
-) ON FinancierosFileGroup;
-
--- Tabla: Factura_Procedimiento
-CREATE TABLE Factura_Procedimiento (
-    ID_Factura_Procedimiento UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
-    ID_Factura UNIQUEIDENTIFIER,
-    ID_Procedimiento CHAR(8),
-    FOREIGN KEY (ID_Factura) REFERENCES Factura(ID_Factura),
-    FOREIGN KEY (ID_Procedimiento) REFERENCES Procedimiento(ID_Procedimiento)
-) ON FinancierosFileGroup;
-
--- Tabla: Factura_Tratamiento
-CREATE TABLE Factura_Tratamiento (
-    ID_Factura_Tratamiento UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
-    ID_Factura UNIQUEIDENTIFIER,
-    ID_Tratamiento CHAR(8),
-    FOREIGN KEY (ID_Factura) REFERENCES Factura(ID_Factura),
-    FOREIGN KEY (ID_Tratamiento) REFERENCES Tratamiento(ID_Tratamiento)
-) ON FinancierosFileGroup;
-
--- Tabla: Auditoria
-CREATE TABLE Auditoria (
-    ID_Auditoria UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
-    Fecha_Hora_Accion DATETIME NOT NULL,
-    Accion VARCHAR(255) NOT NULL,
-    DispositivoQueRealizo VARCHAR(50) NOT NULL,
-    Usuario VARCHAR(128) NOT NULL
-) ON AuditoriaFileGroup;
 
 -- Tabla: Funcionario
 CREATE TABLE Funcionario (
@@ -285,6 +198,69 @@ CREATE TABLE Estado_Citas (
     Descripcion_Estado VARCHAR(200)
 ) ON CitasFileGroup;
 
+-- Tabla: Estado_Cuenta
+CREATE TABLE Estado_Cuenta (
+    ID_Estado_Cuenta CHAR(8) PRIMARY KEY,
+    Nombre_EC VARCHAR(20),
+    Descripcion_EC VARCHAR(200)
+) ON FinancierosFileGroup;
+
+-- Tabla: Tipo_Pago
+CREATE TABLE Tipo_Pago (
+    ID_Tipo_Pago CHAR(8) PRIMARY KEY,
+    Nombre_TP VARCHAR(20),
+    Descripcion_TP VARCHAR(200)
+) ON FinancierosFileGroup;
+
+-- Tabla: Factura
+CREATE TABLE Factura (
+    ID_Factura CHAR(8) PRIMARY KEY,
+    MontoTotal_Fa MONEY,
+    FechaEmision_Fa DATE,
+    ID_EstadoPago CHAR(8),
+    FOREIGN KEY (ID_EstadoPago) REFERENCES Estado_Pago(ID_EstadoPago)
+) ON FinancierosFileGroup;
+
+-- Tabla: Pago
+CREATE TABLE Pago (
+    ID_Pago UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    Monto_Pago MONEY,
+    Fecha_Pago DATE,
+    ID_Factura CHAR(8),
+    ID_Tipo_Pago CHAR(8),
+    FOREIGN KEY (ID_Factura) REFERENCES Factura(ID_Factura),
+    FOREIGN KEY (ID_Tipo_Pago) REFERENCES Tipo_Pago(ID_Tipo_Pago)
+) ON FinancierosFileGroup;
+
+-- Tabla: Cuenta
+CREATE TABLE Cuenta (
+    ID_Cuenta CHAR(8) PRIMARY KEY,
+    Saldo_Total MONEY,
+    Fecha_Apertura DATE,
+    Fecha_Cierre DATE,
+    Fecha_Ultima_Actualizacion DATE,
+    Observaciones VARCHAR(255),
+    ID_Estado_Cuenta CHAR(8),
+    ID_Factura CHAR(8),
+    ID_Paciente CHAR(8),
+    FOREIGN KEY (ID_Estado_Cuenta) REFERENCES Estado_Cuenta(ID_Estado_Cuenta),
+    FOREIGN KEY (ID_Factura) REFERENCES Factura(ID_Factura),
+    FOREIGN KEY (ID_Paciente) REFERENCES Paciente(ID_Paciente)
+) ON FinancierosFileGroup;
+
+-- Tabla: Procedimiento
+CREATE TABLE Procedimiento (
+    ID_Procedimiento CHAR(8) PRIMARY KEY,
+    Fecha_Proc DATE,
+    Detalles_Proc VARCHAR(200),
+    Hora_Inicio_Proc TIME,
+    Hora_Fin_Proc TIME,
+    ID_Tratamiento CHAR(8),
+    ID_Paciente CHAR(8),
+    FOREIGN KEY (ID_Tratamiento) REFERENCES Tratamiento(ID_Tratamiento),
+    FOREIGN KEY (ID_Paciente) REFERENCES Paciente(ID_Paciente)
+) ON TratamientosFileGroup;
+
 -- Tabla: Cita
 CREATE TABLE Cita (
     ID_Cita CHAR(8) PRIMARY KEY,
@@ -298,12 +274,9 @@ CREATE TABLE Cita (
     ID_EstadoCita CHAR(8),
     FOREIGN KEY (ID_Paciente) REFERENCES Paciente(ID_Paciente),
     FOREIGN KEY (ID_Dentista) REFERENCES Dentista(ID_Dentista),
-    FOREIGN KEY (ID_Funcionario) REFERENCES Funcionario(ID_Funcionario)
+    FOREIGN KEY (ID_Funcionario) REFERENCES Funcionario(ID_Funcionario),
+    FOREIGN KEY (ID_EstadoCita) REFERENCES Estado_Citas(ID_EstadoCita)
 ) ON CitasFileGroup;
-
-ALTER TABLE Cita
-ADD CONSTRAINT FK_Cita_EstadoCita
-FOREIGN KEY (ID_EstadoCita) REFERENCES Estado_Citas(ID_EstadoCita);
 
 -- Tabla: Historial_Tratamiento
 CREATE TABLE Historial_Tratamiento (
@@ -329,7 +302,7 @@ CREATE TABLE Permisos (
     Descripcion VARCHAR(200)
 ) ON RolesPermisosFileGroup;
 
--- Tabla: Roles_Permisos (relación muchos a muchos entre Roles y Permisos)
+-- Tabla: Roles_Permisos
 CREATE TABLE Roles_Permisos (
     ID_Roles_Permisos CHAR(8) PRIMARY KEY,
     ID_Roles CHAR(8),
@@ -338,7 +311,7 @@ CREATE TABLE Roles_Permisos (
     FOREIGN KEY (ID_Permisos) REFERENCES Permisos(ID_Permisos)
 ) ON RolesPermisosFileGroup;
 
--- Tabla: Usuario_Roles (relación entre los usuarios y sus roles)
+-- Tabla: Usuario_Roles
 CREATE TABLE Usuario_Roles (
     ID_Usuario_Roles CHAR(8) PRIMARY KEY,
     ID_Usuario CHAR(8),
@@ -347,4 +320,31 @@ CREATE TABLE Usuario_Roles (
     FOREIGN KEY (ID_Roles) REFERENCES Roles(ID_Roles)
 ) ON RolesPermisosFileGroup;
 
+-- Tabla: Factura_Procedimiento
+CREATE TABLE Factura_Procedimiento (
+    ID_Factura_Procedimiento CHAR(8) PRIMARY KEY,
+    ID_Factura CHAR(8),
+    ID_Procedimiento CHAR(8),
+    FOREIGN KEY (ID_Factura) REFERENCES Factura(ID_Factura),
+    FOREIGN KEY (ID_Procedimiento) REFERENCES Procedimiento(ID_Procedimiento)
+) ON FinancierosFileGroup;
+
+-- Tabla: Factura_Tratamiento
+CREATE TABLE Factura_Tratamiento (
+    ID_Factura_Tratamiento CHAR(8) PRIMARY KEY,
+    ID_Factura CHAR(8),
+    ID_Tratamiento CHAR(8),
+    FOREIGN KEY (ID_Factura) REFERENCES Factura(ID_Factura),
+    FOREIGN KEY (ID_Tratamiento) REFERENCES Tratamiento(ID_Tratamiento)
+) ON FinancierosFileGroup;
+
+-- Tabla: Auditoria
+CREATE TABLE Auditoria (
+    ID_Auditoria UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    Fecha_Hora_Accion DATETIME NOT NULL,
+    Accion VARCHAR(255) NOT NULL,
+    DispositivoQueRealizo VARCHAR(50) NOT NULL,
+    Usuario VARCHAR(128) NOT NULL
+) ON AuditoriaFileGroup;
 GO
+
