@@ -9,14 +9,14 @@ RETURNS INT
 AS
 BEGIN
     RETURN (
-        SELECT COUNT(DISTINCT HT.ID_Tratamiento)
-        FROM Historial_Tratamiento HT
-        INNER JOIN Historial_Medico HM ON HT.ID_HistorialMedico = HM.ID_HistorialMedico
-        INNER JOIN Paciente P ON HM.ID_HistorialMedico = P.ID_HistorialMedico
+        SELECT COUNT(DISTINCT T.ID_Tratamiento)
+        FROM Procedimiento P
+        INNER JOIN Tratamiento T ON P.ID_Tratamiento = T.ID_Tratamiento
         WHERE P.ID_Paciente = @ID_Paciente
     );
 END;
 GO
+
 
 DROP FUNCTION IF EXISTS fn_SaldoPendiente;
 GO
@@ -57,14 +57,13 @@ RETURNS INT
 AS
 BEGIN
     RETURN (
-        SELECT COUNT(HT.ID_Tratamiento)
-        FROM Historial_Tratamiento HT
-        INNER JOIN Historial_Medico HM ON HT.ID_HistorialMedico = HM.ID_HistorialMedico
-        INNER JOIN Paciente P ON HM.ID_HistorialMedico = P.ID_HistorialMedico
+        SELECT COUNT(P.ID_Tratamiento)
+        FROM Procedimiento P
         WHERE P.ID_Paciente = @ID_Paciente
     );
 END;
 GO
+
 
 -- Función: fn_CostoTotalTratamientos
 -- Descripción: Calcula el costo total de los tratamientos realizados a un paciente.
@@ -121,10 +120,8 @@ GO
 
 -- Función: fn_UltimaAccionUsuario
 -- Descripción: Consulta la última acción registrada por un usuario específico en la tabla de auditoría.
-
 DROP FUNCTION IF EXISTS dbo.fn_UltimaAccionUsuario;
 GO
-
 CREATE FUNCTION dbo.fn_UltimaAccionUsuario (
     @Usuario VARCHAR(128)
 )
@@ -278,27 +275,26 @@ RETURN
     WHERE P.ID_Paciente = @ID_Paciente
 );
 GO
-
 -- Consultas para probar las funciones
 
 -- Probar fn_ContarTratamientosPorPaciente
-SELECT dbo.fn_ContarTratamientosPorPaciente('PAC00001') AS TotalTratamientosPorPaciente;
+SELECT dbo.fn_ContarTratamientosPorPaciente('PA000001') AS TotalTratamientosPorPaciente;
 GO
 
 -- Probar fn_SaldoPendiente
-SELECT dbo.fn_SaldoPendiente('PAC00001') AS SaldoPendiente;
+SELECT dbo.fn_SaldoPendiente('PA000001') AS SaldoPendiente;
 GO
 
 -- Probar fn_TotalTratamientos
-SELECT dbo.fn_TotalTratamientos('PAC00001') AS TotalTratamientos;
+SELECT dbo.fn_TotalTratamientos('PA000001') AS TotalTratamientos;
 GO
 
 -- Probar fn_CostoTotalTratamientos
-SELECT dbo.fn_CostoTotalTratamientos('PAC00001') AS CostoTotalTratamientos;
+SELECT dbo.fn_CostoTotalTratamientos('PA000001') AS CostoTotalTratamientos;
 GO
 
 -- Calcular la edad del paciente con ID 'PAC00001'
-SELECT dbo.fn_EdadPacientePorID('PAC00001') AS EdadPaciente;
+SELECT dbo.fn_EdadPacientePorID('PA000001') AS EdadPaciente;
 GO
 
 -- Probar fn_UsuarioActual
@@ -312,7 +308,7 @@ GO
 
 
 -- Probar fn_NombreCompletoPaciente
-SELECT dbo.fn_NombreCompletoPaciente('PAC00001') AS NombreCompletoPaciente;
+SELECT dbo.fn_NombreCompletoPaciente('PA000001') AS NombreCompletoPaciente;
 GO
 
 -- Probar fn_FormatoFecha
@@ -320,20 +316,19 @@ SELECT dbo.fn_FormatoFecha('2024-10-31') AS FechaFormateada;
 GO
 
 -- Probar fn_EstadoCita
-SELECT dbo.fn_EstadoCita('CITA0001') AS EstadoCita;
+SELECT dbo.fn_EstadoCita('CI000001') AS EstadoCita;
 GO
 
 -- Probar fn_ProximaCitaPaciente
-SELECT * FROM fn_ProximaCitaPaciente('PAC00001');
+SELECT * FROM fn_ProximaCitaPaciente('PA000001');
 GO
 
 -- Probar fn_DentistaMasCitas
-SELECT * FROM fn_DentistaMasCitas('2024-11-01', '2024-11-30');
+SELECT * FROM fn_DentistaMasCitas('2023-10-03', '2024-11-30');
 GO
 
 -- Probar fn_ResumenFacturacion
-SELECT * FROM fn_ResumenFacturacion('PAC00001');
+SELECT * FROM fn_ResumenFacturacion('PA000001');
 GO
 
 
-Select * from Auditoria
