@@ -19,8 +19,8 @@ class HistorialTratamientoService extends ApiService<HistorialTratamiento> {
     return this.create('/HistorialTratamiento', data);
   }
 
-  public updateHistorialTratamiento(id: string, data: Partial<HistorialTratamiento>) {
-    return this.patch('/HistorialTratamiento', id, data);
+  public updateHistorialTratamiento(id: string, data: HistorialTratamiento) {
+    return this.update('/HistorialTratamiento', id, data);
   }
 
   public deleteHistorialTratamiento(id: string) {

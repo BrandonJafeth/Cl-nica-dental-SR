@@ -20,7 +20,7 @@ class PermisosService extends ApiService<Permisos> {
   }
 
   public updatePermiso(id: string, data: Partial<Permisos>) {
-    return this.patch('/Permisos', id, data);
+    return this.update('/Permisos', id, data);
   }
 
   public deletePermiso(id: string) {

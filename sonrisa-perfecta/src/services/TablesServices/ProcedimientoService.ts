@@ -19,7 +19,7 @@ class ProcedimientoService extends ApiService<Procedimiento> {
   }
 
   public updateProcedimiento(id: string, data: Partial<Procedimiento>) {
-    return this.patch('/Procedimiento', id, data);
+    return this.update('/Procedimiento', id, data);
   }
 
   public deleteProcedimiento(id: string) {

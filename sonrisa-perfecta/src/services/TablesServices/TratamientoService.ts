@@ -20,7 +20,7 @@ class TratamientoService extends ApiService<Tratamiento> {
   }
 
   public updateTratamiento(id: string, data: Partial<Tratamiento>) {
-    return this.patch('/Tratamiento', id, data);
+    return this.update('/Tratamiento', id, data);
   }
 
   public deleteTratamiento(id: string) {

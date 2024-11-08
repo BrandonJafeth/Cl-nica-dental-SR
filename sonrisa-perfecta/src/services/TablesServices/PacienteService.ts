@@ -22,7 +22,7 @@ class PacienteService extends ApiService<Paciente> {
   }
 
   public updatePaciente(id: string, data: Partial<Paciente>) {
-    return this.patch('/Paciente', id, data);
+    return this.update('/Paciente', id, data);
   }
 
   public deletePaciente(id: string) {

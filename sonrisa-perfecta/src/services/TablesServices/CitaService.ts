@@ -20,7 +20,7 @@ class CitaService extends ApiService<Cita> {
   }
 
   public updateCita(id: string, data: Partial<Cita>) {
-    return this.patch('/Cita', id, data);
+    return this.update('/Cita', id, data);
   }
 
   public deleteCita(id: string) {

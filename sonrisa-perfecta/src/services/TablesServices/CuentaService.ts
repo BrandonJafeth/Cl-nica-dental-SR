@@ -19,7 +19,7 @@ class CuentaService extends ApiService<Cuenta> {
   }
 
   public updateCuenta(id: string, data: Partial<Cuenta>) {
-    return this.patch('/Cuenta', id, data);
+    return this.update('/Cuenta', id, data);
   }
 
   public deleteCuenta(id: string) {

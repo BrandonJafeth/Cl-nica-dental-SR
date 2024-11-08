@@ -21,7 +21,7 @@ class EstadoPagoService extends ApiService<EstadoPago> {
   }
 
   public updateEstadoPago(id: string, data: Partial<EstadoPago>) {
-    return this.patch('/EstadoPago', id, data);
+    return this.update('/EstadoPago', id, data);
   }
 
   public deleteEstadoPago(id: string) {

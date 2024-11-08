@@ -21,7 +21,7 @@ class DentistaService extends ApiService<Dentista> {
   }
 
   public updateDentista(id: string, data: Partial<Dentista>) {
-    return this.patch('/Dentista', id, data);
+    return this.update('/Dentista', id, data);
   }
 
   public deleteDentista(id: string) {

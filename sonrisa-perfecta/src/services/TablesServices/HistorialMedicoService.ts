@@ -19,7 +19,7 @@ class HistorialMedicoService extends ApiService<HistorialMedico> {
   }
 
   public updateHistorialMedico(id: string, data: Partial<HistorialMedico>) {
-    return this.patch('/HistorialMedico', id, data);
+    return this.update('/HistorialMedico', id, data);
   }
 
   public deleteHistorialMedico(id: string) {

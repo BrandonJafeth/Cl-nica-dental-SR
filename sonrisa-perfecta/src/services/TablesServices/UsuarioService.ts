@@ -20,7 +20,7 @@ class UsuarioService extends ApiService<Usuarios> {
   }
 
   public updateUsuario(id: string, data: Partial<Usuarios>) {
-    return this.patch('/Usuario', id, data);
+    return this.update('/Usuario', id, data);
   }
 
   public deleteUsuario(id: string) {

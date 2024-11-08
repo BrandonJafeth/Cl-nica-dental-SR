@@ -20,7 +20,7 @@ class FuncionarioService extends ApiService<Funcionario> {
   }
 
   public updateFuncionario(id: string, data: Partial<Funcionario>) {
-    return this.patch('/Funcionario', id, data);
+    return this.update('/Funcionario', id, data);
   }
 
   public deleteFuncionario(id: string) {

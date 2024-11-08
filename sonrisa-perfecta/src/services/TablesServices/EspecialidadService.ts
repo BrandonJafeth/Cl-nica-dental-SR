@@ -20,7 +20,7 @@ class EspecialidadService extends ApiService<Especialidad> {
   }
 
   public updateEspecialidad(id: string, data: Partial<Especialidad>) {
-    return this.patch('/Especialidad', id, data);
+    return this.update('/Especialidad', id, data);
   }
 
   public deleteEspecialidad(id: string) {

@@ -20,7 +20,7 @@ class EstadoCitasService extends ApiService<EstadoCitas> {
   }
 
   public updateEstadoCita(id: string, data: Partial<EstadoCitas>) {
-    return this.patch('/EstadoCitas', id, data);
+    return this.update('/EstadoCitas', id, data);
   }
 
   public deleteEstadoCita(id: string) {

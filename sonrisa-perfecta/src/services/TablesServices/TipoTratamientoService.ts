@@ -20,7 +20,7 @@ class TipoTratamientoService extends ApiService<TipoTratamiento> {
   }
 
   public updateTipoTratamiento(id: string, data: Partial<TipoTratamiento>) {
-    return this.patch('/TipoTratamiento', id, data);
+    return this.update('/TipoTratamiento', id, data);
   }
 
   public deleteTipoTratamiento(id: string) {

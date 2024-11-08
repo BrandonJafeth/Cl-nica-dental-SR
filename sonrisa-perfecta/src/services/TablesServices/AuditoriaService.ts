@@ -20,7 +20,7 @@ class AuditoriaService extends ApiService<Auditoria> {
   }
 
   public updateAuditoria(id: string, data: Partial<Auditoria>) {
-    return this.patch('/Auditoria', id, data);
+    return this.update('/Auditoria', id, data);
   }
 
   public deleteAuditoria(id: string) {

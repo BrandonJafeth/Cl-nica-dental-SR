@@ -19,7 +19,7 @@ class FacturaService extends ApiService<Factura> {
   }
 
   public updateFactura(id: string, data: Partial<Factura>) {
-    return this.patch('/Factura', id, data);
+    return this.update('/Factura', id, data);
   }
 
   public deleteFactura(id: string) {
