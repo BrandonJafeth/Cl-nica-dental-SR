@@ -1,9 +1,24 @@
-
+using Application.GenericService;
+using Domain.Interfaces.Generic;
 using Infraestructure.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
+
+
+builder.Services.AddScoped(typeof(ISvGeneric<>), typeof(SvGeneric<>));
+
 
 builder.Services.AddInfrastructure(builder.Configuration);
 
@@ -23,8 +38,12 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors();
+
 app.UseAuthorization();
 
 app.MapControllers();
 
 app.Run();
+
+
