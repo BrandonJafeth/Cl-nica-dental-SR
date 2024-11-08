@@ -16,9 +16,9 @@ public partial class MydDbContext : DbContext
     {
     }
 
-    public virtual DbSet<Auditorium> Auditoria { get; set; }
+    public virtual DbSet<Auditoria> Auditoria { get; set; }
 
-    public virtual DbSet<Citum> Cita { get; set; }
+    public virtual DbSet<Cita> Cita { get; set; }
 
     public virtual DbSet<Cuenta> Cuenta { get; set; }
 
@@ -96,7 +96,7 @@ public partial class MydDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Auditorium>(entity =>
+        modelBuilder.Entity<Auditoria>(entity =>
         {
             entity.HasKey(e => e.ID_Auditoria).HasName("PK__Auditori__2C0A46DBE6581F43");
 
@@ -113,7 +113,7 @@ public partial class MydDbContext : DbContext
                 .IsUnicode(false);
         });
 
-        modelBuilder.Entity<Citum>(entity =>
+        modelBuilder.Entity<Cita>(entity =>
         {
             entity.HasKey(e => e.ID_Cita).HasName("PK__Cita__7C17FD160E32939C");
 

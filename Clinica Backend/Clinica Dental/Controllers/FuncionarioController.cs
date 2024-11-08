@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+﻿using Application.GenericService;
+using Clinica_Dental;
+using Domain.Interfaces.Generic;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Clinica_Dental.Controllers
 {
@@ -8,36 +11,63 @@ namespace Clinica_Dental.Controllers
     [ApiController]
     public class FuncionarioController : ControllerBase
     {
-        // GET: api/<FuncionarioController>
+        private readonly ISvGeneric<Funcionario> _service;
+
+        public FuncionarioController(ISvGeneric<Funcionario> service)
+        {
+            _service = service;
+        }
+
+        // GET: api/Funcionario
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult<IEnumerable<Funcionario>>> Get()
         {
-            return new string[] { "value1", "value2" };
+            var result = await _service.GetAllAsync();
+            return Ok(result);
         }
 
-        // GET api/<FuncionarioController>/5
+        // GET: api/Funcionario/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<Funcionario>> Get(string id)
         {
-            return "value";
+            var result = await _service.GetByIdAsync(id);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
         }
 
-        // POST api/<FuncionarioController>
+        // POST: api/Funcionario
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult> Post([FromBody] Funcionario funcionario)
         {
+            await _service.AddAsync(funcionario);
+            await _service.SaveChangesAsync();
+            return CreatedAtAction(nameof(Get), new { id = funcionario.ID_Funcionario }, funcionario);
         }
 
-        // PUT api/<FuncionarioController>/5
+        // PUT: api/Funcionario/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ActionResult> Put(string id, [FromBody] Funcionario funcionario)
         {
+            if (id != funcionario.ID_Funcionario)
+            {
+                return BadRequest();
+            }
+
+            await _service.UpdateAsync(funcionario);
+            await _service.SaveChangesAsync();
+            return NoContent();
         }
 
-        // DELETE api/<FuncionarioController>/5
+        // DELETE: api/Funcionario/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> Delete(string id)
         {
+            await _service.DeleteAsync(id);
+            await _service.SaveChangesAsync();
+            return NoContent();
         }
     }
 }

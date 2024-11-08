@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+﻿using Application.GenericService;
+using Clinica_Dental;
+using Domain.Interfaces.Generic;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Clinica_Dental.Controllers
 {
@@ -8,36 +11,63 @@ namespace Clinica_Dental.Controllers
     [ApiController]
     public class PacienteController : ControllerBase
     {
-        // GET: api/<PacienteController>
+        private readonly ISvGeneric<Paciente> _service;
+
+        public PacienteController(ISvGeneric<Paciente> service)
+        {
+            _service = service;
+        }
+
+        // GET: api/Paciente
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult<IEnumerable<Paciente>>> Get()
         {
-            return new string[] { "value1", "value2" };
+            var result = await _service.GetAllAsync();
+            return Ok(result);
         }
 
-        // GET api/<PacienteController>/5
+        // GET: api/Paciente/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<Paciente>> Get(string id)
         {
-            return "value";
+            var result = await _service.GetByIdAsync(id);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
         }
 
-        // POST api/<PacienteController>
+        // POST: api/Paciente
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult> Post([FromBody] Paciente paciente)
         {
+            await _service.AddAsync(paciente);
+            await _service.SaveChangesAsync();
+            return CreatedAtAction(nameof(Get), new { id = paciente.ID_Paciente }, paciente);
         }
 
-        // PUT api/<PacienteController>/5
+        // PUT: api/Paciente/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ActionResult> Put(string id, [FromBody] Paciente paciente)
         {
+            if (id != paciente.ID_Paciente)
+            {
+                return BadRequest();
+            }
+
+            await _service.UpdateAsync(paciente);
+            await _service.SaveChangesAsync();
+            return NoContent();
         }
 
-        // DELETE api/<PacienteController>/5
+        // DELETE: api/Paciente/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> Delete(string id)
         {
+            await _service.DeleteAsync(id);
+            await _service.SaveChangesAsync();
+            return NoContent();
         }
     }
 }

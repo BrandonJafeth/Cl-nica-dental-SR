@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+﻿using Application.GenericService;
+using Clinica_Dental;
+using Domain.Interfaces.Generic;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Clinica_Dental.Controllers
 {
@@ -8,36 +11,63 @@ namespace Clinica_Dental.Controllers
     [ApiController]
     public class Historial_TratamientoController : ControllerBase
     {
-        // GET: api/<Historial_TratamientoController>
+        private readonly ISvGeneric<Historial_Tratamiento> _service;
+
+        public Historial_TratamientoController(ISvGeneric<Historial_Tratamiento> service)
+        {
+            _service = service;
+        }
+
+        // GET: api/Historial_Tratamiento
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult<IEnumerable<Historial_Tratamiento>>> Get()
         {
-            return new string[] { "value1", "value2" };
+            var result = await _service.GetAllAsync();
+            return Ok(result);
         }
 
-        // GET api/<Historial_TratamientoController>/5
+        // GET: api/Historial_Tratamiento/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<Historial_Tratamiento>> Get(string id)
         {
-            return "value";
+            var result = await _service.GetByIdAsync(id);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
         }
 
-        // POST api/<Historial_TratamientoController>
+        // POST: api/Historial_Tratamiento
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult> Post([FromBody] Historial_Tratamiento historialTratamiento)
         {
+            await _service.AddAsync(historialTratamiento);
+            await _service.SaveChangesAsync();
+            return CreatedAtAction(nameof(Get), new { id = historialTratamiento.ID_Historial_Tratamiento }, historialTratamiento);
         }
 
-        // PUT api/<Historial_TratamientoController>/5
+        // PUT: api/Historial_Tratamiento/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ActionResult> Put(string id, [FromBody] Historial_Tratamiento historialTratamiento)
         {
+            if (id != historialTratamiento.ID_Historial_Tratamiento)
+            {
+                return BadRequest();
+            }
+
+            await _service.UpdateAsync(historialTratamiento);
+            await _service.SaveChangesAsync();
+            return NoContent();
         }
 
-        // DELETE api/<Historial_TratamientoController>/5
+        // DELETE: api/Historial_Tratamiento/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> Delete(string id)
         {
+            await _service.DeleteAsync(id);
+            await _service.SaveChangesAsync();
+            return NoContent();
         }
     }
 }

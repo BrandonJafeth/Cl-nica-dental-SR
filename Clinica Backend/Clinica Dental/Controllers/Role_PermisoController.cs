@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+﻿using Application.GenericService;
+using Clinica_Dental;
+using Domain.Interfaces.Generic;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Clinica_Dental.Controllers
 {
@@ -8,36 +11,64 @@ namespace Clinica_Dental.Controllers
     [ApiController]
     public class Role_PermisoController : ControllerBase
     {
-        // GET: api/<Role_PermisoController>
+        private readonly ISvGeneric<Roles_Permiso> _service;
+
+        public Role_PermisoController(ISvGeneric<Roles_Permiso> service)
+        {
+            _service = service;
+        }
+
+        // GET: api/Role_Permiso
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult<IEnumerable<Roles_Permiso>>> Get()
         {
-            return new string[] { "value1", "value2" };
+            var result = await _service.GetAllAsync();
+            return Ok(result);
         }
 
-        // GET api/<Role_PermisoController>/5
+        // GET: api/Role_Permiso/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<Roles_Permiso>> Get(string id)
         {
-            return "value";
+            var result = await _service.GetByIdAsync(id);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
         }
 
-        // POST api/<Role_PermisoController>
+        // POST: api/Role_Permiso
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult> Post([FromBody] Roles_Permiso rolesPermiso)
         {
+            await _service.AddAsync(rolesPermiso);
+            await _service.SaveChangesAsync();
+            return CreatedAtAction(nameof(Get), new { id = rolesPermiso.ID_Roles_Permisos }, rolesPermiso);
         }
 
-        // PUT api/<Role_PermisoController>/5
+        // PUT: api/Role_Permiso/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ActionResult> Put(string id, [FromBody] Roles_Permiso rolesPermiso)
         {
+            if (id != rolesPermiso.ID_Roles_Permisos)
+            {
+                return BadRequest();
+            }
+
+            await _service.UpdateAsync(rolesPermiso);
+            await _service.SaveChangesAsync();
+            return NoContent();
         }
 
-        // DELETE api/<Role_PermisoController>/5
+        // DELETE: api/Role_Permiso/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> Delete(string id)
         {
+            await _service.DeleteAsync(id);
+            await _service.SaveChangesAsync();
+            return NoContent();
         }
     }
 }
+
