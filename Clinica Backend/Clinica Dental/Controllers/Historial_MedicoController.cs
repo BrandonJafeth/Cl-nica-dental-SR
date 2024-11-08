@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+﻿using Application.GenericService;
+using Clinica_Dental;
+using Domain.Interfaces.Generic;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Clinica_Dental.Controllers
 {
@@ -8,36 +11,63 @@ namespace Clinica_Dental.Controllers
     [ApiController]
     public class Historial_MedicoController : ControllerBase
     {
-        // GET: api/<Historial_MedicoController>
+        private readonly ISvGeneric<Historial_Medico> _service;
+
+        public Historial_MedicoController(ISvGeneric<Historial_Medico> service)
+        {
+            _service = service;
+        }
+
+        // GET: api/Historial_Medico
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult<IEnumerable<Historial_Medico>>> Get()
         {
-            return new string[] { "value1", "value2" };
+            var result = await _service.GetAllAsync();
+            return Ok(result);
         }
 
-        // GET api/<Historial_MedicoController>/5
+        // GET: api/Historial_Medico/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<Historial_Medico>> Get(string id)
         {
-            return "value";
+            var result = await _service.GetByIdAsync(id);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
         }
 
-        // POST api/<Historial_MedicoController>
+        // POST: api/Historial_Medico
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult> Post([FromBody] Historial_Medico historialMedico)
         {
+            await _service.AddAsync(historialMedico);
+            await _service.SaveChangesAsync();
+            return CreatedAtAction(nameof(Get), new { id = historialMedico.ID_HistorialMedico }, historialMedico);
         }
 
-        // PUT api/<Historial_MedicoController>/5
+        // PUT: api/Historial_Medico/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ActionResult> Put(string id, [FromBody] Historial_Medico historialMedico)
         {
+            if (id != historialMedico.ID_HistorialMedico)
+            {
+                return BadRequest();
+            }
+
+            await _service.UpdateAsync(historialMedico);
+            await _service.SaveChangesAsync();
+            return NoContent();
         }
 
-        // DELETE api/<Historial_MedicoController>/5
+        // DELETE: api/Historial_Medico/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> Delete(string id)
         {
+            await _service.DeleteAsync(id);
+            await _service.SaveChangesAsync();
+            return NoContent();
         }
     }
 }

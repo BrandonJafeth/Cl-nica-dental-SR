@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+﻿using Application.GenericService;
+using Clinica_Dental;
+using Domain.Interfaces.Generic;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Clinica_Dental.Controllers
 {
@@ -8,36 +11,64 @@ namespace Clinica_Dental.Controllers
     [ApiController]
     public class PagoController : ControllerBase
     {
-        // GET: api/<PagoController>
+        private readonly ISvGeneric<Pago> _service;
+
+        public PagoController(ISvGeneric<Pago> service)
+        {
+            _service = service;
+        }
+
+        // GET: api/Pago
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult<IEnumerable<Pago>>> Get()
         {
-            return new string[] { "value1", "value2" };
+            var result = await _service.GetAllAsync();
+            return Ok(result);
         }
 
-        // GET api/<PagoController>/5
+        // GET: api/Pago/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<Pago>> Get(String id)
         {
-            return "value";
+            var result = await _service.GetByIdAsync(id);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
         }
 
-        // POST api/<PagoController>
+        // POST: api/Pago
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult> Post([FromBody] Pago pago)
         {
+            await _service.AddAsync(pago);
+            await _service.SaveChangesAsync();
+            return CreatedAtAction(nameof(Get), new { id = pago.ID_Pago }, pago);
         }
 
-        // PUT api/<PagoController>/5
+        // PUT: api/Pago/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ActionResult> Put(Guid id, [FromBody] Pago pago)
         {
+            if (id != pago.ID_Pago)
+            {
+                return BadRequest();
+            }
+
+            await _service.UpdateAsync(pago);
+            await _service.SaveChangesAsync();
+            return NoContent();
         }
 
-        // DELETE api/<PagoController>/5
+        // DELETE: api/Pago/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> Delete(String id)
         {
+            await _service.DeleteAsync(id);
+            await _service.SaveChangesAsync();
+            return NoContent();
         }
     }
 }
+
