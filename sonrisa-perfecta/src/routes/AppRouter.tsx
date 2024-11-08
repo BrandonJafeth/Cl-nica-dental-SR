@@ -5,7 +5,9 @@ import ClientsPage from '../pages/Managing/ClientsPage';
 import AppointmentsPage from '../pages/Managing/AppointmentsPage';
 import BillingPage from '../pages/Managing/BillingPage';
 import PandTPage from '../pages/Managing/P&TPage';
-import ContactPage from '../pages/Informative/ContactPage';
+import Login from '../pages/Auth/Login';
+import Register from '../pages/Auth/Register';
+
 
 
 const AppRouter: React.FC = () => {
@@ -13,11 +15,13 @@ const AppRouter: React.FC = () => {
         <Router>
             <Routes>
                 <Route path="/" element={<HomePage />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
                 <Route path="/clients" element={<ClientsPage />} />
                 <Route path="/appointments" element={<AppointmentsPage />} />
                 <Route path="/bills" element={<BillingPage / >} />
                 <Route path="/Treatments-Procedures" element={<PandTPage/>} />
-                <Route path="/contact" element={<ContactPage/>} />
+
             </Routes>
         </Router>
     );
