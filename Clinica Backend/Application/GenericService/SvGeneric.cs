@@ -26,7 +26,7 @@ namespace Application.GenericService
             return await _dbSet.ToListAsync();
         }
 
-        public async Task<T?> GetByIdAsync(int id)
+        public async Task<T?> GetByIdAsync(string id)
         {
             return await _dbSet.FindAsync(id);
         }
@@ -42,7 +42,7 @@ namespace Application.GenericService
             return Task.CompletedTask;
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(string id)
         {
             var entity = await _dbSet.FindAsync(id);
             if (entity != null)
