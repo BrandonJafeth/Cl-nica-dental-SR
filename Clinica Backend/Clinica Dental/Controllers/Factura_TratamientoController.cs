@@ -1,4 +1,4 @@
-﻿using Application.GenericService;
+using Application.GenericService;
 using Clinica_Dental;
 using Domain.Interfaces.Generic;
 using Microsoft.AspNetCore.Mvc;
