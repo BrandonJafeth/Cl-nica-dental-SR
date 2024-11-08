@@ -1,15 +1,39 @@
+USE master;
+GO
+
+-- Crear logins a nivel de servidor
+CREATE LOGIN usrAdmin WITH PASSWORD = 'ContraseñaSegura123!';
+CREATE LOGIN usrDentista WITH PASSWORD = 'ContraseñaSegura123!';
+CREATE LOGIN usrRecepcionista WITH PASSWORD = 'ContraseñaSegura123!';
+CREATE LOGIN usrAsistenteDental WITH PASSWORD = 'ContraseñaSegura123!';
+GO
+
+-- Cambiar al contexto de la base de datos ClinicaDental
+USE ClinicaDental;
+GO
+
+-- Crear usuarios en la base de datos y asignarlos a los logins
+CREATE USER usrAdmin FOR LOGIN usrAdmin;
+CREATE USER usrDentista FOR LOGIN usrDentista;
+CREATE USER usrRecepcionista FOR LOGIN usrRecepcionista;
+CREATE USER usrAsistenteDental FOR LOGIN usrAsistenteDental;
+GO
+
+
+
+
 USE ClinicaDental;
 GO
 
 -- Crear roles de base de datos
-CREATE ROLE [db_Administrador];
+CREATE ROLE [db_Admin];
 CREATE ROLE [db_Dentista];
 CREATE ROLE [db_Recepcionista];
 CREATE ROLE [db_AsistenteDental];
 GO
 
 -- Permiso de control total para el administrador
-GRANT CONTROL ON DATABASE::ClinicaDental TO [db_Administrador];
+GRANT CONTROL ON DATABASE::ClinicaDental TO [db_Admin];
 GO
 
 -- Asignación de permisos específicos a cada rol
@@ -161,8 +185,12 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON Roles_Permisos TO db_Admin;
 GRANT SELECT, INSERT, UPDATE, DELETE ON Usuario_Roles TO db_Admin;
 GO
 
--- Asignación de usuarios a roles
-EXEC sp_addrolemember 'db_Administrador', 'usrAdmin';
+
+
+
+
+-- Asignar roles de base de datos a los usuarios
+EXEC sp_addrolemember 'db_Admin', 'usrAdmin';
 EXEC sp_addrolemember 'db_Dentista', 'usrDentista';
 EXEC sp_addrolemember 'db_Recepcionista', 'usrRecepcionista';
 EXEC sp_addrolemember 'db_AsistenteDental', 'usrAsistenteDental';
