@@ -12,7 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Dtos\" />
+    <Folder Include="Dtos\GetDtos\" />
+    <Folder Include="Dtos\PutDtos\" />
     <Folder Include="ViewModels\" />
   </ItemGroup>
 
