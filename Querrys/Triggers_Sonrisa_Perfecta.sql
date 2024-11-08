@@ -21,84 +21,10 @@ USE ClinicaDental;
 GO
 
 -- Trigger: tr_AuditarInsercionPaciente
-CREATE OR ALTER TRIGGER tr_AuditarInsercionPaciente
-ON Paciente
-AFTER INSERT
-AS
-BEGIN
-    SET NOCOUNT ON;
 
-    INSERT INTO Auditoria (
-        ID_Auditoria, 
-        Fecha_Hora_Accion, 
-        Acción, 
-        DispositivoQueRealizo, 
-        Usuario
-    )
-    SELECT
-        NEWID(),
-        GETDATE(),
-        'Inserción de paciente: ' + i.Nombre_Pac + ' ' + i.Apellido1_Pac + ' ' + i.Apellido2_Pac,
-        HOST_NAME(),
-        dbo.fn_UsuarioActual()
-    FROM inserted i;
-END;
-GO
-
--- Trigger: tr_AuditarActualizacionPaciente
-CREATE OR ALTER TRIGGER tr_AuditarActualizacionPaciente
-ON Paciente
-AFTER UPDATE
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    INSERT INTO Auditoria (
-        ID_Auditoria, 
-        Fecha_Hora_Accion, 
-        Acción, 
-        DispositivoQueRealizo, 
-        Usuario
-    )
-    SELECT
-        NEWID(),
-        GETDATE(),
-        'Actualización de paciente: Cambio de Nombre de ' + d.Nombre_Pac + ' a ' + i.Nombre_Pac,
-        HOST_NAME(),
-        dbo.fn_UsuarioActual()
-    FROM inserted i
-    JOIN deleted d ON i.ID_Paciente = d.ID_Paciente
-    WHERE d.Nombre_Pac <> i.Nombre_Pac;
-END;
-GO
-
--- Trigger: tr_AuditarEliminacionPaciente
-CREATE OR ALTER TRIGGER tr_AuditarEliminacionPaciente
-ON Paciente
-AFTER DELETE
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    INSERT INTO Auditoria (
-        ID_Auditoria, 
-        Fecha_Hora_Accion, 
-        Acción, 
-        DispositivoQueRealizo, 
-        Usuario
-    )
-    SELECT
-        NEWID(),
-        GETDATE(),
-        'Eliminación de paciente: ' + d.Nombre_Pac + ' ' + d.Apellido1_Pac,
-        HOST_NAME(),
-        dbo.fn_UsuarioActual()
-    FROM deleted d;
-END;
-GO
 
 -- Trigger: tr_EvitarDuplicadosCita
-CREATE TRIGGER tr_EvitarDuplicadosCita
+CREATE OR ALTER TRIGGER  tr_EvitarDuplicadosCita
 ON Cita
 INSTEAD OF INSERT
 AS
@@ -131,7 +57,7 @@ END;
 GO
 
 -- Trigger: tr_EvitarFacturaConMontoCero
-CREATE TRIGGER tr_EvitarFacturaConMontoCero
+CREATE OR ALTER TRIGGER  tr_EvitarFacturaConMontoCero
 ON Factura
 AFTER INSERT
 AS
@@ -151,6 +77,159 @@ BEGIN
 END;
 GO
 
+
+-- Trigger: tr_EvitarPagosNegativos
+CREATE OR ALTER TRIGGER  tr_EvitarPagosNegativos
+ON Pago
+AFTER INSERT
+AS
+BEGIN
+    DECLARE @Monto_Pago MONEY, @ID_Pago UNIQUEIDENTIFIER;
+
+    -- Obtener monto del pago insertado
+    SELECT @Monto_Pago = i.Monto_Pago, @ID_Pago = i.ID_Pago
+    FROM inserted i;
+
+    -- Si el monto es negativo, eliminar y lanzar error
+    IF @Monto_Pago < 0
+    BEGIN
+        DELETE FROM Pago WHERE ID_Pago = @ID_Pago;
+        RAISERROR('No se pueden registrar pagos con monto negativo.', 16, 1);
+    END;
+END;
+GO
+
+
+-- TRIGGERS Generales de Tablas 
+
+CREATE OR ALTER TRIGGER tr_AuditarInsercionPaciente
+ON Paciente
+AFTER INSERT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO Auditoria (
+        ID_Auditoria, 
+        Fecha_Hora_Accion, 
+        Accion, 
+        DispositivoQueRealizo, 
+        Usuario
+    )
+    SELECT
+        NEWID(),
+        GETDATE(),
+        'Inserción de paciente: ' + i.Nombre_Pac + ' ' + i.Apellido1_Pac + ' ' + i.Apellido2_Pac,
+        HOST_NAME(),
+        dbo.fn_UsuarioActual()
+    FROM inserted i;
+END;
+GO
+
+-- Trigger: tr_AuditarActualizacionPaciente
+CREATE OR ALTER TRIGGER tr_AuditarActualizacionPaciente
+ON Paciente
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO Auditoria (
+        ID_Auditoria, 
+        Fecha_Hora_Accion, 
+        Accion, 
+        DispositivoQueRealizo, 
+        Usuario
+    )
+    SELECT
+        NEWID(),
+        GETDATE(),
+        'Actualización de paciente: Cambio de Nombre de ' + d.Nombre_Pac + ' a ' + i.Nombre_Pac,
+        HOST_NAME(),
+        dbo.fn_UsuarioActual()
+    FROM inserted i
+    JOIN deleted d ON i.ID_Paciente = d.ID_Paciente
+    WHERE d.Nombre_Pac <> i.Nombre_Pac;
+END;
+GO
+
+-- Trigger: tr_AuditarEliminacionPaciente
+CREATE OR ALTER TRIGGER tr_AuditarEliminacionPaciente
+ON Paciente
+AFTER DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO Auditoria (
+        ID_Auditoria, 
+        Fecha_Hora_Accion, 
+        Accion, 
+        DispositivoQueRealizo, 
+        Usuario
+    )
+    SELECT
+        NEWID(),
+        GETDATE(),
+        'Eliminación de paciente: ' + d.Nombre_Pac + ' ' + d.Apellido1_Pac,
+        HOST_NAME(),
+        dbo.fn_UsuarioActual()
+    FROM deleted d;
+END;
+GO
+
+
+
+
+
+-- Trigger: tr_AuditarInsercionTratamiento
+CREATE TRIGGER tr_AuditarInsercionTratamiento
+ON Tratamiento
+AFTER INSERT
+AS
+BEGIN
+    INSERT INTO Auditoria (
+        ID_Auditoria, 
+        Fecha_Hora_Accion, 
+        Accion, 
+        DispositivoQueRealizo, 
+        Usuario
+    )
+    SELECT 
+        NEWID(), 
+        GETDATE(), 
+        'Inserción en Tratamiento: ' + i.ID_Tratamiento, 
+        HOST_NAME(), 
+        dbo.fn_UsuarioActual()
+    FROM inserted i;
+END;
+GO
+
+
+
+
+-- Trigger: tr_AuditarInsercionFactura
+CREATE TRIGGER tr_AuditarInsercionFactura
+ON Factura
+AFTER INSERT
+AS
+BEGIN
+    INSERT INTO Auditoria (
+        ID_Auditoria, 
+        Fecha_Hora_Accion, 
+        Accion, 
+        DispositivoQueRealizo, 
+        Usuario
+    )
+    SELECT 
+        NEWID(), 
+        GETDATE(), 
+        'Inserción en Factura: ' + i.ID_Factura, 
+        HOST_NAME(), 
+        dbo.fn_UsuarioActual()
+    FROM inserted i;
+END;
+GO
 
 -- Trigger: tr_ActualizarEstadoFactura
 CREATE OR ALTER TRIGGER tr_ActualizarEstadoFactura
@@ -188,7 +267,7 @@ BEGIN
         INSERT INTO Auditoria (
             ID_Auditoria, 
             Fecha_Hora_Accion, 
-            Acción, 
+            Accion, 
             DispositivoQueRealizo, 
             Usuario
         )
@@ -204,26 +283,80 @@ END;
 GO
 
 
--- Trigger: tr_EvitarPagosNegativos
-CREATE TRIGGER tr_EvitarPagosNegativos
+
+-- Trigger: tr_AuditarInsercionPago
+CREATE TRIGGER tr_AuditarInsercionPago
 ON Pago
 AFTER INSERT
 AS
 BEGIN
-    DECLARE @Monto_Pago MONEY, @ID_Pago UNIQUEIDENTIFIER;
-
-    -- Obtener monto del pago insertado
-    SELECT @Monto_Pago = i.Monto_Pago, @ID_Pago = i.ID_Pago
+    INSERT INTO Auditoria (
+        ID_Auditoria, 
+        Fecha_Hora_Accion, 
+        Accion, 
+        DispositivoQueRealizo, 
+        Usuario
+    )
+    SELECT 
+        NEWID(), 
+        GETDATE(), 
+        'Inserción en Pago: ' + CONVERT(VARCHAR(36), i.ID_Pago), 
+        HOST_NAME(), 
+        dbo.fn_UsuarioActual()
     FROM inserted i;
-
-    -- Si el monto es negativo, eliminar y lanzar error
-    IF @Monto_Pago < 0
-    BEGIN
-        DELETE FROM Pago WHERE ID_Pago = @ID_Pago;
-        RAISERROR('No se pueden registrar pagos con monto negativo.', 16, 1);
-    END;
 END;
 GO
+
+
+
+-- Trigger: tr_AuditarInsercionCuenta
+CREATE TRIGGER tr_AuditarInsercionCuenta
+ON Cuenta
+AFTER INSERT
+AS
+BEGIN
+    INSERT INTO Auditoria (
+        ID_Auditoria, 
+        Fecha_Hora_Accion, 
+        Accion, 
+        DispositivoQueRealizo, 
+        Usuario
+    )
+    SELECT 
+        NEWID(), 
+        GETDATE(), 
+        'Inserción en Cuenta: ' + i.ID_Cuenta, 
+        HOST_NAME(), 
+        dbo.fn_UsuarioActual()
+    FROM inserted i;
+END;
+GO
+
+
+
+-- Trigger: tr_AuditarInsercionCita
+CREATE TRIGGER tr_AuditarInsercionCita
+ON Cita
+AFTER INSERT
+AS
+BEGIN
+    INSERT INTO Auditoria (
+        ID_Auditoria, 
+        Fecha_Hora_Accion, 
+        Accion, 
+        DispositivoQueRealizo, 
+        Usuario
+    )
+    SELECT 
+        NEWID(), 
+        GETDATE(), 
+        'Inserción en Cita: ' + i.ID_Cita, 
+        HOST_NAME(), 
+        dbo.fn_UsuarioActual()
+    FROM inserted i;
+END;
+GO
+
 
 -- Auditoría de inserción, actualización y eliminación para la tabla Estado_Pago
 CREATE OR ALTER TRIGGER tr_AuditarInsercionEstadoPago
@@ -1387,3 +1520,29 @@ BEGIN
     FROM deleted d;
 END;
 GO
+
+
+
+-- Trigger: tr_AuditarInsercionProcedimiento
+CREATE TRIGGER tr_AuditarInsercionProcedimiento
+ON Procedimiento
+AFTER INSERT
+AS
+BEGIN
+    INSERT INTO Auditoria (
+        ID_Auditoria, 
+        Fecha_Hora_Accion, 
+        Accion, 
+        DispositivoQueRealizo, 
+        Usuario
+    )
+    SELECT 
+        NEWID(), 
+        GETDATE(), 
+        'Inserción en Procedimiento: ' + i.ID_Procedimiento, 
+        HOST_NAME(), 
+        dbo.fn_UsuarioActual()
+    FROM inserted i;
+END;
+GO
+
