@@ -365,7 +365,7 @@ AFTER INSERT
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Inserción en Estado_Pago: ' + i.ID_EstadoPago, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM inserted i;
 END;
@@ -377,7 +377,7 @@ AFTER UPDATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Actualización en Estado_Pago: ' + d.ID_EstadoPago + ' Cambios aplicados.', HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -389,7 +389,7 @@ AFTER DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Eliminación en Estado_Pago: ' + d.ID_EstadoPago, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -402,7 +402,7 @@ AFTER INSERT
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Inserción en Tipo_Tratamiento: ' + i.ID_TipoTratamiento, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM inserted i;
 END;
@@ -414,7 +414,7 @@ AFTER UPDATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Actualización en Tipo_Tratamiento: ' + d.ID_TipoTratamiento + ' Cambios aplicados.', HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -426,7 +426,7 @@ AFTER DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Eliminación en Tipo_Tratamiento: ' + d.ID_TipoTratamiento, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -439,7 +439,7 @@ AFTER INSERT
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Inserción en Tratamiento: ' + i.ID_Tratamiento, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM inserted i;
 END;
@@ -451,7 +451,7 @@ AFTER UPDATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Actualización en Tratamiento: ' + d.ID_Tratamiento + ' Cambios aplicados.', HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -463,7 +463,7 @@ AFTER DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Eliminación en Tratamiento: ' + d.ID_Tratamiento, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -476,7 +476,7 @@ AFTER INSERT
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Inserción en Procedimiento: ' + i.ID_Procedimiento, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM inserted i;
 END;
@@ -488,7 +488,7 @@ AFTER UPDATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Actualización en Procedimiento: ' + d.ID_Procedimiento + ' Cambios aplicados.', HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -500,7 +500,7 @@ AFTER DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Eliminación en Procedimiento: ' + d.ID_Procedimiento, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -513,7 +513,7 @@ AFTER INSERT
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Inserción en Factura: ' + i.ID_Factura, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM inserted i;
 END;
@@ -525,7 +525,7 @@ AFTER UPDATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Actualización en Factura: ' + d.ID_Factura + ' Cambios aplicados.', HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -537,7 +537,7 @@ AFTER DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Eliminación en Factura: ' + d.ID_Factura, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -560,7 +560,7 @@ AFTER INSERT
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Inserción en Historial_Medico: ' + i.ID_HistorialMedico, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM inserted i;
 END;
@@ -572,7 +572,7 @@ AFTER UPDATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Actualización en Historial_Medico: ' + d.ID_HistorialMedico + ' Cambios aplicados.', HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -584,7 +584,7 @@ AFTER DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Eliminación en Historial_Medico: ' + d.ID_HistorialMedico, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -597,7 +597,7 @@ AFTER INSERT
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Inserción en Cuenta: ' + i.ID_Cuenta, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM inserted i;
 END;
@@ -609,7 +609,7 @@ AFTER UPDATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Actualización en Cuenta: ' + d.ID_Cuenta + ' Cambios aplicados.', HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -621,7 +621,7 @@ AFTER DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Eliminación en Cuenta: ' + d.ID_Cuenta, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -634,7 +634,7 @@ AFTER INSERT
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Inserción en Factura_Procedimiento: ' + i.ID_Factura_Procedimiento, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM inserted i;
 END;
@@ -646,7 +646,7 @@ AFTER UPDATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Actualización en Factura_Procedimiento: ' + d.ID_Factura_Procedimiento + ' Cambios aplicados.', HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -658,7 +658,7 @@ AFTER DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Eliminación en Factura_Procedimiento: ' + d.ID_Factura_Procedimiento, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -671,7 +671,7 @@ AFTER INSERT
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Inserción en Factura_Tratamiento: ' + i.ID_Factura_Tratamiento, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM inserted i;
 END;
@@ -683,7 +683,7 @@ AFTER UPDATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Actualización en Factura_Tratamiento: ' + d.ID_Factura_Tratamiento + ' Cambios aplicados.', HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -695,7 +695,7 @@ AFTER DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Eliminación en Factura_Tratamiento: ' + d.ID_Factura_Tratamiento, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -708,7 +708,7 @@ AFTER INSERT
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Inserción en Roles: ' + i.ID_Roles, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM inserted i;
 END;
@@ -720,7 +720,7 @@ AFTER UPDATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Actualización en Roles: ' + d.ID_Roles + ' Cambios aplicados.', HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -732,7 +732,7 @@ AFTER DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Eliminación en Roles: ' + d.ID_Roles, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -745,7 +745,7 @@ AFTER INSERT
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Inserción en Permisos: ' + i.ID_Permisos, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM inserted i;
 END;
@@ -757,7 +757,7 @@ AFTER UPDATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Actualización en Permisos: ' + d.ID_Permisos + ' Cambios aplicados.', HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -769,7 +769,7 @@ AFTER DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Eliminación en Permisos: ' + d.ID_Permisos, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -782,7 +782,7 @@ AFTER INSERT
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Inserción en Usuario_Roles: ' + i.ID_Usuario_Roles, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM inserted i;
 END;
@@ -794,7 +794,7 @@ AFTER UPDATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Actualización en Usuario_Roles: ' + d.ID_Usuario_Roles + ' Cambios aplicados.', HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -806,7 +806,7 @@ AFTER DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Eliminación en Usuario_Roles: ' + d.ID_Usuario_Roles, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -820,7 +820,7 @@ AFTER INSERT
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Inserción en Funcionario: ' + i.ID_Funcionario, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM inserted i;
 END;
@@ -832,7 +832,7 @@ AFTER UPDATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Actualización en Funcionario: ' + d.ID_Funcionario + ' Cambios aplicados.', HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -844,7 +844,7 @@ AFTER DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Eliminación en Funcionario: ' + d.ID_Funcionario, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -857,7 +857,7 @@ AFTER INSERT
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Inserción en Usuarios: ' + i.ID_Usuario, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM inserted i;
 END;
@@ -869,7 +869,7 @@ AFTER UPDATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Actualización en Usuarios: ' + d.ID_Usuario + ' Cambios aplicados.', HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -881,7 +881,7 @@ AFTER DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Eliminación en Usuarios: ' + d.ID_Usuario, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -894,7 +894,7 @@ AFTER INSERT
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Inserción en Dentista: ' + i.ID_Dentista, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM inserted i;
 END;
@@ -906,7 +906,7 @@ AFTER UPDATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Actualización en Dentista: ' + d.ID_Dentista + ' Cambios aplicados.', HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -918,7 +918,7 @@ AFTER DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Eliminación en Dentista: ' + d.ID_Dentista, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -931,7 +931,7 @@ AFTER INSERT
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Inserción en Especialidad: ' + i.ID_Especialidad, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM inserted i;
 END;
@@ -943,7 +943,7 @@ AFTER UPDATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Actualización en Especialidad: ' + d.ID_Especialidad + ' Cambios aplicados.', HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -955,7 +955,7 @@ AFTER DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Eliminación en Especialidad: ' + d.ID_Especialidad, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -968,7 +968,7 @@ AFTER INSERT
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Inserción en Dentista_Especialidad: ' + i.ID_Dentista_Especialidad, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM inserted i;
 END;
@@ -980,7 +980,7 @@ AFTER UPDATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Actualización en Dentista_Especialidad: ' + d.ID_Dentista_Especialidad + ' Cambios aplicados.', HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -992,7 +992,7 @@ AFTER DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Eliminación en Dentista_Especialidad: ' + d.ID_Dentista_Especialidad, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -1005,7 +1005,7 @@ AFTER INSERT
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Inserción en Estado_Citas: ' + i.ID_EstadoCita, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM inserted i;
 END;
@@ -1017,7 +1017,7 @@ AFTER UPDATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Actualización en Estado_Citas: ' + d.ID_EstadoCita + ' Cambios aplicados.', HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -1029,7 +1029,7 @@ AFTER DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Eliminación en Estado_Citas: ' + d.ID_EstadoCita, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -1042,7 +1042,7 @@ AFTER INSERT
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Inserción en Cita: ' + i.ID_Cita, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM inserted i;
 END;
@@ -1054,7 +1054,7 @@ AFTER UPDATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Actualización en Cita: ' + d.ID_Cita + ' Cambios aplicados.', HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -1066,7 +1066,7 @@ AFTER DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Eliminación en Cita: ' + d.ID_Cita, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -1084,7 +1084,7 @@ AFTER INSERT
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Inserción en Estado_Pago: ' + i.ID_EstadoPago, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM inserted i;
 END;
@@ -1096,7 +1096,7 @@ AFTER UPDATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Actualización en Estado_Pago: ' + d.ID_EstadoPago + ' Cambios aplicados.', HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -1108,7 +1108,7 @@ AFTER DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Eliminación en Estado_Pago: ' + d.ID_EstadoPago, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -1121,7 +1121,7 @@ AFTER INSERT
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Inserción en Tipo_Tratamiento: ' + i.ID_TipoTratamiento, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM inserted i;
 END;
@@ -1133,7 +1133,7 @@ AFTER UPDATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Actualización en Tipo_Tratamiento: ' + d.ID_TipoTratamiento + ' Cambios aplicados.', HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -1145,7 +1145,7 @@ AFTER DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Eliminación en Tipo_Tratamiento: ' + d.ID_TipoTratamiento, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -1158,7 +1158,7 @@ AFTER INSERT
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Inserción en Tratamiento: ' + i.ID_Tratamiento, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM inserted i;
 END;
@@ -1170,7 +1170,7 @@ AFTER UPDATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Actualización en Tratamiento: ' + d.ID_Tratamiento + ' Cambios aplicados.', HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -1182,7 +1182,7 @@ AFTER DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Eliminación en Tratamiento: ' + d.ID_Tratamiento, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -1195,7 +1195,7 @@ AFTER INSERT
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Inserción en Procedimiento: ' + i.ID_Procedimiento, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM inserted i;
 END;
@@ -1207,7 +1207,7 @@ AFTER UPDATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Actualización en Procedimiento: ' + d.ID_Procedimiento + ' Cambios aplicados.', HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -1219,7 +1219,7 @@ AFTER DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Eliminación en Procedimiento: ' + d.ID_Procedimiento, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -1232,7 +1232,7 @@ AFTER INSERT
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Inserción en Factura: ' + i.ID_Factura, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM inserted i;
 END;
@@ -1244,7 +1244,7 @@ AFTER UPDATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Actualización en Factura: ' + d.ID_Factura + ' Cambios aplicados.', HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -1256,7 +1256,7 @@ AFTER DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Eliminación en Factura: ' + d.ID_Factura, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -1269,7 +1269,7 @@ AFTER INSERT
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Inserción en Funcionario: ' + i.ID_Funcionario, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM inserted i;
 END;
@@ -1281,7 +1281,7 @@ AFTER UPDATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Actualización en Funcionario: ' + d.ID_Funcionario + ' Cambios aplicados.', HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -1293,7 +1293,7 @@ AFTER DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Eliminación en Funcionario: ' + d.ID_Funcionario, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -1306,7 +1306,7 @@ AFTER INSERT
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Inserción en Usuarios: ' + i.ID_Usuario, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM inserted i;
 END;
@@ -1318,7 +1318,7 @@ AFTER UPDATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Actualización en Usuarios: ' + d.ID_Usuario + ' Cambios aplicados.', HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -1330,7 +1330,7 @@ AFTER DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Eliminación en Usuarios: ' + d.ID_Usuario, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -1343,7 +1343,7 @@ AFTER INSERT
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Inserción en Dentista: ' + i.ID_Dentista, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM inserted i;
 END;
@@ -1355,7 +1355,7 @@ AFTER UPDATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Actualización en Dentista: ' + d.ID_Dentista + ' Cambios aplicados.', HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -1367,7 +1367,7 @@ AFTER DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Eliminación en Dentista: ' + d.ID_Dentista, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -1380,7 +1380,7 @@ AFTER INSERT
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Inserción en Especialidad: ' + i.ID_Especialidad, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM inserted i;
 END;
@@ -1392,7 +1392,7 @@ AFTER UPDATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Actualización en Especialidad: ' + d.ID_Especialidad + ' Cambios aplicados.', HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -1404,7 +1404,7 @@ AFTER DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Eliminación en Especialidad: ' + d.ID_Especialidad, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -1417,7 +1417,7 @@ AFTER INSERT
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Inserción en Dentista_Especialidad: ' + i.ID_Dentista_Especialidad, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM inserted i;
 END;
@@ -1429,7 +1429,7 @@ AFTER UPDATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Actualización en Dentista_Especialidad: ' + d.ID_Dentista_Especialidad + ' Cambios aplicados.', HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -1441,7 +1441,7 @@ AFTER DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Eliminación en Dentista_Especialidad: ' + d.ID_Dentista_Especialidad, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -1454,7 +1454,7 @@ AFTER INSERT
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Inserción en Estado_Citas: ' + i.ID_EstadoCita, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM inserted i;
 END;
@@ -1466,7 +1466,7 @@ AFTER UPDATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Actualización en Estado_Citas: ' + d.ID_EstadoCita + ' Cambios aplicados.', HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -1478,7 +1478,7 @@ AFTER DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Eliminación en Estado_Citas: ' + d.ID_EstadoCita, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -1491,7 +1491,7 @@ AFTER INSERT
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Inserción en Cita: ' + i.ID_Cita, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM inserted i;
 END;
@@ -1503,7 +1503,7 @@ AFTER UPDATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Actualización en Cita: ' + d.ID_Cita + ' Cambios aplicados.', HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
@@ -1515,34 +1515,11 @@ AFTER DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Accion, DispositivoQueRealizo, Usuario)
     SELECT NEWID(), GETDATE(), 'Eliminación en Cita: ' + d.ID_Cita, HOST_NAME(), dbo.fn_UsuarioActual()
     FROM deleted d;
 END;
 GO
 
 
-
--- Trigger: tr_AuditarInsercionProcedimiento
-CREATE TRIGGER tr_AuditarInsercionProcedimiento
-ON Procedimiento
-AFTER INSERT
-AS
-BEGIN
-    INSERT INTO Auditoria (
-        ID_Auditoria, 
-        Fecha_Hora_Accion, 
-        Accion, 
-        DispositivoQueRealizo, 
-        Usuario
-    )
-    SELECT 
-        NEWID(), 
-        GETDATE(), 
-        'Inserción en Procedimiento: ' + i.ID_Procedimiento, 
-        HOST_NAME(), 
-        dbo.fn_UsuarioActual()
-    FROM inserted i;
-END;
-GO
 

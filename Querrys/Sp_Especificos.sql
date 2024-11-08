@@ -94,7 +94,7 @@ BEGIN
 END;
 GO
 
--- Procedimiento almacenado para consultar citas por dentista en una fecha determinada
+-- Procedimiento almacenado para consultar tratamientos por paciente
 CREATE PROCEDURE sp_ConsultarTratamientosPorPaciente
     @ID_Paciente CHAR(8)
 AS
@@ -107,9 +107,7 @@ BEGIN
 
     SELECT t.*
     FROM Tratamiento t
-    JOIN Historial_Tratamiento ht ON t.ID_Tratamiento = ht.ID_Tratamiento
-    JOIN Historial_Medico hm ON ht.ID_HistorialMedico = hm.ID_HistorialMedico
-    JOIN Paciente p ON hm.ID_HistorialMedico = p.ID_HistorialMedico
+    JOIN Procedimiento p ON t.ID_Tratamiento = p.ID_Tratamiento
     WHERE p.ID_Paciente = @ID_Paciente;
 END;
 GO

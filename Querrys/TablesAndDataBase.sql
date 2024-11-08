@@ -148,6 +148,7 @@ CREATE TABLE Funcionario (
     Contraseña CHAR(12)
 ) ON AuditoriaFileGroup;
 
+
 -- Tabla: Usuarios
 CREATE TABLE Usuarios (
     ID_Usuario CHAR(8) PRIMARY KEY,

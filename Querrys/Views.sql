@@ -15,7 +15,8 @@ FROM
     Paciente P
 INNER JOIN Cita C ON P.ID_Paciente = C.ID_Paciente
 INNER JOIN Dentista D ON C.ID_Dentista = D.ID_Dentista
-INNER JOIN Historial_Tratamiento HT ON P.ID_HistorialMedico = HT.ID_HistorialMedico
+INNER JOIN Historial_Medico HM ON P.ID_Paciente = HM.ID_Paciente
+INNER JOIN Historial_Tratamiento HT ON HM.ID_HistorialMedico = HT.ID_HistorialMedico
 INNER JOIN Tratamiento T ON HT.ID_Tratamiento = T.ID_Tratamiento;
 GO
 
@@ -71,7 +72,8 @@ FROM
     Dentista D
 INNER JOIN Cita C ON D.ID_Dentista = C.ID_Dentista
 INNER JOIN Paciente P ON C.ID_Paciente = P.ID_Paciente
-INNER JOIN Historial_Tratamiento HT ON P.ID_HistorialMedico = HT.ID_HistorialMedico
+INNER JOIN Historial_Medico HM ON P.ID_Paciente = HM.ID_Paciente
+INNER JOIN Historial_Tratamiento HT ON HM.ID_HistorialMedico = HT.ID_HistorialMedico
 INNER JOIN Tratamiento T ON HT.ID_Tratamiento = T.ID_Tratamiento;
 GO
 
@@ -143,12 +145,12 @@ SELECT
     T.Nombre_Tra, T.Descripcion_Tra, HT.Fecha_Tratamiento
 FROM 
     Paciente P
-INNER JOIN Historial_Tratamiento HT ON P.ID_HistorialMedico = HT.ID_HistorialMedico
+INNER JOIN Historial_Medico HM ON P.ID_Paciente = HM.ID_Paciente
+INNER JOIN Historial_Tratamiento HT ON HM.ID_HistorialMedico = HT.ID_HistorialMedico
 INNER JOIN Tratamiento T ON HT.ID_Tratamiento = T.ID_Tratamiento
 WHERE 
     HT.Fecha_Tratamiento >= GETDATE();
 GO
-
 -- 9. Vista: Dentistas con Más Tratamientos Realizados
 -- Eliminar la vista si ya existe
 IF OBJECT_ID('vw_DentistasConMasTratamientos', 'V') IS NOT NULL
@@ -156,6 +158,10 @@ IF OBJECT_ID('vw_DentistasConMasTratamientos', 'V') IS NOT NULL
 GO
 
 -- Crear la vista
+IF OBJECT_ID('vw_DentistasConMasTratamientos', 'V') IS NOT NULL
+    DROP VIEW vw_DentistasConMasTratamientos;
+GO
+
 CREATE VIEW vw_DentistasConMasTratamientos AS
 SELECT 
     D.ID_Dentista, 
@@ -167,17 +173,50 @@ FROM
     Dentista D
 INNER JOIN Cita C ON D.ID_Dentista = C.ID_Dentista
 INNER JOIN Paciente P ON C.ID_Paciente = P.ID_Paciente
-INNER JOIN Historial_Medico HM ON P.ID_HistorialMedico = HM.ID_HistorialMedico
+INNER JOIN Historial_Medico HM ON P.ID_Paciente = HM.ID_Paciente
 INNER JOIN Historial_Tratamiento HT ON HM.ID_HistorialMedico = HT.ID_HistorialMedico
 GROUP BY 
     D.ID_Dentista, 
     D.Nombre_Den, 
     D.Apellido1_Den, 
-    D.Apellido2_Den
-WITH CHECK OPTION;
+    D.Apellido2_Den;
 GO
 
+CREATE OR ALTER VIEW vw_TratamientosPorPaciente AS
+SELECT
+    P.ID_Paciente,
+    P.Nombre_Pac,
+    P.Apellido1_Pac,
+    P.Apellido2_Pac,
+    COUNT(DISTINCT HT.ID_Tratamiento) AS TotalTratamientos
+FROM
+    Paciente P
+    INNER JOIN Historial_Medico HM ON P.ID_Paciente = HM.ID_Paciente
+    INNER JOIN Historial_Tratamiento HT ON HM.ID_HistorialMedico = HT.ID_HistorialMedico
+GROUP BY
+    P.ID_Paciente,
+    P.Nombre_Pac,
+    P.Apellido1_Pac,
+    P.Apellido2_Pac;
+GO
+CREATE OR ALTER VIEW vw_TratamientosPorPaciente AS
+SELECT
+    P.ID_Paciente,
+    P.Nombre_Pac,
+    P.Apellido1_Pac,
+    P.Apellido2_Pac,
+    COUNT(DISTINCT HT.ID_Tratamiento) AS TotalTratamientos
+FROM
+    Paciente P
+    INNER JOIN Historial_Medico HM ON P.ID_Paciente = HM.ID_Paciente
+    INNER JOIN Historial_Tratamiento HT ON HM.ID_HistorialMedico = HT.ID_HistorialMedico
+GROUP BY
+    P.ID_Paciente,
+    P.Nombre_Pac,
 
+    P.Apellido1_Pac,
+    P.Apellido2_Pac;
+GO
 
 -- Consultar la vista de Historial Completo de Pacientes
 SELECT * FROM vw_HistorialPaciente;
