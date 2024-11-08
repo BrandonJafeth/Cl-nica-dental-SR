@@ -268,7 +268,7 @@ GO
 
 -- Procedimiento almacenado para registrar un pago
 CREATE PROCEDURE sp_RegistrarPago
-    @ID_Pago INT,
+    @ID_Pago UNIQUEIDENTIFIER,
     @ID_Factura CHAR(8),
     @Monto_Pago MONEY,
     @Fecha_Pago DATE,
