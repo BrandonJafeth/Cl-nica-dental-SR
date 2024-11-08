@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using Application.GenericService;
+using Clinica_Dental;
+using Domain.Interfaces.Generic;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Clinica_Dental.Controllers
 {
@@ -8,36 +11,63 @@ namespace Clinica_Dental.Controllers
     [ApiController]
     public class Factura_TratamientoController : ControllerBase
     {
-        // GET: api/<Factura_TratamientoController>
+        private readonly ISvGeneric<Factura_Tratamiento> _service;
+
+        public Factura_TratamientoController(ISvGeneric<Factura_Tratamiento> service)
+        {
+            _service = service;
+        }
+
+        // GET: api/Factura_Tratamiento
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult<IEnumerable<Factura_Tratamiento>>> Get()
         {
-            return new string[] { "value1", "value2" };
+            var result = await _service.GetAllAsync();
+            return Ok(result);
         }
 
-        // GET api/<Factura_TratamientoController>/5
+        // GET: api/Factura_Tratamiento/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<Factura_Tratamiento>> Get(string id)
         {
-            return "value";
+            var result = await _service.GetByIdAsync(id);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
         }
 
-        // POST api/<Factura_TratamientoController>
+        // POST: api/Factura_Tratamiento
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult> Post([FromBody] Factura_Tratamiento facturaTratamiento)
         {
+            await _service.AddAsync(facturaTratamiento);
+            await _service.SaveChangesAsync();
+            return CreatedAtAction(nameof(Get), new { id = facturaTratamiento.ID_Factura_Tratamiento }, facturaTratamiento);
         }
 
-        // PUT api/<Factura_TratamientoController>/5
+        // PUT: api/Factura_Tratamiento/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ActionResult> Put(string id, [FromBody] Factura_Tratamiento facturaTratamiento)
         {
+            if (id != facturaTratamiento.ID_Factura_Tratamiento)
+            {
+                return BadRequest();
+            }
+
+            await _service.UpdateAsync(facturaTratamiento);
+            await _service.SaveChangesAsync();
+            return NoContent();
         }
 
-        // DELETE api/<Factura_TratamientoController>/5
+        // DELETE: api/Factura_Tratamiento/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> Delete(string id)
         {
+            await _service.DeleteAsync(id);
+            await _service.SaveChangesAsync();
+            return NoContent();
         }
     }
 }
