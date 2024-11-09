@@ -13,7 +13,7 @@ namespace Application.Dtos.PostDtos
         public string Apellido1_Den { get; set; }
         public string Apellido2_Den { get; set; }
         public string Direccion_Den { get; set; }
-        public DateTime FechaNacimiento_Den { get; set; }
+        public DateOnly FechaNacimiento_Den { get; set; }
         public string Telefono_Den { get; set; }
         public string Correo_Den { get; set; }
         public string ID_Funcionario { get; set; }
