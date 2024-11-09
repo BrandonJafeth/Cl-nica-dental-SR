@@ -5,6 +5,7 @@ import TratamientoList from "../..//pages/Tratamiento/TratamientoList";
 import TratamientoForm from "../../pages/Tratamiento/TratamientoForm";
 import { useTratamiento } from "../../hooks/useTratamiento";
 import { Tratamiento } from "../../types/type";
+import Navbar from "../../components/Navbar";
 
 function TratamientoPage() {
   const [showForm, setShowForm] = useState(false);
@@ -38,6 +39,8 @@ function TratamientoPage() {
   };
 
   return (
+    <>
+    <Navbar />
     <div className="min-h-screen bg-gray-100 text-gray-800">
       <div className="container mx-auto py-10 px-4">
         <h1 className="text-3xl font-bold text-center text-blue-700 mb-8">Gestión de Tratamientos</h1>
@@ -50,6 +53,7 @@ function TratamientoPage() {
           />
         ) : (
           <>
+          
             <div className="flex justify-end mb-6">
               <button
                 onClick={handleAddTratamiento}
@@ -67,6 +71,7 @@ function TratamientoPage() {
         )}
       </div>
     </div>
+    </>
   );
 }
 

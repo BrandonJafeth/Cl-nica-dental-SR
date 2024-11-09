@@ -16,16 +16,16 @@ function Navbar() {
         {/* Enlaces de navegación */}
         <ul className="flex items-center space-x-6">
           <li>
-            <Link to="/" className="text-white hover:text-[#93f7ea] text-lg transition-colors duration-200">Home</Link>
+            <Link to="/" className="text-white hover:text-[#93f7ea] text-lg transition-colors duration-200">Inicio</Link>
           </li>
           <li>
-            <Link to="/clients" className="text-white hover:text-[#93f7ea] text-lg transition-colors duration-200">Client Manager</Link>
+            <Link to="/clients" className="text-white hover:text-[#93f7ea] text-lg transition-colors duration-200">Pacientes</Link>
           </li>
           <li>
-            <Link to="/appointments" className="text-white hover:text-[#93f7ea] text-lg transition-colors duration-200">Appointments</Link>
+            <Link to="/appointments" className="text-white hover:text-[#93f7ea] text-lg transition-colors duration-200">Citas</Link>
           </li>
           <li>
-            <Link to="/bills" className="text-white hover:text-[#93f7ea] text-lg transition-colors duration-200">Billing Service</Link>
+            <Link to="/bills" className="text-white hover:text-[#93f7ea] text-lg transition-colors duration-200">Facturación</Link>
           </li>
           <li>
             <Link to="/treatments" className="text-white hover:text-[#93f7ea] text-lg transition-colors duration-200">Tratamientos</Link>
@@ -34,23 +34,14 @@ function Navbar() {
             <Link to="/dentist" className="text-white hover:text-[#93f7ea] text-lg transition-colors duration-200">Dentistas</Link>
           </li>
           <li>
-            <Link to="/payments" className="text-white hover:text-[#93f7ea] text-lg transition-colors duration-200">Payments</Link>
+            <Link to="/payments" className="text-white hover:text-[#93f7ea] text-lg transition-colors duration-200">Pagos</Link>
           </li>
           <li>
             <Link to="/cuentas" className="text-white hover:text-[#93f7ea] text-lg transition-colors duration-200">Cuentas</Link>
           </li>
         </ul>
 
-        {/* Login y Register */}
-        <div className="flex space-x-4">
-          <Link
-            to="/login"
-            className="bg-white text-blue-600 font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-gray-100 transition duration-200"
-          >
-            Login
-          </Link>
-     
-        </div>
+      
       </div>
     </nav>
   );
