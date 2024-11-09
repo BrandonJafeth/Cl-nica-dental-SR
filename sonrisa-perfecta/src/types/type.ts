@@ -84,17 +84,17 @@ export interface EstadoCuenta {
 }
 
 export interface Paciente {
-  ID_Paciente: IdPaciente;
-  Nombre_Pac: string;
-  Apellido1_Pac: string;
-  Apellido2_Pac: string;
-  Fecha_Nacimiento_Pac: string; // ISO format date
-  Telefono_Pac: string;
-  Correo_Pac: string;
-  Direccion_Pac: string;
-  ID_HistorialMedico: IdHistorialMedico;
+  iD_Paciente: string;
+  nombre_Pac: string;
+  apellido1_Pac: string;
+  apellido2_Pac: string;
+  fecha_Nacimiento_Pac: string; // ISO format date
+  telefono_Pac: string;
+  correo_Pac: string;
+  direccion_Pac: string;
+  iD_HistorialMedico: IdHistorialMedico;
 }
-export type { IdPaciente, IdHistorialMedico }; 
+
 
 
 export interface HistorialMedico {
@@ -105,15 +105,15 @@ export interface HistorialMedico {
 }
 
 export interface Cuenta {
-  ID_Cuenta: IdCuenta;
+  ID_Cuenta: string;
   Saldo_Total: number;
-  Fecha_Apertura: string; // ISO format date
-  Fecha_Cierre: string; // ISO format date
-  Fecha_Ultima_Actualizacion: string; // ISO format date
+  Fecha_Apertura: string;
+  Fecha_Cierre: string;
+  Fecha_Ultima_Actualizacion: string;
   Observaciones: string;
-  ID_Estado_Cuenta: IdEstadoCuenta;
-  ID_Factura: IdFactura;
-  ID_Paciente: IdPaciente;
+  ID_Estado_Cuenta: string;
+  ID_Factura: string;
+  ID_Paciente: string;  // Asegúrate de que esto esté definido aquí
 }
 
 export type{ IdFacturaProcedimiento, IdProcedimiento }
