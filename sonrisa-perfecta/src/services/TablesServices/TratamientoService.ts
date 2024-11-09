@@ -1,30 +1,34 @@
-// services/TratamientoService.ts
-import { Tratamiento } from "../../types/type";
-import ApiService from "../ApiService/ApiService";
+
+import { Tratamiento } from '../../types/type';
+import ApiService from '../ApiService/ApiService';
 
 class TratamientoService extends ApiService<Tratamiento> {
   constructor() {
     super();
   }
 
-  public getAllTratamientos() {
-    return this.getAll('/Tratamiento');
+  public async getAllTratamientos(): Promise<Tratamiento[]> {
+    const response = await this.getAll('/Tratamiento');
+    return response.data; // Devuelve solo los datos
   }
 
-  public getTratamientoById(id: string) {
-    return this.getOne('/Tratamiento', id);
+  public async getTratamientoById(id: string): Promise<Tratamiento> {
+    const response = await this.getOne('/Tratamiento', id);
+    return response.data; // Devuelve solo los datos
   }
 
-  public createTratamiento(data: Tratamiento) {
-    return this.create('/Tratamiento', data);
+  public async createTratamiento(data: Tratamiento): Promise<Tratamiento> {
+    const response = await this.create('/Tratamiento', data);
+    return response.data; // Devuelve solo los datos
   }
 
-  public updateTratamiento(id: string, data: Partial<Tratamiento>) {
-    return this.update('/Tratamiento', id, data);
+  public async updateTratamiento(id: string, data: Partial<Tratamiento>): Promise<Tratamiento> {
+    const response = await this.update('/Tratamiento', id, data);
+    return response.data; // Devuelve solo los datos
   }
 
-  public deleteTratamiento(id: string) {
-    return this.delete('/Tratamiento', id);
+  public async deleteTratamiento(id: string): Promise<void> {
+    await this.delete('/Tratamiento', id);
   }
 }
 

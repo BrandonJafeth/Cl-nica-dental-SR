@@ -116,11 +116,14 @@ export interface Cuenta {
   ID_Paciente: IdPaciente;
 }
 
+export type{ IdFacturaProcedimiento, IdProcedimiento }
 export interface FacturaProcedimiento {
   ID_Factura_Procedimiento: IdFacturaProcedimiento;
   ID_Factura: IdFactura;
   ID_Procedimiento: IdProcedimiento;
 }
+
+export type { IdFacturaTratamiento, IdFactura, IdTratamiento }  
 
 export interface FacturaTratamiento {
   ID_Factura_Tratamiento: IdFacturaTratamiento;
@@ -180,7 +183,9 @@ export interface DentistaEspecialidad {
   ID_Especialidad: IdEspecialidad;
 }
 
-export interface EstadoCitas {
+
+export type { IdEstadoCita }
+export interface EstadoCita {
   ID_EstadoCita: IdEstadoCita;
   Nombre_Estado: string;
   Descripcion_Estado: string;
@@ -228,3 +233,11 @@ export interface UsuarioRoles {
   ID_Usuario: IdUsuario;
   ID_Roles: IdRoles;
 }
+
+
+// Tabla: Estado_Tratamiento
+export type EstadoTratamiento = {
+  ID_EstadoTratamiento: string;
+  Nombre_Estado: string;
+  Descripcion_Estado: string;
+};
