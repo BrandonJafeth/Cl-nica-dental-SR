@@ -1,32 +1,33 @@
-// services/EstadoCitasService.ts
-import { EstadoCitas } from "../../types/type";
-import ApiService from "../ApiService/ApiService";
+// src/services/EstadoCitaService.ts
+import axios from 'axios';
+import { EstadoCita } from '../../types/type';
 
-class EstadoCitasService extends ApiService<EstadoCitas> {
-  constructor() {
-    super();
-  }
+const API_URL = 'https://localhost:7232/api/Estado_Cita';
 
-  public getAllEstadoCitas() {
-    return this.getAll('/EstadoCitas');
-  }
+export const EstadoCitaService = {
+  async getAll(): Promise<EstadoCita[]> {
+    const response = await axios.get<EstadoCita[]>(API_URL);
+    return response.data;
+  },
 
-  public getEstadoCitaById(id: string) {
-    return this.getOne('/EstadoCitas', id);
-  }
+  async getById(id: string): Promise<EstadoCita> {
+    const response = await axios.get<EstadoCita>(`${API_URL}/${id}`);
+    return response.data;
+  },
 
-  public createEstadoCita(data: EstadoCitas) {
-    return this.create('/EstadoCitas', data);
-  }
+  async create(data: EstadoCita): Promise<EstadoCita> {
+    const response = await axios.post<EstadoCita>(API_URL, data);
+    return response.data;
+  },
 
-  public updateEstadoCita(id: string, data: Partial<EstadoCitas>) {
-    return this.update('/EstadoCitas', id, data);
-  }
+  async update(id: string, data: Partial<EstadoCita>): Promise<EstadoCita> {
+    const response = await axios.put<EstadoCita>(`${API_URL}/${id}`, data);
+    return response.data;
+  },
 
-  public deleteEstadoCita(id: string) {
-    return this.delete('/EstadoCitas', id);
-  }
-}
+  async delete(id: string): Promise<void> {
+    await axios.delete(`${API_URL}/${id}`);
+  },
+};
 
-export const estadoCitasService = new EstadoCitasService();
-export default estadoCitasService;
+export default EstadoCitaService;

@@ -1,32 +1,33 @@
-// services/TipoTratamientoService.ts
-import { TipoTratamiento } from "../../types/type";
-import ApiService from "../ApiService/ApiService";
+// src/services/TipoTratamientoService.ts
+import axios from 'axios';
+import { TipoTratamiento } from '../../types/type';
 
-class TipoTratamientoService extends ApiService<TipoTratamiento> {
-  constructor() {
-    super();
-  }
+const API_URL = 'https://localhost:7232/api/TipoTratamiento';
 
-  public getAllTipoTratamiento() {
-    return this.getAll('/TipoTratamiento');
-  }
+export const TipoTratamientoService = {
+  async getAll(): Promise<TipoTratamiento[]> {
+    const response = await axios.get<TipoTratamiento[]>(API_URL);
+    return response.data;
+  },
 
-  public getTipoTratamientoById(id: string) {
-    return this.getOne('/TipoTratamiento', id);
-  }
+  async getById(id: string): Promise<TipoTratamiento> {
+    const response = await axios.get<TipoTratamiento>(`${API_URL}/${id}`);
+    return response.data;
+  },
 
-  public createTipoTratamiento(data: TipoTratamiento) {
-    return this.create('/TipoTratamiento', data);
-  }
+  async create(data: TipoTratamiento): Promise<TipoTratamiento> {
+    const response = await axios.post<TipoTratamiento>(API_URL, data);
+    return response.data;
+  },
 
-  public updateTipoTratamiento(id: string, data: Partial<TipoTratamiento>) {
-    return this.update('/TipoTratamiento', id, data);
-  }
+  async update(id: string, data: Partial<TipoTratamiento>): Promise<TipoTratamiento> {
+    const response = await axios.put<TipoTratamiento>(`${API_URL}/${id}`, data);
+    return response.data;
+  },
 
-  public deleteTipoTratamiento(id: string) {
-    return this.delete('/TipoTratamiento', id);
-  }
-}
+  async delete(id: string): Promise<void> {
+    await axios.delete(`${API_URL}/${id}`);
+  },
+};
 
-export const tipoTratamientoService = new TipoTratamientoService();
-export default tipoTratamientoService;
+export default TipoTratamientoService;

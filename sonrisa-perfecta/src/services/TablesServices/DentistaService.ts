@@ -1,33 +1,33 @@
-
-
+// src/services/DentistaService.ts
+import axios from 'axios';
 import { Dentista } from '../../types/type';
-import ApiService from '../ApiService/ApiService';
 
-class DentistaService extends ApiService<Dentista> {
-  constructor() {
-    super();
-  }
+const API_URL = 'https://localhost:7232/api/Dentista';
 
-  public getAllDentistas() {
-    return this.getAll('/Dentista');
-  }
+export const DentistaService = {
+  async getAll(): Promise<Dentista[]> {
+    const response = await axios.get<Dentista[]>(API_URL);
+    return response.data;
+  },
 
-  public getDentistaById(id: string) {
-    return this.getOne('/Dentista', id);
-  }
+  async getById(id: string): Promise<Dentista> {
+    const response = await axios.get<Dentista>(`${API_URL}/${id}`);
+    return response.data;
+  },
 
-  public createDentista(data: Dentista) {
-    return this.create('/Dentista', data);
-  }
+  async create(data: Dentista): Promise<Dentista> {
+    const response = await axios.post<Dentista>(API_URL, data);
+    return response.data;
+  },
 
-  public updateDentista(id: string, data: Partial<Dentista>) {
-    return this.update('/Dentista', id, data);
-  }
+  async update(id: string, data: Partial<Dentista>): Promise<Dentista> {
+    const response = await axios.put<Dentista>(`${API_URL}/${id}`, data);
+    return response.data;
+  },
 
-  public deleteDentista(id: string) {
-    return this.delete('/Dentista', id);
-  }
-}
+  async delete(id: string): Promise<void> {
+    await axios.delete(`${API_URL}/${id}`);
+  },
+};
 
-export const dentistaService = new DentistaService();
-export default dentistaService;
+export default DentistaService;

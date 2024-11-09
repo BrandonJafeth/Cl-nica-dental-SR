@@ -1,33 +1,33 @@
-// services/EstadoPagoService.ts
+// src/services/EstadoPagoService.ts
+import axios from 'axios';
+import { EstadoPago } from '../../types/type';
 
-import { EstadoPago } from "../../types/type";
-import ApiService from "../ApiService/ApiService";
+const API_URL = 'https://localhost:7232/api/Estado_Pago';
 
-class EstadoPagoService extends ApiService<EstadoPago> {
-  constructor() {
-    super();
-  }
+export const EstadoPagoService = {
+  async getAll(): Promise<EstadoPago[]> {
+    const response = await axios.get<EstadoPago[]>(API_URL);
+    return response.data;
+  },
 
-  public getAllEstadoPago() {
-    return this.getAll('/EstadoPago');
-  }
+  async getById(id: string): Promise<EstadoPago> {
+    const response = await axios.get<EstadoPago>(`${API_URL}/${id}`);
+    return response.data;
+  },
 
-  public getEstadoPagoById(id: string) {
-    return this.getOne('/EstadoPago', id);
-  }
+  async create(data: EstadoPago): Promise<EstadoPago> {
+    const response = await axios.post<EstadoPago>(API_URL, data);
+    return response.data;
+  },
 
-  public createEstadoPago(data: EstadoPago) {
-    return this.create('/EstadoPago', data);
-  }
+  async update(id: string, data: Partial<EstadoPago>): Promise<EstadoPago> {
+    const response = await axios.put<EstadoPago>(`${API_URL}/${id}`, data);
+    return response.data;
+  },
 
-  public updateEstadoPago(id: string, data: Partial<EstadoPago>) {
-    return this.update('/EstadoPago', id, data);
-  }
+  async delete(id: string): Promise<void> {
+    await axios.delete(`${API_URL}/${id}`);
+  },
+};
 
-  public deleteEstadoPago(id: string) {
-    return this.delete('/EstadoPago', id);
-  }
-}
-
-export const estadoPagoService = new EstadoPagoService();
-export default estadoPagoService;
+export default EstadoPagoService;

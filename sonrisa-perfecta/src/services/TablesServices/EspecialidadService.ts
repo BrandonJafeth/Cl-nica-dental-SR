@@ -1,32 +1,33 @@
-// services/EspecialidadService.ts
-import { Especialidad } from "../../types/type";
-import ApiService from "../ApiService/ApiService";
+// src/services/EspecialidadService.ts
+import axios from 'axios';
+import { Especialidad } from '../../types/type';
 
-class EspecialidadService extends ApiService<Especialidad> {
-  constructor() {
-    super();
-  }
+const API_URL = 'https://localhost:7232/api/Especialidad';
 
-  public getAllEspecialidades() {
-    return this.getAll('/Especialidad');
-  }
+export const EspecialidadService = {
+  async getAll(): Promise<Especialidad[]> {
+    const response = await axios.get<Especialidad[]>(API_URL);
+    return response.data;
+  },
 
-  public getEspecialidadById(id: string) {
-    return this.getOne('/Especialidad', id);
-  }
+  async getById(id: string): Promise<Especialidad> {
+    const response = await axios.get<Especialidad>(`${API_URL}/${id}`);
+    return response.data;
+  },
 
-  public createEspecialidad(data: Especialidad) {
-    return this.create('/Especialidad', data);
-  }
+  async create(data: Especialidad): Promise<Especialidad> {
+    const response = await axios.post<Especialidad>(API_URL, data);
+    return response.data;
+  },
 
-  public updateEspecialidad(id: string, data: Partial<Especialidad>) {
-    return this.update('/Especialidad', id, data);
-  }
+  async update(id: string, data: Partial<Especialidad>): Promise<Especialidad> {
+    const response = await axios.put<Especialidad>(`${API_URL}/${id}`, data);
+    return response.data;
+  },
 
-  public deleteEspecialidad(id: string) {
-    return this.delete('/Especialidad', id);
-  }
-}
+  async delete(id: string): Promise<void> {
+    await axios.delete(`${API_URL}/${id}`);
+  },
+};
 
-export const especialidadService = new EspecialidadService();
-export default especialidadService;
+export default EspecialidadService;

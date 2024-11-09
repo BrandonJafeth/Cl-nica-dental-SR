@@ -1,31 +1,33 @@
-import { Factura } from "../../types/type";
-import ApiService from "../ApiService/ApiService";
+// src/services/FacturaService.ts
+import axios from 'axios';
+import { Factura } from '../../types/type';
 
-class FacturaService extends ApiService<Factura> {
-  constructor() {
-    super();
-  }
+const API_URL = 'https://localhost:7232/api/Factura';
 
-  public getAllFacturas() {
-    return this.getAll('/Factura');
-  }
+export const FacturaService = {
+  async getAll(): Promise<Factura[]> {
+    const response = await axios.get<Factura[]>(API_URL);
+    return response.data;
+  },
 
-  public getFacturaById(id: string) {
-    return this.getOne('/Factura', id);
-  }
+  async getById(id: string): Promise<Factura> {
+    const response = await axios.get<Factura>(`${API_URL}/${id}`);
+    return response.data;
+  },
 
-  public createFactura(data: Factura) {
-    return this.create('/Factura', data);
-  }
+  async create(data: Factura): Promise<Factura> {
+    const response = await axios.post<Factura>(API_URL, data);
+    return response.data;
+  },
 
-  public updateFactura(id: string, data: Partial<Factura>) {
-    return this.update('/Factura', id, data);
-  }
+  async update(id: string, data: Partial<Factura>): Promise<Factura> {
+    const response = await axios.put<Factura>(`${API_URL}/${id}`, data);
+    return response.data;
+  },
 
-  public deleteFactura(id: string) {
-    return this.delete('/Factura', id);
-  }
-}
+  async delete(id: string): Promise<void> {
+    await axios.delete(`${API_URL}/${id}`);
+  },
+};
 
-export const facturaService = new FacturaService();
-export default facturaService;
+export default FacturaService;

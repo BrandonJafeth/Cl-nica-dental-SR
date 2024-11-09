@@ -1,31 +1,33 @@
-// services/CuentaService.ts
-import { Cuenta } from "../../types/type";
-import ApiService from "../ApiService/ApiService";
-class CuentaService extends ApiService<Cuenta> {
-  constructor() {
-    super();
-  }
+// src/services/CuentaService.ts
+import axios from 'axios';
+import { Cuenta } from '../../types/type';
 
-  public getAllCuentas() {
-    return this.getAll('/Cuenta');
-  }
+const API_URL = 'https://localhost:7232/api/Cuenta';
 
-  public getCuentaById(id: string) {
-    return this.getOne('/Cuenta', id);
-  }
+export const CuentaService = {
+  async getAll(): Promise<Cuenta[]> {
+    const response = await axios.get<Cuenta[]>(API_URL);
+    return response.data;
+  },
 
-  public createCuenta(data: Cuenta) {
-    return this.create('/Cuenta', data);
-  }
+  async getById(id: string): Promise<Cuenta> {
+    const response = await axios.get<Cuenta>(`${API_URL}/${id}`);
+    return response.data;
+  },
 
-  public updateCuenta(id: string, data: Partial<Cuenta>) {
-    return this.update('/Cuenta', id, data);
-  }
+  async create(data: Cuenta): Promise<Cuenta> {
+    const response = await axios.post<Cuenta>(API_URL, data);
+    return response.data;
+  },
 
-  public deleteCuenta(id: string) {
-    return this.delete('/Cuenta', id);
-  }
-}
+  async update(id: string, data: Partial<Cuenta>): Promise<Cuenta> {
+    const response = await axios.put<Cuenta>(`${API_URL}/${id}`, data);
+    return response.data;
+  },
 
-export const cuentaService = new CuentaService();
-export default cuentaService;
+  async delete(id: string): Promise<void> {
+    await axios.delete(`${API_URL}/${id}`);
+  },
+};
+
+export default CuentaService;
