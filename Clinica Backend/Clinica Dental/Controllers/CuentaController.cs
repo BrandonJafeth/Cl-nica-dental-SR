@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+﻿using Application.BrandonServices;
+using Application.Dtos.PostDtos;
+using Domain.Interfaces.Brandon_Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Clinica_Dental.Controllers
 {
@@ -8,36 +11,78 @@ namespace Clinica_Dental.Controllers
     [ApiController]
     public class CuentaController : ControllerBase
     {
+        private readonly ISvCuenta _svCuenta;
+
+        public CuentaController(ISvCuenta svCuenta)
+        {
+            _svCuenta = svCuenta;
+        }
+
         // GET: api/<CuentaController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult<IEnumerable<CuentaDto>>> Get()
         {
-            return new string[] { "value1", "value2" };
+            var cuentas = await _svCuenta.GetAllAsync();
+            return Ok(cuentas);
         }
 
         // GET api/<CuentaController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<CuentaDto>> Get(string id)
         {
-            return "value";
+            var cuenta = await _svCuenta.GetByIdAsync(id);
+            if (cuenta == null)
+            {
+                return NotFound();
+            }
+            return Ok(cuenta);
         }
 
         // POST api/<CuentaController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult> Post([FromBody] CuentaDto cuentaDto)
         {
+            if (cuentaDto == null)
+            {
+                return BadRequest();
+            }
+
+            await _svCuenta.AddAsync(cuentaDto);
+            await _svCuenta.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(Get), new { id = cuentaDto.ID_Cuenta }, cuentaDto);
         }
 
         // PUT api/<CuentaController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ActionResult> Put(string id, [FromBody] CuentaDto cuentaDto)
         {
+            if (cuentaDto == null || id != cuentaDto.ID_Cuenta)
+            {
+                return BadRequest();
+            }
+
+            await _svCuenta.UpdateAsync(cuentaDto);
+            await _svCuenta.SaveChangesAsync();
+
+            return NoContent();
         }
 
         // DELETE api/<CuentaController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> Delete(string id)
         {
+            var cuenta = await _svCuenta.GetByIdAsync(id);
+            if (cuenta == null)
+            {
+                return NotFound();
+            }
+
+            await _svCuenta.DeleteAsync(id);
+            await _svCuenta.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }
+
