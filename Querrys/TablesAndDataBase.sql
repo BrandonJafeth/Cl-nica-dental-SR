@@ -100,7 +100,7 @@ CREATE TABLE Estado_Tratamiento (
     Descripcion_Estado VARCHAR(200)
 ) ON TratamientosFileGroup;
 
--- Tabla: Paciente (sin clave foránea inicialmente)
+-- Tabla: Paciente
 CREATE TABLE Paciente (
     ID_Paciente CHAR(8) PRIMARY KEY,
     Nombre_Pac VARCHAR(20),
@@ -112,54 +112,25 @@ CREATE TABLE Paciente (
     Direccion_Pac VARCHAR(200)
 ) ON PacientesFileGroup;
 
--- Tabla intermedia Paciente_Procedimiento 
-CREATE TABLE Paciente_Procedimiento (
-    ID_Paciente_Procedimiento CHAR(8) PRIMARY KEY,
-    ID_Paciente CHAR(8),
-    ID_Procedimiento CHAR(8),
-    FOREIGN KEY (ID_Paciente) REFERENCES Paciente(ID_Paciente),
-    FOREIGN KEY (ID_Procedimiento) REFERENCES Procedimiento(ID_Procedimiento)
-) ON TratamientosFileGroup;
-
--- Tabla: Historial_Medico (sin clave foránea inicialmente)
-
+-- Tabla: Historial_Medico con ON DELETE CASCADE
 CREATE TABLE Historial_Medico (
     ID_HistorialMedico CHAR(8) PRIMARY KEY,
     Fecha_Historial DATE,
     Diagnostico VARCHAR(100),
-    ID_Paciente CHAR(8) UNIQUE
+    ID_Paciente CHAR(8) UNIQUE,
+    FOREIGN KEY (ID_Paciente) REFERENCES Paciente(ID_Paciente) ON DELETE CASCADE
 ) ON PacientesFileGroup;
 
--- Agregar claves foráneas después de crear ambas tablas
-ALTER TABLE Historial_Medico
-ADD CONSTRAINT FK_HistorialMedico_Paciente
-FOREIGN KEY (ID_Paciente) REFERENCES Paciente(ID_Paciente);
-
-
-
--- Tabla: Tratamiento
+-- Tabla: Tratamiento con ON DELETE CASCADE en referencias
 CREATE TABLE Tratamiento (
     ID_Tratamiento CHAR(8) PRIMARY KEY,
     Nombre_Tra VARCHAR(20),
     Descripcion_Tra VARCHAR(200),
     ID_TipoTratamiento CHAR(8),
     ID_EstadoTratamiento CHAR(8),
-    FOREIGN KEY (ID_TipoTratamiento) REFERENCES Tipo_Tratamiento(ID_TipoTratamiento),
-    FOREIGN KEY (ID_EstadoTratamiento) REFERENCES Estado_Tratamiento(ID_EstadoTratamiento)
+    FOREIGN KEY (ID_TipoTratamiento) REFERENCES Tipo_Tratamiento(ID_TipoTratamiento) ON DELETE CASCADE,
+    FOREIGN KEY (ID_EstadoTratamiento) REFERENCES Estado_Tratamiento(ID_EstadoTratamiento) ON DELETE CASCADE
 ) ON TratamientosFileGroup;
-
--- Tabla: Funcionario
-CREATE TABLE Funcionario (
-    ID_Funcionario CHAR(8) PRIMARY KEY,
-    Nombre VARCHAR(20),
-    Apellido1 VARCHAR(200),
-    Apellido2 VARCHAR(200),
-    Email VARCHAR(20),
-    Contraseña CHAR(12),
-    ID_Usuario CHAR(8),
-    FOREIGN KEY (ID_Usuario) REFERENCES Usuarios(ID_Usuario)
-) ON AuditoriaFileGroup;
-
 
 -- Tabla: Usuarios
 CREATE TABLE Usuarios (
@@ -169,10 +140,21 @@ CREATE TABLE Usuarios (
     Apellido2 VARCHAR(200),
     Email VARCHAR(50),
     Contraseña CHAR(12),
-    Token VARCHAR(100),
+    Token VARCHAR(100)
 ) ON AuditoriaFileGroup;
 
--- Tabla: Dentista
+-- Tabla: Funcionario con ON DELETE CASCADE en relación a Usuarios
+CREATE TABLE Funcionario (
+    ID_Funcionario CHAR(8) PRIMARY KEY,
+    Nombre VARCHAR(20),
+    Apellido1 VARCHAR(200),
+    Apellido2 VARCHAR(200),
+    Email VARCHAR(20),
+    ID_Usuario CHAR(8),
+    FOREIGN KEY (ID_Usuario) REFERENCES Usuarios(ID_Usuario) ON DELETE CASCADE
+) ON AuditoriaFileGroup;
+
+-- Tabla: Dentista con ON DELETE CASCADE en relación a Funcionario
 CREATE TABLE Dentista (
     ID_Dentista CHAR(8) PRIMARY KEY,
     Nombre_Den VARCHAR(20),
@@ -183,7 +165,7 @@ CREATE TABLE Dentista (
     Telefono_Den VARCHAR(20),
     Correo_Den VARCHAR(30),
     ID_Funcionario CHAR(8),
-    FOREIGN KEY (ID_Funcionario) REFERENCES Funcionario(ID_Funcionario)
+    FOREIGN KEY (ID_Funcionario) REFERENCES Funcionario(ID_Funcionario) ON DELETE CASCADE
 ) ON CitasFileGroup;
 
 -- Tabla: Especialidad
@@ -193,13 +175,13 @@ CREATE TABLE Especialidad (
     Descripcion_Esp VARCHAR(200)
 ) ON CitasFileGroup;
 
--- Tabla: Dentista_Especialidad
+-- Tabla: Dentista_Especialidad con ON DELETE CASCADE
 CREATE TABLE Dentista_Especialidad (
     ID_Dentista_Especialidad CHAR(8) PRIMARY KEY,
     ID_Dentista CHAR(8),
     ID_Especialidad CHAR(8),
-    FOREIGN KEY (ID_Dentista) REFERENCES Dentista(ID_Dentista),
-    FOREIGN KEY (ID_Especialidad) REFERENCES Especialidad(ID_Especialidad)
+    FOREIGN KEY (ID_Dentista) REFERENCES Dentista(ID_Dentista) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Especialidad) REFERENCES Especialidad(ID_Especialidad) ON DELETE CASCADE
 ) ON CitasFileGroup;
 
 -- Tabla: Estado_Citas
@@ -239,11 +221,11 @@ CREATE TABLE Pago (
     Fecha_Pago DATE,
     ID_Factura CHAR(8),
     ID_Tipo_Pago CHAR(8),
-    FOREIGN KEY (ID_Factura) REFERENCES Factura(ID_Factura),
+    FOREIGN KEY (ID_Factura) REFERENCES Factura(ID_Factura) ON DELETE CASCADE,
     FOREIGN KEY (ID_Tipo_Pago) REFERENCES Tipo_Pago(ID_Tipo_Pago)
 ) ON FinancierosFileGroup;
 
--- Tabla: Cuenta
+-- Tabla: Cuenta con ON DELETE CASCADE en relación a Paciente y Factura
 CREATE TABLE Cuenta (
     ID_Cuenta CHAR(8) PRIMARY KEY,
     Saldo_Total MONEY,
@@ -254,12 +236,12 @@ CREATE TABLE Cuenta (
     ID_Estado_Cuenta CHAR(8),
     ID_Factura CHAR(8),
     ID_Paciente CHAR(8),
-    FOREIGN KEY (ID_Estado_Cuenta) REFERENCES Estado_Cuenta(ID_Estado_Cuenta),
-    FOREIGN KEY (ID_Factura) REFERENCES Factura(ID_Factura),
-    FOREIGN KEY (ID_Paciente) REFERENCES Paciente(ID_Paciente)
+    FOREIGN KEY (ID_Estado_Cuenta) REFERENCES Estado_Cuenta(ID_Estado_Cuenta) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Factura) REFERENCES Factura(ID_Factura) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Paciente) REFERENCES Paciente(ID_Paciente) ON DELETE CASCADE
 ) ON FinancierosFileGroup;
 
--- Tabla: Procedimiento
+-- Tabla: Procedimiento con ON DELETE CASCADE en relación a Tratamiento y Paciente
 CREATE TABLE Procedimiento (
     ID_Procedimiento CHAR(8) PRIMARY KEY,
     Fecha_Proc DATE,
@@ -267,9 +249,16 @@ CREATE TABLE Procedimiento (
     Hora_Inicio_Proc TIME,
     Hora_Fin_Proc TIME,
     ID_Tratamiento CHAR(8),
+    FOREIGN KEY (ID_Tratamiento) REFERENCES Tratamiento(ID_Tratamiento) ON DELETE CASCADE,
+) ON TratamientosFileGroup;
+
+-- Tabla intermedia Paciente_Procedimiento con ON DELETE CASCADE
+CREATE TABLE Paciente_Procedimiento (
+    ID_Paciente_Procedimiento CHAR(8) PRIMARY KEY,
     ID_Paciente CHAR(8),
-    FOREIGN KEY (ID_Tratamiento) REFERENCES Tratamiento(ID_Tratamiento),
-    FOREIGN KEY (ID_Paciente) REFERENCES Paciente(ID_Paciente)
+    ID_Procedimiento CHAR(8),
+    FOREIGN KEY (ID_Paciente) REFERENCES Paciente(ID_Paciente) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Procedimiento) REFERENCES Procedimiento(ID_Procedimiento) ON DELETE CASCADE
 ) ON TratamientosFileGroup;
 
 -- Tabla: Cita
@@ -283,20 +272,20 @@ CREATE TABLE Cita (
     ID_Dentista CHAR(8),
     ID_Funcionario CHAR(8),
     ID_EstadoCita CHAR(8),
-    FOREIGN KEY (ID_Paciente) REFERENCES Paciente(ID_Paciente),
-    FOREIGN KEY (ID_Dentista) REFERENCES Dentista(ID_Dentista),
+    FOREIGN KEY (ID_Paciente) REFERENCES Paciente(ID_Paciente) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Dentista) REFERENCES Dentista(ID_Dentista) ON DELETE CASCADE,
     FOREIGN KEY (ID_Funcionario) REFERENCES Funcionario(ID_Funcionario),
     FOREIGN KEY (ID_EstadoCita) REFERENCES Estado_Citas(ID_EstadoCita)
 ) ON CitasFileGroup;
 
--- Tabla: Historial_Tratamiento
+-- Tabla: Historial_Tratamiento con ON DELETE CASCADE
 CREATE TABLE Historial_Tratamiento (
     ID_Historial_Tratamiento CHAR(8) PRIMARY KEY,
     ID_HistorialMedico CHAR(8) NOT NULL,
     ID_Tratamiento CHAR(8) NOT NULL,
     Fecha_Tratamiento DATE,
-    FOREIGN KEY (ID_HistorialMedico) REFERENCES Historial_Medico(ID_HistorialMedico),
-    FOREIGN KEY (ID_Tratamiento) REFERENCES Tratamiento(ID_Tratamiento)
+    FOREIGN KEY (ID_HistorialMedico) REFERENCES Historial_Medico(ID_HistorialMedico) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Tratamiento) REFERENCES Tratamiento(ID_Tratamiento) ON DELETE CASCADE
 ) ON TratamientosFileGroup;
 
 -- Tabla: Roles
@@ -313,40 +302,40 @@ CREATE TABLE Permisos (
     Descripcion VARCHAR(200)
 ) ON RolesPermisosFileGroup;
 
--- Tabla: Roles_Permisos
+-- Tabla: Roles_Permisos con ON DELETE CASCADE
 CREATE TABLE Roles_Permisos (
     ID_Roles_Permisos CHAR(8) PRIMARY KEY,
     ID_Roles CHAR(8),
     ID_Permisos CHAR(8),
-    FOREIGN KEY (ID_Roles) REFERENCES Roles(ID_Roles),
-    FOREIGN KEY (ID_Permisos) REFERENCES Permisos(ID_Permisos)
+    FOREIGN KEY (ID_Roles) REFERENCES Roles(ID_Roles) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Permisos) REFERENCES Permisos(ID_Permisos) ON DELETE CASCADE
 ) ON RolesPermisosFileGroup;
 
--- Tabla: Usuario_Roles
+-- Tabla: Usuario_Roles con ON DELETE CASCADE
 CREATE TABLE Usuario_Roles (
     ID_Usuario_Roles CHAR(8) PRIMARY KEY,
     ID_Usuario CHAR(8),
     ID_Roles CHAR(8),
-    FOREIGN KEY (ID_Usuario) REFERENCES Usuarios(ID_Usuario),
-    FOREIGN KEY (ID_Roles) REFERENCES Roles(ID_Roles)
+    FOREIGN KEY (ID_Usuario) REFERENCES Usuarios(ID_Usuario) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Roles) REFERENCES Roles(ID_Roles) ON DELETE CASCADE
 ) ON RolesPermisosFileGroup;
 
--- Tabla: Factura_Procedimiento
+-- Tabla: Factura_Procedimiento con ON DELETE CASCADE
 CREATE TABLE Factura_Procedimiento (
     ID_Factura_Procedimiento CHAR(8) PRIMARY KEY,
     ID_Factura CHAR(8),
     ID_Procedimiento CHAR(8),
-    FOREIGN KEY (ID_Factura) REFERENCES Factura(ID_Factura),
-    FOREIGN KEY (ID_Procedimiento) REFERENCES Procedimiento(ID_Procedimiento)
+    FOREIGN KEY (ID_Factura) REFERENCES Factura(ID_Factura) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Procedimiento) REFERENCES Procedimiento(ID_Procedimiento) ON DELETE CASCADE
 ) ON FinancierosFileGroup;
 
--- Tabla: Factura_Tratamiento
+-- Tabla: Factura_Tratamiento con ON DELETE CASCADE
 CREATE TABLE Factura_Tratamiento (
     ID_Factura_Tratamiento CHAR(8) PRIMARY KEY,
     ID_Factura CHAR(8),
     ID_Tratamiento CHAR(8),
-    FOREIGN KEY (ID_Factura) REFERENCES Factura(ID_Factura),
-    FOREIGN KEY (ID_Tratamiento) REFERENCES Tratamiento(ID_Tratamiento)
+    FOREIGN KEY (ID_Factura) REFERENCES Factura(ID_Factura) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Tratamiento) REFERENCES Tratamiento(ID_Tratamiento) ON DELETE CASCADE
 ) ON FinancierosFileGroup;
 
 -- Tabla: Auditoria
@@ -358,4 +347,3 @@ CREATE TABLE Auditoria (
     Usuario VARCHAR(128) NOT NULL
 ) ON AuditoriaFileGroup;
 GO
-
