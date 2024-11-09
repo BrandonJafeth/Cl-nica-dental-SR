@@ -30,10 +30,10 @@ export interface Procedimiento {
 }
 
 export interface Factura {
-  ID_Factura: string;
-  MontoTotal_Fa: number;
-  FechaEmision_Fa: string; // ISO format date
-  ID_EstadoPago: string;
+  iD_Factura: string;
+  montoTotal_Fa: number;
+  fechaEmision_Fa: string; // ISO format date
+  iD_EstadoPago: string;
 }
 
 export interface TipoPago {
@@ -43,11 +43,11 @@ export interface TipoPago {
 }
 
 export interface Pago {
-  ID_Pago: string;
-  Monto_Pago: number;
-  Fecha_Pago: string; // ISO format date
-  ID_Factura: string;
-  ID_Tipo_Pago: string;
+  iD_Pago: string;
+  monto_Pago: number;
+  fecha_Pago: string; // ISO format date
+  iD_Factura: string;
+  iD_Tipo_Pago: string;
 }
 
 export interface EstadoCuenta {
@@ -158,15 +158,15 @@ export interface EstadoCita {
 }
 
 export interface Cita {
-  ID_Cita: string;
-  Fecha_Cita: string; // ISO format date
-  Motivo: string;
-  Hora_Inicio: string; // ISO format time
-  Hora_Fin: string; // ISO format time
-  ID_Paciente: string;
-  ID_Dentista: string;
-  ID_Funcionario: string;
-  ID_EstadoCita: string;
+  iD_Cita?: string;
+  fecha_Cita: string;
+  motivo: string;
+  hora_Inicio: string;
+  hora_Fin: string;
+  iD_Paciente: string;
+  iD_Dentista: string;
+  iD_Funcionario: string;
+  iD_EstadoCita: string;
 }
 
 export interface HistorialTratamiento {
@@ -206,3 +206,5 @@ export type EstadoTratamiento = {
   Nombre_Estado: string;
   Descripcion_Estado: string;
 };
+
+
