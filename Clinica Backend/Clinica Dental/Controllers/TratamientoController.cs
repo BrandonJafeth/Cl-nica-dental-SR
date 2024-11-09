@@ -1,43 +1,66 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Application.Dtos.PostDtos;
+using Domain.Interfaces.JD_Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
-namespace Clinica_Dental.Controllers
+namespace Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class TratamientoController : ControllerBase
     {
-        // GET: api/<TratamientoController>
+        private readonly ISvTratamiento _svTratamiento;
+
+        public TratamientoController(ISvTratamiento svTratamiento)
+        {
+            _svTratamiento = svTratamiento;
+        }
+
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult<IEnumerable<TratamientoDto>>> GetAllTratamientos()
         {
-            return new string[] { "value1", "value2" };
+            var tratamientos = await _svTratamiento.GetAllTratamientosAsync();
+            return Ok(tratamientos);
         }
 
-        // GET api/<TratamientoController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<TratamientoDto>> GetTratamientoById(string id)
         {
-            return "value";
+            var tratamiento = await _svTratamiento.GetTratamientoByIdAsync(id);
+
+            if (tratamiento == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(tratamiento);
         }
 
-        // POST api/<TratamientoController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult> RegisterTratamiento([FromBody] TratamientoDto tratamientoDto)
         {
+            await _svTratamiento.RegisterTratamientoAsync(tratamientoDto);
+            return CreatedAtAction(nameof(GetTratamientoById), new { id = tratamientoDto.ID_Tratamiento }, tratamientoDto);
         }
 
-        // PUT api/<TratamientoController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ActionResult> UpdateTratamiento(string id, [FromBody] TratamientoDto tratamientoDto)
         {
+            if (id != tratamientoDto.ID_Tratamiento)
+            {
+                return BadRequest();
+            }
+
+            await _svTratamiento.UpdateTratamientoAsync(tratamientoDto);
+            return NoContent();
         }
 
-        // DELETE api/<TratamientoController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> DeleteTratamiento(string id)
         {
+            await _svTratamiento.DeleteTratamientoAsync(id);
+            return NoContent();
         }
     }
 }

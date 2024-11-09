@@ -1,73 +1,89 @@
-﻿using Application.GenericService;
-using Clinica_Dental;
-using Domain.Interfaces.Generic;
+﻿using Application.Dtos.PostDtos;
+using Application.Services;
+using Domain.Interfaces.JD_Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Clinica_Dental.Controllers
+namespace Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PermisoController : ControllerBase
+    public class PermisosController : ControllerBase
     {
-        private readonly ISvGeneric<Permiso> _service;
+        private readonly ISvPermiso _svPermiso;
 
-        public PermisoController(ISvGeneric<Permiso> service)
+        public PermisosController(ISvPermiso svPermiso)
         {
-            _service = service;
+            _svPermiso = svPermiso;
         }
 
-        // GET: api/Permiso
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Permiso>>> Get()
+        public async Task<ActionResult<IEnumerable<PermisosPostDto>>> GetAllPermisos()
         {
-            var result = await _service.GetAllAsync();
-            return Ok(result);
+            var permisos = await _svPermiso.GetAllPermisosAsync();
+            return Ok(permisos);
         }
 
-        // GET: api/Permiso/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Permiso>> Get(string id)
+        public async Task<ActionResult<PermisosPostDto>> GetPermisoById(string id)
         {
-            var result = await _service.GetByIdAsync(id);
-            if (result == null)
+            try
             {
-                return NotFound();
+                var permiso = await _svPermiso.GetPermisoByIdAsync(id);
+                return Ok(permiso);
             }
-            return Ok(result);
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
-        // POST: api/Permiso
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] Permiso permiso)
+        public async Task<ActionResult> RegisterPermiso([FromBody] PermisosPostDto permisoDto)
         {
-            await _service.AddAsync(permiso);
-            await _service.SaveChangesAsync();
-            return CreatedAtAction(nameof(Get), new { id = permiso.ID_Permisos }, permiso);
+            try
+            {
+                await _svPermiso.RegisterPermisoAsync(permisoDto);
+                return CreatedAtAction(nameof(GetPermisoById), new { id = permisoDto.ID_Permisos }, permisoDto);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        // PUT: api/Permiso/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(string id, [FromBody] Permiso permiso)
+        public async Task<ActionResult> UpdatePermiso(string id, [FromBody] PermisosPostDto permisoDto)
         {
-            if (id != permiso.ID_Permisos)
+            if (id != permisoDto.ID_Permisos)
             {
-                return BadRequest();
+                return BadRequest("ID del permiso no coincide");
             }
 
-            await _service.UpdateAsync(permiso);
-            await _service.SaveChangesAsync();
-            return NoContent();
+            try
+            {
+                await _svPermiso.UpdatePermisoAsync(permisoDto);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
-        // DELETE: api/Permiso/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(string id)
+        public async Task<ActionResult> DeletePermiso(string id)
         {
-            await _service.DeleteAsync(id);
-            await _service.SaveChangesAsync();
-            return NoContent();
+            try
+            {
+                await _svPermiso.DeletePermisoAsync(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }

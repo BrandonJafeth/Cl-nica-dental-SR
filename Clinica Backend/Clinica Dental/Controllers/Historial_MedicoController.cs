@@ -1,72 +1,65 @@
-﻿using Application.GenericService;
-using Clinica_Dental;
-using Domain.Interfaces.Generic;
+﻿using Application.Dtos.PostDtos;
+using Application.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Clinica_Dental.Controllers
+namespace Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class Historial_MedicoController : ControllerBase
+    public class HistorialMedicoController : ControllerBase
     {
-        private readonly ISvGeneric<Historial_Medico> _service;
+        private readonly SvHistorialMedico _svHistorialMedico;
 
-        public Historial_MedicoController(ISvGeneric<Historial_Medico> service)
+        public HistorialMedicoController(SvHistorialMedico svHistorialMedico)
         {
-            _service = service;
+            _svHistorialMedico = svHistorialMedico;
         }
 
-        // GET: api/Historial_Medico
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Historial_Medico>>> Get()
+        public async Task<ActionResult<IEnumerable<HistorialMedicoDto>>> GetAllHistorialesMedicos()
         {
-            var result = await _service.GetAllAsync();
-            return Ok(result);
+            var historialesMedicos = await _svHistorialMedico.GetAllHistorialesMedicosAsync();
+            return Ok(historialesMedicos);
         }
 
-        // GET: api/Historial_Medico/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Historial_Medico>> Get(string id)
+        public async Task<ActionResult<HistorialMedicoDto>> GetHistorialMedicoById(string id)
         {
-            var result = await _service.GetByIdAsync(id);
-            if (result == null)
+            var historialMedico = await _svHistorialMedico.GetHistorialMedicoByIdAsync(id);
+
+            if (historialMedico == null)
             {
                 return NotFound();
             }
-            return Ok(result);
+
+            return Ok(historialMedico);
         }
 
-        // POST: api/Historial_Medico
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] Historial_Medico historialMedico)
+        public async Task<ActionResult> RegisterHistorialMedico([FromBody] HistorialMedicoDto historialMedicoDto)
         {
-            await _service.AddAsync(historialMedico);
-            await _service.SaveChangesAsync();
-            return CreatedAtAction(nameof(Get), new { id = historialMedico.ID_HistorialMedico }, historialMedico);
+            await _svHistorialMedico.RegisterHistorialMedicoAsync(historialMedicoDto);
+            return CreatedAtAction(nameof(GetHistorialMedicoById), new { id = historialMedicoDto.ID_HistorialMedico }, historialMedicoDto);
         }
 
-        // PUT: api/Historial_Medico/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(string id, [FromBody] Historial_Medico historialMedico)
+        public async Task<ActionResult> UpdateHistorialMedico(string id, [FromBody] HistorialMedicoDto historialMedicoDto)
         {
-            if (id != historialMedico.ID_HistorialMedico)
+            if (id != historialMedicoDto.ID_HistorialMedico)
             {
                 return BadRequest();
             }
 
-            await _service.UpdateAsync(historialMedico);
-            await _service.SaveChangesAsync();
+            await _svHistorialMedico.UpdateHistorialMedicoAsync(historialMedicoDto);
             return NoContent();
         }
 
-        // DELETE: api/Historial_Medico/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(string id)
+        public async Task<ActionResult> DeleteHistorialMedico(string id)
         {
-            await _service.DeleteAsync(id);
-            await _service.SaveChangesAsync();
+            await _svHistorialMedico.DeleteHistorialMedicoAsync(id);
             return NoContent();
         }
     }

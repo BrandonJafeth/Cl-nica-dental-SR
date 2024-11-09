@@ -1,73 +1,88 @@
-﻿using Application.GenericService;
-using Clinica_Dental;
-using Domain.Interfaces.Generic;
+﻿using Application.Dtos.PostDtos;
+using Application.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Clinica_Dental.Controllers
+namespace Application.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class PacienteController : ControllerBase
     {
-        private readonly ISvGeneric<Paciente> _service;
+        private readonly SvPaciente _svPaciente;
 
-        public PacienteController(ISvGeneric<Paciente> service)
+        public PacienteController(SvPaciente svPaciente)
         {
-            _service = service;
+            _svPaciente = svPaciente;
         }
 
-        // GET: api/Paciente
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Paciente>>> Get()
-        {
-            var result = await _service.GetAllAsync();
-            return Ok(result);
-        }
-
-        // GET: api/Paciente/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Paciente>> Get(string id)
+        public async Task<ActionResult<PacienteDto>> GetPacienteById(string id)
         {
-            var result = await _service.GetByIdAsync(id);
-            if (result == null)
+            try
             {
-                return NotFound();
+                var paciente = await _svPaciente.GetPacienteByIdAsync(id);
+                return Ok(paciente);
             }
-            return Ok(result);
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
-        // POST: api/Paciente
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<PacienteDto>>> GetAllPacientes()
+        {
+            var pacientes = await _svPaciente.GetAllPacientesAsync();
+            return Ok(pacientes);
+        }
+
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] Paciente paciente)
+        public async Task<ActionResult> RegisterPaciente([FromBody] PacienteDto pacienteDto)
         {
-            await _service.AddAsync(paciente);
-            await _service.SaveChangesAsync();
-            return CreatedAtAction(nameof(Get), new { id = paciente.ID_Paciente }, paciente);
+            try
+            {
+                await _svPaciente.RegisterPacienteAsync(pacienteDto);
+                return CreatedAtAction(nameof(GetPacienteById), new { id = pacienteDto.ID_Paciente }, pacienteDto);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        // PUT: api/Paciente/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(string id, [FromBody] Paciente paciente)
+        public async Task<ActionResult> UpdatePaciente(string id, [FromBody] PacienteDto pacienteDto)
         {
-            if (id != paciente.ID_Paciente)
+            if (id != pacienteDto.ID_Paciente)
             {
-                return BadRequest();
+                return BadRequest("ID del paciente no coincide");
             }
 
-            await _service.UpdateAsync(paciente);
-            await _service.SaveChangesAsync();
-            return NoContent();
+            try
+            {
+                await _svPaciente.UpdatePacienteAsync(pacienteDto);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
-        // DELETE: api/Paciente/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(string id)
+        public async Task<ActionResult> DeletePaciente(string id)
         {
-            await _service.DeleteAsync(id);
-            await _service.SaveChangesAsync();
-            return NoContent();
+            try
+            {
+                await _svPaciente.DeletePacienteAsync(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }

@@ -1,74 +1,89 @@
-﻿using Application.GenericService;
-using Clinica_Dental;
-using Domain.Interfaces.Generic;
+﻿using Application.Dtos.PostDtos;
+using Application.Services;
+using Domain.Interfaces.JD_Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Clinica_Dental.Controllers
+namespace Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class Role_PermisoController : ControllerBase
+    public class RolesPermisosController : ControllerBase
     {
-        private readonly ISvGeneric<Roles_Permiso> _service;
+        private readonly ISvRolesPermiso _svRolesPermiso;
 
-        public Role_PermisoController(ISvGeneric<Roles_Permiso> service)
+        public RolesPermisosController(ISvRolesPermiso svRolesPermiso)
         {
-            _service = service;
+            _svRolesPermiso = svRolesPermiso;
         }
 
-        // GET: api/Role_Permiso
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Roles_Permiso>>> Get()
+        public async Task<ActionResult<IEnumerable<RolesPermisosPostDto>>> GetAllRolesPermisos()
         {
-            var result = await _service.GetAllAsync();
-            return Ok(result);
+            var rolesPermisos = await _svRolesPermiso.GetAllRolesPermisosAsync();
+            return Ok(rolesPermisos);
         }
 
-        // GET: api/Role_Permiso/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Roles_Permiso>> Get(string id)
+        public async Task<ActionResult<RolesPermisosPostDto>> GetRolesPermisoById(string id)
         {
-            var result = await _service.GetByIdAsync(id);
-            if (result == null)
+            try
             {
-                return NotFound();
+                var rolesPermiso = await _svRolesPermiso.GetRolesPermisoByIdAsync(id);
+                return Ok(rolesPermiso);
             }
-            return Ok(result);
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
-        // POST: api/Role_Permiso
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] Roles_Permiso rolesPermiso)
+        public async Task<ActionResult> RegisterRolesPermiso([FromBody] RolesPermisosPostDto rolesPermisosDto)
         {
-            await _service.AddAsync(rolesPermiso);
-            await _service.SaveChangesAsync();
-            return CreatedAtAction(nameof(Get), new { id = rolesPermiso.ID_Roles_Permisos }, rolesPermiso);
+            try
+            {
+                await _svRolesPermiso.RegisterRolesPermisoAsync(rolesPermisosDto);
+                return CreatedAtAction(nameof(GetRolesPermisoById), new { id = rolesPermisosDto.ID_Roles_Permisos }, rolesPermisosDto);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        // PUT: api/Role_Permiso/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(string id, [FromBody] Roles_Permiso rolesPermiso)
+        public async Task<ActionResult> UpdateRolesPermiso(string id, [FromBody] RolesPermisosPostDto rolesPermisosDto)
         {
-            if (id != rolesPermiso.ID_Roles_Permisos)
+            if (id != rolesPermisosDto.ID_Roles_Permisos)
             {
-                return BadRequest();
+                return BadRequest("ID del RolesPermiso no coincide");
             }
 
-            await _service.UpdateAsync(rolesPermiso);
-            await _service.SaveChangesAsync();
-            return NoContent();
+            try
+            {
+                await _svRolesPermiso.UpdateRolesPermisoAsync(rolesPermisosDto);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
-        // DELETE: api/Role_Permiso/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(string id)
+        public async Task<ActionResult> DeleteRolesPermiso(string id)
         {
-            await _service.DeleteAsync(id);
-            await _service.SaveChangesAsync();
-            return NoContent();
+            try
+            {
+                await _svRolesPermiso.DeleteRolesPermisoAsync(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }
-

@@ -1,43 +1,68 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Application.Dtos.PostDtos;
+using Domain.Interfaces.JD_Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
-namespace Clinica_Dental.Controllers
+namespace Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class Usuario_RoleController : ControllerBase
+    public class UsuarioRolesController : ControllerBase
     {
-        // GET: api/<Usuario_RoleController>
+        private readonly ISvUsuarioRoles _svUsuarioRoles;
+
+        public UsuarioRolesController(ISvUsuarioRoles svUsuarioRoles)
+        {
+            _svUsuarioRoles = svUsuarioRoles;
+        }
+
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult<IEnumerable<UsuarioRolesDto>>> GetAllUsuarioRoles()
         {
-            return new string[] { "value1", "value2" };
+            var usuarioRoles = await _svUsuarioRoles.GetAllUsuarioRolesAsync();
+            return Ok(usuarioRoles);
         }
 
-        // GET api/<Usuario_RoleController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<UsuarioRolesDto>> GetUsuarioRolesById(string id)
         {
-            return "value";
+            var usuarioRole = await _svUsuarioRoles.GetUsuarioRolesByIdAsync(id);
+
+            if (usuarioRole == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(usuarioRole);
         }
 
-        // POST api/<Usuario_RoleController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult> RegisterUsuarioRoles([FromBody] UsuarioRolesDto usuarioRolesDto)
         {
+            await _svUsuarioRoles.RegisterUsuarioRolesAsync(usuarioRolesDto);
+            return CreatedAtAction(nameof(GetUsuarioRolesById), new { id = usuarioRolesDto.ID_Usuario_Roles }, usuarioRolesDto);
         }
 
-        // PUT api/<Usuario_RoleController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ActionResult> UpdateUsuarioRoles(string id, [FromBody] UsuarioRolesDto usuarioRolesDto)
         {
+            if (id != usuarioRolesDto.ID_Usuario_Roles)
+            {
+                return BadRequest();
+            }
+
+            await _svUsuarioRoles.UpdateUsuarioRolesAsync(usuarioRolesDto);
+            return NoContent();
         }
 
-        // DELETE api/<Usuario_RoleController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> DeleteUsuarioRoles(string id)
         {
+            await _svUsuarioRoles.DeleteUsuarioRolesAsync(id);
+            return NoContent();
         }
     }
 }
+
+
