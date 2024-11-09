@@ -35,7 +35,7 @@ export function useFactura() {
       const updatedFactura = await FacturaService.update(id, data);
       setFacturas((prev) =>
         prev.map((factura) =>
-          factura.ID_Factura === id ? updatedFactura : factura
+          factura.iD_Factura === id ? updatedFactura : factura
         )
       );
     } catch (err) {
@@ -46,7 +46,7 @@ export function useFactura() {
   const deleteFactura = async (id: string) => {
     try {
       await FacturaService.delete(id);
-      setFacturas((prev) => prev.filter((factura) => factura.ID_Factura !== id));
+      setFacturas((prev) => prev.filter((factura) => factura.iD_Factura !== id));
     } catch (err) {
       setError('Error al eliminar la factura');
     }
