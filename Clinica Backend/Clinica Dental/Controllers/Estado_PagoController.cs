@@ -1,6 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+﻿using Application.Dtos.PostDtos;
+using Application.GenericService;
+using Clinica_Dental;
+using Domain.Interfaces.Generic;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Clinica_Dental.Controllers
 {
@@ -8,36 +13,92 @@ namespace Clinica_Dental.Controllers
     [ApiController]
     public class Estado_PagoController : ControllerBase
     {
-        // GET: api/<Estado_PagoController>
+        private readonly ISvGeneric<Estado_Pago> _service;
+
+        public Estado_PagoController(ISvGeneric<Estado_Pago> service)
+        {
+            _service = service;
+        }
+
+        // GET: api/Estado_Pago
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult<IEnumerable<EstadoPagoPostDto>>> Get()
         {
-            return new string[] { "value1", "value2" };
+            var result = await _service.GetAllAsync();
+            var dtoResult = result.Select(e => new EstadoPagoPostDto
+            {
+                ID_EstadoPago = e.ID_EstadoPago,
+                Nombre_EP = e.Nombre_EP,
+                Descripcion_EP = e.Descripcion_EP
+            }).ToList();
+
+            return Ok(dtoResult);
         }
 
-        // GET api/<Estado_PagoController>/5
+        // GET: api/Estado_Pago/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<EstadoPagoPostDto>> Get(string id)
         {
-            return "value";
+            var result = await _service.GetByIdAsync(id);
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            var dtoResult = new EstadoPagoPostDto
+            {
+                ID_EstadoPago = result.ID_EstadoPago,
+                Nombre_EP = result.Nombre_EP,
+                Descripcion_EP = result.Descripcion_EP
+            };
+
+            return Ok(dtoResult);
         }
 
-        // POST api/<Estado_PagoController>
+        // POST: api/Estado_Pago
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult> Post([FromBody] EstadoPagoPostDto estadoPagoDto)
         {
+            var estadoPago = new Estado_Pago
+            {
+                ID_EstadoPago = estadoPagoDto.ID_EstadoPago,
+                Nombre_EP = estadoPagoDto.Nombre_EP,
+                Descripcion_EP = estadoPagoDto.Descripcion_EP
+            };
+
+            await _service.AddAsync(estadoPago);
+            await _service.SaveChangesAsync();
+            return CreatedAtAction(nameof(Get), new { id = estadoPago.ID_EstadoPago }, estadoPagoDto);
         }
 
-        // PUT api/<Estado_PagoController>/5
+        // PUT: api/Estado_Pago/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ActionResult> Put(string id, [FromBody] EstadoPagoPostDto estadoPagoDto)
         {
+            if (id != estadoPagoDto.ID_EstadoPago)
+            {
+                return BadRequest();
+            }
+
+            var estadoPago = new Estado_Pago
+            {
+                ID_EstadoPago = estadoPagoDto.ID_EstadoPago,
+                Nombre_EP = estadoPagoDto.Nombre_EP,
+                Descripcion_EP = estadoPagoDto.Descripcion_EP
+            };
+
+            await _service.UpdateAsync(estadoPago);
+            await _service.SaveChangesAsync();
+            return NoContent();
         }
 
-        // DELETE api/<Estado_PagoController>/5
+        // DELETE: api/Estado_Pago/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> Delete(string id)
         {
+            await _service.DeleteAsync(id);
+            await _service.SaveChangesAsync();
+            return NoContent();
         }
     }
 }
