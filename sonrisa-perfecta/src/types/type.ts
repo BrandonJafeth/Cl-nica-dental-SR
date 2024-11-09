@@ -187,7 +187,7 @@ export interface EstadoCitas {
 }
 
 export interface Cita {
-  iD_Cita: string;
+  iD_Cita?: string;
   fecha_Cita: string;
   motivo: string;
   hora_Inicio: string;

@@ -24,10 +24,12 @@ class CitaService {
   }
 
   // Actualiza una cita existente
-  public async updateCita(id: string, data: Partial<Cita>): Promise<Cita> {
-    const response = await axios.put<Cita>(`${API_URL}/${id}`, data);
+  public async updateCita(id: string, data: Cita): Promise<Cita> {
+    const response = await axios.put<Cita>(`${API_URL}/${id}`, data, {
+        headers: { 'Content-Type': 'application/json' }
+    });
     return response.data;
-  }
+}
 
   // Elimina una cita
   public async deleteCita(id: string): Promise<void> {
