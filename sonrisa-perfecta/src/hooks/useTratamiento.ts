@@ -1,6 +1,6 @@
 // src/hooks/useTratamiento.ts
 import { useState, useEffect } from 'react';
-import { tratamientoService } from '../services/TablesServices/TratamientoService';
+import tratamientoService  from '../services/TablesServices/TratamientoService';
 import { Tratamiento } from '../types/type';
 
 export function useTratamiento() {
@@ -13,6 +13,7 @@ export function useTratamiento() {
     setError(null);
     try {
       const data = await tratamientoService.getAllTratamientos();
+      console.log("Tratamientos cargados:", data); // Verificar que los datos se están cargando
       setTratamientos(data);
     } catch (err) {
       setError('Error al cargar los tratamientos');
@@ -20,7 +21,6 @@ export function useTratamiento() {
       setLoading(false);
     }
   };
-
   const addTratamiento = async (data: Tratamiento) => {
     try {
       const newTratamiento = await tratamientoService.createTratamiento(data);

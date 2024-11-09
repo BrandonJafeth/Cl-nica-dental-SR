@@ -28,7 +28,10 @@ function Navbar() {
             <Link to="/bills" className="text-white hover:text-[#93f7ea] text-lg transition-colors duration-200">Billing Service</Link>
           </li>
           <li>
-            <Link to="/Treatments-Procedures" className="text-white hover:text-[#93f7ea] text-lg transition-colors duration-200">Treatments & Procedures</Link>
+            <Link to="/treatments" className="text-white hover:text-[#93f7ea] text-lg transition-colors duration-200">Tratamientos</Link>
+          </li>
+          <li>
+            <Link to="/dentist" className="text-white hover:text-[#93f7ea] text-lg transition-colors duration-200">Dentistas</Link>
           </li>
           <li>
             <Link to="/payments" className="text-white hover:text-[#93f7ea] text-lg transition-colors duration-200">Payments</Link>

@@ -1,36 +1,53 @@
-
+// src/services/TratamientoService.ts
+import axios from 'axios';
 import { Tratamiento } from '../../types/type';
-import ApiService from '../ApiService/ApiService';
 
-class TratamientoService extends ApiService<Tratamiento> {
-  constructor() {
-    super();
-  }
+const API_URL = 'https://localhost:7232/api/Tratamiento';
 
-  public async getAllTratamientos(): Promise<Tratamiento[]> {
-    const response = await this.getAll('/Tratamiento');
-    return response.data; // Devuelve solo los datos
-  }
+const TratamientoService = {
+  /**
+   * Obtener todos los tratamientos
+   */
+  async getAllTratamientos(): Promise<Tratamiento[]> {
+    const response = await axios.get<Tratamiento[]>(API_URL);
+    return response.data;
+  },
 
-  public async getTratamientoById(id: string): Promise<Tratamiento> {
-    const response = await this.getOne('/Tratamiento', id);
-    return response.data; // Devuelve solo los datos
-  }
+  /**
+   * Obtener un tratamiento por su ID
+   * @param id - ID del tratamiento
+   */
+  async getTratamientoById(id: string): Promise<Tratamiento> {
+    const response = await axios.get<Tratamiento>(`${API_URL}/${id}`);
+    return response.data;
+  },
 
-  public async createTratamiento(data: Tratamiento): Promise<Tratamiento> {
-    const response = await this.create('/Tratamiento', data);
-    return response.data; // Devuelve solo los datos
-  }
+  /**
+   * Crear un nuevo tratamiento
+   * @param data - Datos del tratamiento a crear
+   */
+  async createTratamiento(data: Tratamiento): Promise<Tratamiento> {
+    const response = await axios.post<Tratamiento>(API_URL, data);
+    return response.data;
+  },
 
-  public async updateTratamiento(id: string, data: Partial<Tratamiento>): Promise<Tratamiento> {
-    const response = await this.update('/Tratamiento', id, data);
-    return response.data; // Devuelve solo los datos
-  }
+  /**
+   * Actualizar un tratamiento existente
+   * @param id - ID del tratamiento a actualizar
+   * @param data - Datos actualizados del tratamiento
+   */
+  async updateTratamiento(id: string, data: Partial<Tratamiento>): Promise<Tratamiento> {
+    const response = await axios.put<Tratamiento>(`${API_URL}/${id}`, data);
+    return response.data;
+  },
 
-  public async deleteTratamiento(id: string): Promise<void> {
-    await this.delete('/Tratamiento', id);
-  }
-}
+  /**
+   * Eliminar un tratamiento
+   * @param id - ID del tratamiento a eliminar
+   */
+  async deleteTratamiento(id: string): Promise<void> {
+    await axios.delete(`${API_URL}/${id}`);
+  },
+};
 
-export const tratamientoService = new TratamientoService();
-export default tratamientoService;
+export default TratamientoService;
