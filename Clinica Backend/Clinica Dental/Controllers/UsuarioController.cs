@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+﻿using Application.Dtos.PostDtos;
+using Application.JD_Services;
+using Domain.Dtos.OtherDtos;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Clinica_Dental.Controllers
 {
@@ -8,36 +11,76 @@ namespace Clinica_Dental.Controllers
     [ApiController]
     public class UsuarioController : ControllerBase
     {
+        private readonly SvUsuario _svUsuario;
+
+        public UsuarioController(SvUsuario svUsuario)
+        {
+            _svUsuario = svUsuario;
+        }
+
         // GET: api/<UsuarioController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult<IEnumerable<UsuariosDto>>> Get()
         {
-            return new string[] { "value1", "value2" };
+            var usuarios = await _svUsuario.GetAllUsersAsync();
+            return Ok(usuarios);
         }
 
         // GET api/<UsuarioController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<UsuariosDto>> Get(string id)
         {
-            return "value";
+            var usuario = await _svUsuario.GetUserByIdAsync(id);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+            return Ok(usuario);
         }
 
         // POST api/<UsuarioController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult> Post([FromBody] UsuariosDto usuarioDto)
         {
+            await _svUsuario.RegisterAsync(usuarioDto);
+            return CreatedAtAction(nameof(Get), new { id = usuarioDto.ID_Usuario }, usuarioDto);
         }
 
         // PUT api/<UsuarioController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ActionResult> Put(string id, [FromBody] UsuariosDto usuarioDto)
         {
+            if (id != usuarioDto.ID_Usuario)
+            {
+                return BadRequest();
+            }
+
+            await _svUsuario.UpdateUserAsync(usuarioDto);
+            return NoContent();
         }
 
         // DELETE api/<UsuarioController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> Delete(string id)
         {
+            await _svUsuario.DeleteUserAsync(id);
+            return NoContent();
+        }
+
+        // POST api/<UsuarioController>/login
+        [HttpPost("login")]
+        public async Task<ActionResult<UsuariosDto>> Login([FromBody] LoginDto loginDto)
+        {
+            var usuario = await _svUsuario.LoginAsync(loginDto.Email, loginDto.Password);
+            return Ok(usuario);
+        }
+
+        // POST api/<UsuarioController>/register
+        [HttpPost("register")]
+        public async Task<ActionResult> Register([FromBody] UsuariosDto usuarioDto)
+        {
+            await _svUsuario.RegisterAsync(usuarioDto);
+            return CreatedAtAction(nameof(Get), new { id = usuarioDto.ID_Usuario }, usuarioDto);
         }
     }
 }

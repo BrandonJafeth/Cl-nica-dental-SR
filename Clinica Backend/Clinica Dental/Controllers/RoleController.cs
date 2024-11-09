@@ -1,43 +1,70 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Application.Dtos.PostDtos;
+using Application.Services;
+using Domain.Interfaces.JD_Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
-namespace Clinica_Dental.Controllers
+namespace Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RoleController : ControllerBase
+    public class RolesController : ControllerBase
     {
-        // GET: api/<RoleController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly ISvRole _svRole;
+
+        public RolesController(ISvRole svRole)
         {
-            return new string[] { "value1", "value2" };
+            _svRole = svRole;
         }
 
-        // GET api/<RoleController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<RolesPostDto>> GetRoleById(string id)
         {
-            return "value";
+            var role = await _svRole.GetRoleByIdAsync(id);
+
+            if (role == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(role);
         }
 
-        // POST api/<RoleController>
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<RolesPostDto>>> GetAllRoles()
+        {
+            var roles = await _svRole.GetAllRolesAsync();
+            return Ok(roles);
+        }
+
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult> RegisterRole(RolesPostDto roleDto)
         {
+            await _svRole.RegisterRoleAsync(roleDto);
+            return CreatedAtAction(nameof(GetRoleById), new { id = roleDto.ID_Roles }, roleDto);
         }
 
-        // PUT api/<RoleController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ActionResult> UpdateRole(string id, RolesPostDto roleDto)
         {
+            if (id != roleDto.ID_Roles)
+            {
+                return BadRequest();
+            }
+
+            await _svRole.UpdateRoleAsync(roleDto);
+            return NoContent();
         }
 
-        // DELETE api/<RoleController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> DeleteRole(string id)
         {
+            await _svRole.DeleteRoleAsync(id);
+            return NoContent();
         }
     }
 }
+
+
+

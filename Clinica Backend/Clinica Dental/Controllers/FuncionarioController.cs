@@ -1,73 +1,88 @@
-﻿using Application.GenericService;
-using Clinica_Dental;
-using Domain.Interfaces.Generic;
+﻿using Application.Dtos.PostDtos;
+using Application.JD_Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Clinica_Dental.Controllers
+namespace YourNamespace.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class FuncionarioController : ControllerBase
     {
-        private readonly ISvGeneric<Funcionario> _service;
+        private readonly SvFuncionario _svFuncionario;
 
-        public FuncionarioController(ISvGeneric<Funcionario> service)
+        public FuncionarioController(SvFuncionario svFuncionario)
         {
-            _service = service;
+            _svFuncionario = svFuncionario;
         }
 
-        // GET: api/Funcionario
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Funcionario>>> Get()
-        {
-            var result = await _service.GetAllAsync();
-            return Ok(result);
-        }
-
-        // GET: api/Funcionario/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Funcionario>> Get(string id)
+        public async Task<ActionResult<FuncionarioPostDto>> GetFuncionarioById(string id)
         {
-            var result = await _service.GetByIdAsync(id);
-            if (result == null)
+            try
             {
-                return NotFound();
+                var funcionario = await _svFuncionario.GetFuncionarioByIdAsync(id);
+                return Ok(funcionario);
             }
-            return Ok(result);
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
-        // POST: api/Funcionario
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<FuncionarioPostDto>>> GetAllFuncionarios()
+        {
+            var funcionarios = await _svFuncionario.GetAllFuncionariosAsync();
+            return Ok(funcionarios);
+        }
+
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] Funcionario funcionario)
+        public async Task<ActionResult> RegisterFuncionario([FromBody] FuncionarioPostDto funcionarioDto)
         {
-            await _service.AddAsync(funcionario);
-            await _service.SaveChangesAsync();
-            return CreatedAtAction(nameof(Get), new { id = funcionario.ID_Funcionario }, funcionario);
+            try
+            {
+                await _svFuncionario.RegisterFuncionarioAsync(funcionarioDto);
+                return CreatedAtAction(nameof(GetFuncionarioById), new { id = funcionarioDto.ID_Funcionario }, funcionarioDto);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        // PUT: api/Funcionario/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(string id, [FromBody] Funcionario funcionario)
+        public async Task<ActionResult> UpdateFuncionario(string id, [FromBody] FuncionarioPostDto funcionarioDto)
         {
-            if (id != funcionario.ID_Funcionario)
+            if (id != funcionarioDto.ID_Funcionario)
             {
-                return BadRequest();
+                return BadRequest("ID del funcionario no coincide");
             }
 
-            await _service.UpdateAsync(funcionario);
-            await _service.SaveChangesAsync();
-            return NoContent();
+            try
+            {
+                await _svFuncionario.UpdateFuncionarioAsync(funcionarioDto);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
-        // DELETE: api/Funcionario/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(string id)
+        public async Task<ActionResult> DeleteFuncionario(string id)
         {
-            await _service.DeleteAsync(id);
-            await _service.SaveChangesAsync();
-            return NoContent();
+            try
+            {
+                await _svFuncionario.DeleteFuncionarioAsync(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }

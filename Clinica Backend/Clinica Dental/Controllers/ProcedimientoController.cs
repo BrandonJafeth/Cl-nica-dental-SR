@@ -1,73 +1,89 @@
-﻿using Application.GenericService;
-using Clinica_Dental;
-using Domain.Interfaces.Generic;
+﻿using Application.Dtos.PostDtos;
+using Application.Services;
+using Domain.Interfaces.JD_Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Clinica_Dental.Controllers
+namespace Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProcedimientoController : ControllerBase
+    public class ProcedimientosController : ControllerBase
     {
-        private readonly ISvGeneric<Procedimiento> _service;
+        private readonly ISvProcedimiento _svProcedimiento;
 
-        public ProcedimientoController(ISvGeneric<Procedimiento> service)
+        public ProcedimientosController(ISvProcedimiento svProcedimiento)
         {
-            _service = service;
+            _svProcedimiento = svProcedimiento;
         }
 
-        // GET: api/Procedimiento
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Procedimiento>>> Get()
+        public async Task<ActionResult<IEnumerable<ProcedimientoDto>>> GetAllProcedimientos()
         {
-            var result = await _service.GetAllAsync();
-            return Ok(result);
+            var procedimientos = await _svProcedimiento.GetAllProcedimientosAsync();
+            return Ok(procedimientos);
         }
 
-        // GET: api/Procedimiento/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Procedimiento>> Get(string id)
+        public async Task<ActionResult<ProcedimientoDto>> GetProcedimientoById(string id)
         {
-            var result = await _service.GetByIdAsync(id);
-            if (result == null)
+            try
             {
-                return NotFound();
+                var procedimiento = await _svProcedimiento.GetProcedimientoByIdAsync(id);
+                return Ok(procedimiento);
             }
-            return Ok(result);
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
-        // POST: api/Procedimiento
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] Procedimiento procedimiento)
+        public async Task<ActionResult> RegisterProcedimiento([FromBody] ProcedimientoDto procedimientoDto)
         {
-            await _service.AddAsync(procedimiento);
-            await _service.SaveChangesAsync();
-            return CreatedAtAction(nameof(Get), new { id = procedimiento.ID_Procedimiento }, procedimiento);
+            try
+            {
+                await _svProcedimiento.RegisterProcedimientoAsync(procedimientoDto);
+                return CreatedAtAction(nameof(GetProcedimientoById), new { id = procedimientoDto.ID_Procedimiento }, procedimientoDto);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        // PUT: api/Procedimiento/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(string id, [FromBody] Procedimiento procedimiento)
+        public async Task<ActionResult> UpdateProcedimiento(string id, [FromBody] ProcedimientoDto procedimientoDto)
         {
-            if (id != procedimiento.ID_Procedimiento)
+            if (id != procedimientoDto.ID_Procedimiento)
             {
-                return BadRequest();
+                return BadRequest("ID del procedimiento no coincide");
             }
 
-            await _service.UpdateAsync(procedimiento);
-            await _service.SaveChangesAsync();
-            return NoContent();
+            try
+            {
+                await _svProcedimiento.UpdateProcedimientoAsync(procedimientoDto);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
-        // DELETE: api/Procedimiento/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(string id)
+        public async Task<ActionResult> DeleteProcedimiento(string id)
         {
-            await _service.DeleteAsync(id);
-            await _service.SaveChangesAsync();
-            return NoContent();
+            try
+            {
+                await _svProcedimiento.DeleteProcedimientoAsync(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }

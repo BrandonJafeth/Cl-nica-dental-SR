@@ -1,43 +1,67 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Application.Dtos.PostDtos;
+using Application.Services;
+using Domain.Interfaces.JD_Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
-namespace Clinica_Dental.Controllers
+namespace Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class Tipo_PagoController : ControllerBase
+    public class TipoPagoController : ControllerBase
     {
-        // GET: api/<Tipo_PagoController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly ISvTipoPago _svTipoPago;
+
+        public TipoPagoController(ISvTipoPago svTipoPago)
         {
-            return new string[] { "value1", "value2" };
+            _svTipoPago = svTipoPago;
         }
 
-        // GET api/<Tipo_PagoController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<TipoPagoPostDto>> GetTipoPagoById(string id)
         {
-            return "value";
+            var tipoPago = await _svTipoPago.GetTipoPagoByIdAsync(id);
+
+            if (tipoPago == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(tipoPago);
         }
 
-        // POST api/<Tipo_PagoController>
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<TipoPagoPostDto>>> GetAllTipoPagos()
+        {
+            var tipoPagos = await _svTipoPago.GetAllTipoPagosAsync();
+            return Ok(tipoPagos);
+        }
+
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult> RegisterTipoPago(TipoPagoPostDto tipoPagoDto)
         {
+            await _svTipoPago.RegisterTipoPagoAsync(tipoPagoDto);
+            return CreatedAtAction(nameof(GetTipoPagoById), new { id = tipoPagoDto.ID_Tipo_Pago }, tipoPagoDto);
         }
 
-        // PUT api/<Tipo_PagoController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ActionResult> UpdateTipoPago(string id, TipoPagoPostDto tipoPagoDto)
         {
+            if (id != tipoPagoDto.ID_Tipo_Pago)
+            {
+                return BadRequest();
+            }
+
+            await _svTipoPago.UpdateTipoPagoAsync(tipoPagoDto);
+            return NoContent();
         }
 
-        // DELETE api/<Tipo_PagoController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> DeleteTipoPago(string id)
         {
+            await _svTipoPago.DeleteTipoPagoAsync(id);
+            return NoContent();
         }
     }
 }

@@ -1,43 +1,67 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Application.Dtos.PostDtos;
+using Application.Services;
+using Domain.Interfaces.JD_Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
-namespace Clinica_Dental.Controllers
+namespace Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class Tipo_TratamientoController : ControllerBase
+    public class TipoTratamientoController : ControllerBase
     {
-        // GET: api/<Tipo_TratamientoController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly ISvTipoTratamiento _svTipoTratamiento;
+
+        public TipoTratamientoController(ISvTipoTratamiento svTipoTratamiento)
         {
-            return new string[] { "value1", "value2" };
+            _svTipoTratamiento = svTipoTratamiento;
         }
 
-        // GET api/<Tipo_TratamientoController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<TipoTratamientoPostDto>> GetTipoTratamientoById(string id)
         {
-            return "value";
+            var tipoTratamiento = await _svTipoTratamiento.GetTipoTratamientoByIdAsync(id);
+
+            if (tipoTratamiento == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(tipoTratamiento);
         }
 
-        // POST api/<Tipo_TratamientoController>
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<TipoTratamientoPostDto>>> GetAllTipoTratamientos()
+        {
+            var tipoTratamientos = await _svTipoTratamiento.GetAllTipoTratamientosAsync();
+            return Ok(tipoTratamientos);
+        }
+
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult> RegisterTipoTratamiento(TipoTratamientoPostDto tipoTratamientoDto)
         {
+            await _svTipoTratamiento.RegisterTipoTratamientoAsync(tipoTratamientoDto);
+            return CreatedAtAction(nameof(GetTipoTratamientoById), new { id = tipoTratamientoDto.ID_TipoTratamiento }, tipoTratamientoDto);
         }
 
-        // PUT api/<Tipo_TratamientoController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ActionResult> UpdateTipoTratamiento(string id, TipoTratamientoPostDto tipoTratamientoDto)
         {
+            if (id != tipoTratamientoDto.ID_TipoTratamiento)
+            {
+                return BadRequest();
+            }
+
+            await _svTipoTratamiento.UpdateTipoTratamientoAsync(tipoTratamientoDto);
+            return NoContent();
         }
 
-        // DELETE api/<Tipo_TratamientoController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> DeleteTipoTratamiento(string id)
         {
+            await _svTipoTratamiento.DeleteTipoTratamientoAsync(id);
+            return NoContent();
         }
     }
 }

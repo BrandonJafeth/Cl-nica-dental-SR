@@ -1,72 +1,65 @@
-﻿using Application.GenericService;
-using Clinica_Dental;
-using Domain.Interfaces.Generic;
+﻿using Application.Dtos.PostDtos;
+using Application.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Clinica_Dental.Controllers
+namespace Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class Historial_TratamientoController : ControllerBase
+    public class HistorialTratamientoController : ControllerBase
     {
-        private readonly ISvGeneric<Historial_Tratamiento> _service;
+        private readonly SvHistorialTratamiento _svHistorialTratamiento;
 
-        public Historial_TratamientoController(ISvGeneric<Historial_Tratamiento> service)
+        public HistorialTratamientoController(SvHistorialTratamiento svHistorialTratamiento)
         {
-            _service = service;
+            _svHistorialTratamiento = svHistorialTratamiento;
         }
 
-        // GET: api/Historial_Tratamiento
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Historial_Tratamiento>>> Get()
+        public async Task<ActionResult<IEnumerable<HistorialTratamientoDto>>> GetAllHistorialesTratamientos()
         {
-            var result = await _service.GetAllAsync();
-            return Ok(result);
+            var historialesTratamientos = await _svHistorialTratamiento.GetAllHistorialesTratamientosAsync();
+            return Ok(historialesTratamientos);
         }
 
-        // GET: api/Historial_Tratamiento/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Historial_Tratamiento>> Get(string id)
+        public async Task<ActionResult<HistorialTratamientoDto>> GetHistorialTratamientoById(string id)
         {
-            var result = await _service.GetByIdAsync(id);
-            if (result == null)
+            var historialTratamiento = await _svHistorialTratamiento.GetHistorialTratamientoByIdAsync(id);
+
+            if (historialTratamiento == null)
             {
                 return NotFound();
             }
-            return Ok(result);
+
+            return Ok(historialTratamiento);
         }
 
-        // POST: api/Historial_Tratamiento
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] Historial_Tratamiento historialTratamiento)
+        public async Task<ActionResult> RegisterHistorialTratamiento([FromBody] HistorialTratamientoDto historialTratamientoDto)
         {
-            await _service.AddAsync(historialTratamiento);
-            await _service.SaveChangesAsync();
-            return CreatedAtAction(nameof(Get), new { id = historialTratamiento.ID_Historial_Tratamiento }, historialTratamiento);
+            await _svHistorialTratamiento.RegisterHistorialTratamientoAsync(historialTratamientoDto);
+            return CreatedAtAction(nameof(GetHistorialTratamientoById), new { id = historialTratamientoDto.ID_Historial_Tratamiento }, historialTratamientoDto);
         }
 
-        // PUT: api/Historial_Tratamiento/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(string id, [FromBody] Historial_Tratamiento historialTratamiento)
+        public async Task<ActionResult> UpdateHistorialTratamiento(string id, [FromBody] HistorialTratamientoDto historialTratamientoDto)
         {
-            if (id != historialTratamiento.ID_Historial_Tratamiento)
+            if (id != historialTratamientoDto.ID_Historial_Tratamiento)
             {
                 return BadRequest();
             }
 
-            await _service.UpdateAsync(historialTratamiento);
-            await _service.SaveChangesAsync();
+            await _svHistorialTratamiento.UpdateHistorialTratamientoAsync(historialTratamientoDto);
             return NoContent();
         }
 
-        // DELETE: api/Historial_Tratamiento/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(string id)
+        public async Task<ActionResult> DeleteHistorialTratamiento(string id)
         {
-            await _service.DeleteAsync(id);
-            await _service.SaveChangesAsync();
+            await _svHistorialTratamiento.DeleteHistorialTratamientoAsync(id);
             return NoContent();
         }
     }
