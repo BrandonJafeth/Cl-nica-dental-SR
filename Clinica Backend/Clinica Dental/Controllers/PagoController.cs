@@ -1,74 +1,88 @@
-﻿using Application.GenericService;
-using Clinica_Dental;
-using Domain.Interfaces.Generic;
+﻿using Application.Dtos.PostDtos;
+using Application.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Clinica_Dental.Controllers
+namespace Application.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class PagoController : ControllerBase
     {
-        private readonly ISvGeneric<Pago> _service;
+        private readonly SvPago _svPago;
 
-        public PagoController(ISvGeneric<Pago> service)
+        public PagoController(SvPago svPago)
         {
-            _service = service;
+            _svPago = svPago;
         }
 
-        // GET: api/Pago
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Pago>>> Get()
-        {
-            var result = await _service.GetAllAsync();
-            return Ok(result);
-        }
-
-        // GET: api/Pago/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Pago>> Get(String id)
+        public async Task<ActionResult<PagoDto>> GetPagoById(string id)
         {
-            var result = await _service.GetByIdAsync(id);
-            if (result == null)
+            try
             {
-                return NotFound();
+                var pago = await _svPago.GetByIdAsync(id);
+                return Ok(pago);
             }
-            return Ok(result);
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
-        // POST: api/Pago
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<PagoDto>>> GetAllPagos()
+        {
+            var pagos = await _svPago.GetAllAsync();
+            return Ok(pagos);
+        }
+
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] Pago pago)
+        public async Task<ActionResult> RegisterPago([FromBody] PagoDto pagoDto)
         {
-            await _service.AddAsync(pago);
-            await _service.SaveChangesAsync();
-            return CreatedAtAction(nameof(Get), new { id = pago.ID_Pago }, pago);
+            try
+            {
+                await _svPago.AddAsync(pagoDto);
+                return CreatedAtAction(nameof(GetPagoById), new { id = pagoDto.ID_Pago }, pagoDto);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        // PUT: api/Pago/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(Guid id, [FromBody] Pago pago)
+        public async Task<ActionResult> UpdatePago(string id, [FromBody] PagoDto pagoDto)
         {
-            if (id != pago.ID_Pago)
+            if (id != pagoDto.ID_Pago.ToString())
             {
-                return BadRequest();
+                return BadRequest("ID del pago no coincide");
             }
 
-            await _service.UpdateAsync(pago);
-            await _service.SaveChangesAsync();
-            return NoContent();
+            try
+            {
+                await _svPago.UpdateAsync(pagoDto);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
-        // DELETE: api/Pago/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(String id)
+        public async Task<ActionResult> DeletePago(string id)
         {
-            await _service.DeleteAsync(id);
-            await _service.SaveChangesAsync();
-            return NoContent();
+            try
+            {
+                await _svPago.DeleteAsync(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }
-
