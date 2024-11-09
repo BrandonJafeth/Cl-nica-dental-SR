@@ -1,33 +1,56 @@
 import { useState, useEffect } from "react";
+import { Cita } from "../../types/type"; // Asegúrate de que el tipo `Cita` esté correctamente definido
+import citaService from "../../services/TablesServices/CitaService";
 
-function AppointmentForm({ appointment, onClose }) {
-    const [formData, setFormData] = useState({
-        Fecha_Cita: "",
-        Motivo: "",
-        Hora_Inicio: "",
-        Hora_Fin: ""
+interface AppointmentFormProps {
+    appointment?: Cita;
+    onClose: () => void;
+    onSave: () => void;
+}
+
+function AppointmentForm({ appointment, onClose, onSave }: AppointmentFormProps) {
+    const [formData, setFormData] = useState<Cita>({
+        iD_Cita: "",
+        fecha_Cita: "",
+        motivo: "",
+        hora_Inicio: "",
+        hora_Fin: "",
+        iD_Paciente: "",
+        iD_Dentista: "",
+        iD_Funcionario: "",
+        iD_EstadoCita: ""
     });
 
     useEffect(() => {
         if (appointment) {
             setFormData({
-                Fecha_Cita: appointment.Fecha_Cita,
-                Motivo: appointment.Motivo,
-                Hora_Inicio: appointment.Hora_Inicio,
-                Hora_Fin: appointment.Hora_Fin
+                iD_Cita: appointment.iD_Cita || "",
+                fecha_Cita: appointment.fecha_Cita || "",
+                motivo: appointment.motivo || "",
+                hora_Inicio: appointment.hora_Inicio || "",
+                hora_Fin: appointment.hora_Fin || "",
+                iD_Paciente: appointment.iD_Paciente || "",
+                iD_Dentista: appointment.iD_Dentista || "",
+                iD_Funcionario: appointment.iD_Funcionario || "",
+                iD_EstadoCita: appointment.iD_EstadoCita || ""
             });
         }
     }, [appointment]);
 
-    const handleChange = (e:any) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        setFormData((prevData) => ({ ...prevData, [name]: value }));
     };
 
-    const handleSubmit = (e:any) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Datos de la cita:", formData);
-        onClose();
+        try {
+            await citaService.createCita(formData); // Llama a la API para crear la cita
+            onSave(); // Actualiza la lista de citas
+            onClose();
+        } catch (error) {
+            console.error("Error al crear la cita:", error);
+        }
     };
 
     return (
@@ -38,8 +61,8 @@ function AppointmentForm({ appointment, onClose }) {
                     <label className="block text-gray-700 font-semibold mb-2">Fecha de la Cita</label>
                     <input
                         type="date"
-                        name="Fecha_Cita"
-                        value={formData.Fecha_Cita}
+                        name="fecha_Cita"
+                        value={formData.fecha_Cita}
                         onChange={handleChange}
                         className="w-full p-2 border border-gray-300 rounded"
                     />
@@ -48,8 +71,8 @@ function AppointmentForm({ appointment, onClose }) {
                     <label className="block text-gray-700 font-semibold mb-2">Motivo</label>
                     <input
                         type="text"
-                        name="Motivo"
-                        value={formData.Motivo}
+                        name="motivo"
+                        value={formData.motivo}
                         onChange={handleChange}
                         placeholder="Motivo de la cita"
                         className="w-full p-2 border border-gray-300 rounded"
@@ -59,8 +82,8 @@ function AppointmentForm({ appointment, onClose }) {
                     <label className="block text-gray-700 font-semibold mb-2">Hora de Inicio</label>
                     <input
                         type="time"
-                        name="Hora_Inicio"
-                        value={formData.Hora_Inicio}
+                        name="hora_Inicio"
+                        value={formData.hora_Inicio}
                         onChange={handleChange}
                         className="w-full p-2 border border-gray-300 rounded"
                     />
@@ -69,9 +92,53 @@ function AppointmentForm({ appointment, onClose }) {
                     <label className="block text-gray-700 font-semibold mb-2">Hora de Fin</label>
                     <input
                         type="time"
-                        name="Hora_Fin"
-                        value={formData.Hora_Fin}
+                        name="hora_Fin"
+                        value={formData.hora_Fin}
                         onChange={handleChange}
+                        className="w-full p-2 border border-gray-300 rounded"
+                    />
+                </div>
+                <div>
+                    <label className="block text-gray-700 font-semibold mb-2">Paciente ID</label>
+                    <input
+                        type="text"
+                        name="iD_Paciente"
+                        value={formData.iD_Paciente}
+                        onChange={handleChange}
+                        placeholder="ID del Paciente"
+                        className="w-full p-2 border border-gray-300 rounded"
+                    />
+                </div>
+                <div>
+                    <label className="block text-gray-700 font-semibold mb-2">Dentista ID</label>
+                    <input
+                        type="text"
+                        name="iD_Dentista"
+                        value={formData.iD_Dentista}
+                        onChange={handleChange}
+                        placeholder="ID del Dentista"
+                        className="w-full p-2 border border-gray-300 rounded"
+                    />
+                </div>
+                <div>
+                    <label className="block text-gray-700 font-semibold mb-2">Funcionario ID</label>
+                    <input
+                        type="text"
+                        name="iD_Funcionario"
+                        value={formData.iD_Funcionario}
+                        onChange={handleChange}
+                        placeholder="ID del Funcionario"
+                        className="w-full p-2 border border-gray-300 rounded"
+                    />
+                </div>
+                <div>
+                    <label className="block text-gray-700 font-semibold mb-2">Estado de la Cita</label>
+                    <input
+                        type="text"
+                        name="iD_EstadoCita"
+                        value={formData.iD_EstadoCita}
+                        onChange={handleChange}
+                        placeholder="Estado de la Cita"
                         className="w-full p-2 border border-gray-300 rounded"
                     />
                 </div>
