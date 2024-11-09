@@ -56,11 +56,13 @@ export interface Procedimiento {
   ID_Tratamiento: IdTratamiento;
 }
 
+// src/types/type.ts
+
 export interface Factura {
-  ID_Factura: IdFactura;
-  MontoTotal_Fa: number;
-  FechaEmision_Fa: string; // ISO format date
-  ID_EstadoPago: IdEstadoPago;
+  iD_Factura: string;
+  montoTotal_Fa: number;
+  fechaEmision_Fa: string; // ISO format date
+  iD_EstadoPago: string;
 }
 
 export interface TipoPago {
@@ -70,11 +72,11 @@ export interface TipoPago {
 }
 
 export interface Pago {
-  ID_Pago: UniqueIdentifier;
-  Monto_Pago: number;
-  Fecha_Pago: string; // ISO format date
-  ID_Factura: IdFactura;
-  ID_Tipo_Pago: IdTipoPago;
+  iD_Pago: string;
+  monto_Pago: number;
+  fecha_Pago: string; // ISO format date
+  iD_Factura: string;
+  iD_Tipo_Pago: string;
 }
 
 export interface EstadoCuenta {
@@ -241,3 +243,4 @@ export type EstadoTratamiento = {
   Nombre_Estado: string;
   Descripcion_Estado: string;
 };
+

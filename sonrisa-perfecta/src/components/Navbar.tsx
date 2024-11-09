@@ -30,6 +30,9 @@ function Navbar() {
           <li>
             <Link to="/Treatments-Procedures" className="text-white hover:text-[#93f7ea] text-lg transition-colors duration-200">Treatments & Procedures</Link>
           </li>
+          <li>
+            <Link to="/payments" className="text-white hover:text-[#93f7ea] text-lg transition-colors duration-200">Payments</Link>
+          </li>
         </ul>
 
         {/* Login y Register */}
