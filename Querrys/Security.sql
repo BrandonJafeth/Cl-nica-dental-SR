@@ -1,15 +1,39 @@
+USE master;
+GO
+
+-- Crear logins a nivel de servidor
+CREATE LOGIN usrAdmin WITH PASSWORD = 'ContraseñaSegura123!';
+CREATE LOGIN usrDentista WITH PASSWORD = 'ContraseñaSegura123!';
+CREATE LOGIN usrRecepcionista WITH PASSWORD = 'ContraseñaSegura123!';
+CREATE LOGIN usrAsistenteDental WITH PASSWORD = 'ContraseñaSegura123!';
+GO
+
+-- Cambiar al contexto de la base de datos ClinicaDental
+USE ClinicaDental;
+GO
+
+-- Crear usuarios en la base de datos y asignarlos a los logins
+CREATE USER usrAdmin FOR LOGIN usrAdmin;
+CREATE USER usrDentista FOR LOGIN usrDentista;
+CREATE USER usrRecepcionista FOR LOGIN usrRecepcionista;
+CREATE USER usrAsistenteDental FOR LOGIN usrAsistenteDental;
+GO
+
+
+
+
 USE ClinicaDental;
 GO
 
 -- Crear roles de base de datos
-CREATE ROLE [db_Administrador];
+CREATE ROLE [db_Admin];
 CREATE ROLE [db_Dentista];
 CREATE ROLE [db_Recepcionista];
 CREATE ROLE [db_AsistenteDental];
 GO
 
 -- Permiso de control total para el administrador
-GRANT CONTROL ON DATABASE::ClinicaDental TO [db_Administrador];
+GRANT CONTROL ON DATABASE::ClinicaDental TO [db_Admin];
 GO
 
 -- Asignación de permisos específicos a cada rol
@@ -111,24 +135,24 @@ GRANT EXECUTE ON OBJECT::[DeleteFactura] TO [db_Admin];
 GRANT EXECUTE ON OBJECT::[InsertTipoTratamiento] TO [db_Admin];
 GRANT EXECUTE ON OBJECT::[UpdateTipoTratamiento] TO [db_Admin];
 GRANT EXECUTE ON OBJECT::[DeleteTipoTratamiento] TO [db_Admin];
-GRANT EXECUTE ON OBJECT::[InsertTipo_Pago] TO [db_Admin];
-GRANT EXECUTE ON OBJECT::[UpdateTipo_Pago] TO [db_Admin];
-GRANT EXECUTE ON OBJECT::[DeleteTipo_Pago] TO [db_Admin];
+--GRANT EXECUTE ON OBJECT::[InsertTipo_Pago] TO [db_Admin];
+--GRANT EXECUTE ON OBJECT::[UpdateTipo_Pago] TO [db_Admin];
+--GRANT EXECUTE ON OBJECT::[DeleteTipo_Pago] TO [db_Admin];
 GRANT EXECUTE ON OBJECT::[InsertPago] TO [db_Admin];
 GRANT EXECUTE ON OBJECT::[UpdatePago] TO [db_Admin];
 GRANT EXECUTE ON OBJECT::[DeletePago] TO [db_Admin];
-GRANT EXECUTE ON OBJECT::[InsertEstado_Pago] TO [db_Admin];
-GRANT EXECUTE ON OBJECT::[UpdateEstado_Pago] TO [db_Admin];
-GRANT EXECUTE ON OBJECT::[DeleteEstado_Pago] TO [db_Admin];
+--GRANT EXECUTE ON OBJECT::[InsertEstado_Pago] TO [db_Admin];
+--GRANT EXECUTE ON OBJECT::[UpdateEstado_Pago] TO [db_Admin];
+--GRANT EXECUTE ON OBJECT::[DeleteEstado_Pago] TO [db_Admin];
 GRANT EXECUTE ON OBJECT::[InsertHistorialMedico] TO [db_Admin];
 GRANT EXECUTE ON OBJECT::[UpdateHistorialMedico] TO [db_Admin];
 GRANT EXECUTE ON OBJECT::[DeleteHistorialMedico] TO [db_Admin];
 GRANT EXECUTE ON OBJECT::[InsertEstadoCitas] TO [db_Admin];
 GRANT EXECUTE ON OBJECT::[UpdateEstadoCitas] TO [db_Admin];
 GRANT EXECUTE ON OBJECT::[DeleteEstadoCitas] TO [db_Admin];
-GRANT EXECUTE ON OBJECT::[InsertDentista_Especialidad] TO [db_Admin];
-GRANT EXECUTE ON OBJECT::[UpdateDentista_Especialidad] TO [db_Admin];
-GRANT EXECUTE ON OBJECT::[DeleteDentista_Especialidad] TO [db_Admin];
+--GRANT EXECUTE ON OBJECT::[InsertDentista_Especialidad] TO [db_Admin];
+--GRANT EXECUTE ON OBJECT::[UpdateDentista_Especialidad] TO [db_Admin];
+--GRANT EXECUTE ON OBJECT::[DeleteDentista_Especialidad] TO [db_Admin];
 
 -- Permisos de tablas para db_Admin (todos los permisos en todas las tablas)
 GRANT SELECT, INSERT, UPDATE, DELETE ON Estado_Pago TO db_Admin;
@@ -148,7 +172,6 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON Factura_Tratamiento TO db_Admin;
 GRANT SELECT, INSERT, UPDATE, DELETE ON Auditoria TO db_Admin;
 GRANT SELECT, INSERT, UPDATE, DELETE ON Funcionario TO db_Admin;
 GRANT SELECT, INSERT, UPDATE, DELETE ON Usuarios TO db_Admin;
-GRANT SELECT, INSERT, UPDATE, DELETE ON DB_User TO db_Admin;
 GRANT SELECT, INSERT, UPDATE, DELETE ON Dentista TO db_Admin;
 GRANT SELECT, INSERT, UPDATE, DELETE ON Especialidad TO db_Admin;
 GRANT SELECT, INSERT, UPDATE, DELETE ON Dentista_Especialidad TO db_Admin;
@@ -161,8 +184,12 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON Roles_Permisos TO db_Admin;
 GRANT SELECT, INSERT, UPDATE, DELETE ON Usuario_Roles TO db_Admin;
 GO
 
--- Asignación de usuarios a roles
-EXEC sp_addrolemember 'db_Administrador', 'usrAdmin';
+
+
+
+
+-- Asignar roles de base de datos a los usuarios
+EXEC sp_addrolemember 'db_Admin', 'usrAdmin';
 EXEC sp_addrolemember 'db_Dentista', 'usrDentista';
 EXEC sp_addrolemember 'db_Recepcionista', 'usrRecepcionista';
 EXEC sp_addrolemember 'db_AsistenteDental', 'usrAsistenteDental';

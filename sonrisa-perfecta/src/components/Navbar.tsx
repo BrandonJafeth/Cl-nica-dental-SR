@@ -30,11 +30,18 @@ function Navbar() {
           <li>
             <Link to="/Treatments-Procedures" className="text-white hover:text-[#93f7ea] text-lg transition-colors duration-200">Treatments & Procedures</Link>
           </li>
-          <li>
-            <Link to="/contact" className="text-white hover:text-[#93f7ea] text-lg transition-colors duration-200">Contact</Link>
-          </li>
         </ul>
 
+        {/* Login y Register */}
+        <div className="flex space-x-4">
+          <Link
+            to="/login"
+            className="bg-white text-blue-600 font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-gray-100 transition duration-200"
+          >
+            Login
+          </Link>
+     
+        </div>
       </div>
     </nav>
   );

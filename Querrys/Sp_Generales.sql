@@ -7,12 +7,11 @@ CREATE PROCEDURE InsertPaciente
     @Fecha_Nacimiento_Pac DATE,
     @Telefono_Pac VARCHAR(20),
     @Correo_Pac VARCHAR(30),
-    @Direccion_Pac VARCHAR(200),
-    @ID_HistorialMedico CHAR(8)
+    @Direccion_Pac VARCHAR(200)
 AS
 BEGIN
     -- Validar que ninguno de los parámetros sea nulo o vacío
-    IF @ID_Paciente = '' OR @Nombre_Pac = '' OR @Apellido1_Pac = '' OR @Apellido2_Pac = '' OR @Fecha_Nacimiento_Pac is NULL OR @Telefono_Pac = '' OR @Correo_Pac = '' OR @Direccion_Pac = '' OR @ID_HistorialMedico = ''
+    IF @ID_Paciente = '' OR @Nombre_Pac = '' OR @Apellido1_Pac = '' OR @Apellido2_Pac = '' OR @Fecha_Nacimiento_Pac IS NULL OR @Telefono_Pac = '' OR @Correo_Pac = '' OR @Direccion_Pac = ''
     BEGIN
         -- Lanzar un error si algún parámetro es nulo o vacío
         RAISERROR('No se permiten valores nulos o vacíos', 16, 1);
@@ -20,8 +19,8 @@ BEGIN
     END
 
     -- Insertar el nuevo registro en la tabla Paciente
-    INSERT INTO Paciente (ID_Paciente, Nombre_Pac, Apellido1_Pac, Apellido2_Pac, Fecha_Nacimiento_Pac, Telefono_Pac, Correo_Pac, Direccion_Pac, ID_HistorialMedico)
-    VALUES (@ID_Paciente, @Nombre_Pac, @Apellido1_Pac, @Apellido2_Pac, @Fecha_Nacimiento_Pac, @Telefono_Pac, @Correo_Pac, @Direccion_Pac, @ID_HistorialMedico);
+    INSERT INTO Paciente (ID_Paciente, Nombre_Pac, Apellido1_Pac, Apellido2_Pac, Fecha_Nacimiento_Pac, Telefono_Pac, Correo_Pac, Direccion_Pac)
+    VALUES (@ID_Paciente, @Nombre_Pac, @Apellido1_Pac, @Apellido2_Pac, @Fecha_Nacimiento_Pac, @Telefono_Pac, @Correo_Pac, @Direccion_Pac);
 END;
 GO
 
@@ -34,12 +33,11 @@ CREATE PROCEDURE UpdatePaciente
     @Fecha_Nacimiento_Pac DATE,
     @Telefono_Pac VARCHAR(20),
     @Correo_Pac VARCHAR(30),
-    @Direccion_Pac VARCHAR(200),
-    @ID_HistorialMedico CHAR(8)
+    @Direccion_Pac VARCHAR(200)
 AS
 BEGIN
     -- Validar que ninguno de los parámetros sea nulo o vacío
-    IF @ID_Paciente = '' OR @Nombre_Pac = '' OR @Apellido1_Pac = '' OR @Apellido2_Pac = '' OR @Fecha_Nacimiento_Pac IS NULL OR  @Telefono_Pac = '' OR @Correo_Pac = '' OR @Direccion_Pac = '' OR @ID_HistorialMedico = ''
+    IF @ID_Paciente = '' OR @Nombre_Pac = '' OR @Apellido1_Pac = '' OR @Apellido2_Pac = '' OR @Fecha_Nacimiento_Pac IS NULL OR  @Telefono_Pac = '' OR @Correo_Pac = '' OR @Direccion_Pac = ''
     BEGIN
         -- Lanzar un error si algún parámetro es nulo o vacío
         RAISERROR('No se permiten valores nulos o vacíos', 16, 1);
@@ -54,11 +52,11 @@ BEGIN
         Fecha_Nacimiento_Pac = @Fecha_Nacimiento_Pac,
         Telefono_Pac = @Telefono_Pac,
         Correo_Pac = @Correo_Pac,
-        Direccion_Pac = @Direccion_Pac,
-        ID_HistorialMedico = @ID_HistorialMedico
+        Direccion_Pac = @Direccion_Pac
     WHERE ID_Paciente = @ID_Paciente;
 END;
 GO
+
 
 -- Procedimiento almacenado para eliminar un registro de la tabla Paciente
 CREATE PROCEDURE DeletePaciente
@@ -420,19 +418,24 @@ GO
 
 -- Procedimiento almacenado para insertar un registro en la tabla Pago
 CREATE PROCEDURE InsertPago
-    @ID_Pago INT,
+    @ID_Pago UNIQUEIDENTIFIER = NULL,  -- Opcional, generado automáticamente si no se proporciona
     @Monto_Pago MONEY,
     @Fecha_Pago DATE,
     @ID_Factura CHAR(8),
     @ID_Tipo_Pago CHAR(8)
 AS
 BEGIN
-    IF @ID_Pago IS NULL OR @Monto_Pago IS NULL OR @Fecha_Pago IS NULL OR @ID_Factura = '' OR @ID_Tipo_Pago = ''
+    -- Genera un nuevo GUID si @ID_Pago es NULL
+    SET @ID_Pago = ISNULL(@ID_Pago, NEWID());
+
+    -- Validación de parámetros obligatorios
+    IF @Monto_Pago IS NULL OR @Fecha_Pago IS NULL OR @ID_Factura = '' OR @ID_Tipo_Pago = ''
     BEGIN
-        RAISERROR('No se permiten valores nulos o vacíos', 16, 1);
+        RAISERROR('No se permiten valores nulos o vacíos en Monto_Pago, Fecha_Pago, ID_Factura o ID_Tipo_Pago', 16, 1);
         RETURN;
     END
 
+    -- Inserción del registro en la tabla Pago
     INSERT INTO Pago (ID_Pago, Monto_Pago, Fecha_Pago, ID_Factura, ID_Tipo_Pago)
     VALUES (@ID_Pago, @Monto_Pago, @Fecha_Pago, @ID_Factura, @ID_Tipo_Pago);
 END;
@@ -440,41 +443,57 @@ GO
 
 -- Procedimiento almacenado para actualizar un registro en la tabla Pago
 CREATE PROCEDURE UpdatePago
-    @ID_Pago INT,
+    @ID_Pago UNIQUEIDENTIFIER,
     @Monto_Pago MONEY,
     @Fecha_Pago DATE,
     @ID_Factura CHAR(8),
     @ID_Tipo_Pago CHAR(8)
 AS
 BEGIN
+    -- Validación de parámetros obligatorios
     IF @ID_Pago IS NULL OR @Monto_Pago IS NULL OR @Fecha_Pago IS NULL OR @ID_Factura = '' OR @ID_Tipo_Pago = ''
     BEGIN
-        RAISERROR('No se permiten valores nulos o vacíos', 16, 1);
+        RAISERROR('No se permiten valores nulos o vacíos en ID_Pago, Monto_Pago, Fecha_Pago, ID_Factura o ID_Tipo_Pago', 16, 1);
         RETURN;
     END
 
+    -- Actualización del registro en la tabla Pago
     UPDATE Pago
     SET Monto_Pago = @Monto_Pago,
         Fecha_Pago = @Fecha_Pago,
         ID_Factura = @ID_Factura,
         ID_Tipo_Pago = @ID_Tipo_Pago
     WHERE ID_Pago = @ID_Pago;
+
+    -- Verifica si se afectaron filas
+    IF @@ROWCOUNT = 0
+    BEGIN
+        RAISERROR('No se encontró un registro con el ID_Pago especificado.', 16, 1);
+    END
 END;
 GO
 
 -- Procedimiento almacenado para eliminar un registro de la tabla Pago
 CREATE PROCEDURE DeletePago
-    @ID_Pago INT
+    @ID_Pago UNIQUEIDENTIFIER
 AS
 BEGIN
+    -- Validación de parámetro obligatorio
     IF @ID_Pago IS NULL
     BEGIN
-        RAISERROR('No se permiten valores nulos o vacíos', 16, 1);
+        RAISERROR('ID_Pago no puede ser nulo o vacío.', 16, 1);
         RETURN;
     END
 
+    -- Eliminación del registro en la tabla Pago
     DELETE FROM Pago
     WHERE ID_Pago = @ID_Pago;
+
+    -- Verifica si se afectaron filas
+    IF @@ROWCOUNT = 0
+    BEGIN
+        RAISERROR('No se encontró un registro con el ID_Pago especificado.', 16, 1);
+    END
 END;
 GO
 
@@ -991,59 +1010,6 @@ BEGIN
 END;
 GO
 
--- Procedimiento almacenado para insertar un registro en la tabla Tipo_Accion
-CREATE PROCEDURE InsertTipoAccion
-    @ID_TipoAccion CHAR(8),
-    @Nombre_Accion VARCHAR(20),
-    @Descripcion_Tipo_Accion VARCHAR(200)
-AS
-BEGIN
-    IF @ID_TipoAccion = '' OR @Nombre_Accion = '' OR @Descripcion_Tipo_Accion = ''
-    BEGIN
-        RAISERROR('No se permiten valores nulos o vacíos', 16, 1);
-        RETURN;
-    END
-
-    INSERT INTO Tipo_Accion (ID_TipoAccion, Nombre_Accion, Descripcion_Tipo_Accion)
-    VALUES (@ID_TipoAccion, @Nombre_Accion, @Descripcion_Tipo_Accion);
-END;
-GO
-
--- Procedimiento almacenado para actualizar un registro en la tabla Tipo_Accion
-CREATE PROCEDURE UpdateTipoAccion
-    @ID_TipoAccion CHAR(8),
-    @Nombre_Accion VARCHAR(20),
-    @Descripcion_Tipo_Accion VARCHAR(200)
-AS
-BEGIN
-    IF @ID_TipoAccion = '' OR @Nombre_Accion = '' OR @Descripcion_Tipo_Accion = ''
-    BEGIN
-        RAISERROR('No se permiten valores nulos o vacíos', 16, 1);
-        RETURN;
-    END
-
-    UPDATE Tipo_Accion
-    SET Nombre_Accion = @Nombre_Accion,
-        Descripcion_Tipo_Accion = @Descripcion_Tipo_Accion
-    WHERE ID_TipoAccion = @ID_TipoAccion;
-END;
-GO
-
--- Procedimiento almacenado para eliminar un registro de la tabla Tipo_Accion
-CREATE PROCEDURE DeleteTipoAccion
-    @ID_TipoAccion CHAR(8)
-AS
-BEGIN
-    IF @ID_TipoAccion = ''
-    BEGIN
-        RAISERROR('No se permiten valores nulos o vacíos', 16, 1);
-        RETURN;
-    END
-
-    DELETE FROM Tipo_Accion
-    WHERE ID_TipoAccion = @ID_TipoAccion;
-END;
-GO
 
 -- Procedimiento almacenado para insertar un registro en la tabla Historial_Tratamiento
 CREATE PROCEDURE InsertHistorialTratamiento
@@ -1099,5 +1065,89 @@ BEGIN
 
     DELETE FROM Historial_Tratamiento
     WHERE ID_Historial_Tratamiento = @ID_Historial_Tratamiento;
+END;
+GO
+
+
+
+-- Procedimiento almacenado para insertar un registro en la tabla Dentista
+CREATE PROCEDURE InsertDentista
+    @ID_Dentista CHAR(8),
+    @Nombre_Den VARCHAR(20),
+    @Apellido1_Den VARCHAR(20),
+    @Apellido2_Den VARCHAR(20),
+    @Direccion_Den VARCHAR(200),
+    @FechaNacimiento_Den DATE,
+    @Telefono_Den VARCHAR(20),
+    @Correo_Den VARCHAR(30),
+    @ID_Funcionario CHAR(8)
+AS
+BEGIN
+    IF @ID_Dentista = '' OR @Nombre_Den = '' OR @Apellido1_Den = '' OR @FechaNacimiento_Den IS NULL OR @ID_Funcionario = ''
+    BEGIN
+        RAISERROR('No se permiten valores nulos o vacíos en los campos obligatorios.', 16, 1);
+        RETURN;
+    END
+
+    INSERT INTO Dentista (ID_Dentista, Nombre_Den, Apellido1_Den, Apellido2_Den, Direccion_Den, FechaNacimiento_Den, Telefono_Den, Correo_Den, ID_Funcionario)
+    VALUES (@ID_Dentista, @Nombre_Den, @Apellido1_Den, @Apellido2_Den, @Direccion_Den, @FechaNacimiento_Den, @Telefono_Den, @Correo_Den, @ID_Funcionario);
+END;
+GO
+
+-- Procedimiento almacenado para actualizar un registro en la tabla Dentista
+CREATE PROCEDURE UpdateDentista
+    @ID_Dentista CHAR(8),
+    @Nombre_Den VARCHAR(20),
+    @Apellido1_Den VARCHAR(20),
+    @Apellido2_Den VARCHAR(20),
+    @Direccion_Den VARCHAR(200),
+    @FechaNacimiento_Den DATE,
+    @Telefono_Den VARCHAR(20),
+    @Correo_Den VARCHAR(30),
+    @ID_Funcionario CHAR(8)
+AS
+BEGIN
+    IF @ID_Dentista = '' OR @Nombre_Den = '' OR @Apellido1_Den = '' OR @FechaNacimiento_Den IS NULL OR @ID_Funcionario = ''
+    BEGIN
+        RAISERROR('No se permiten valores nulos o vacíos en los campos obligatorios.', 16, 1);
+        RETURN;
+    END
+
+    UPDATE Dentista
+    SET Nombre_Den = @Nombre_Den,
+        Apellido1_Den = @Apellido1_Den,
+        Apellido2_Den = @Apellido2_Den,
+        Direccion_Den = @Direccion_Den,
+        FechaNacimiento_Den = @FechaNacimiento_Den,
+        Telefono_Den = @Telefono_Den,
+        Correo_Den = @Correo_Den,
+        ID_Funcionario = @ID_Funcionario
+    WHERE ID_Dentista = @ID_Dentista;
+
+    IF @@ROWCOUNT = 0
+    BEGIN
+        RAISERROR('No se encontró un registro con el ID_Dentista especificado.', 16, 1);
+    END
+END;
+GO
+
+-- Procedimiento almacenado para eliminar un registro de la tabla Dentista
+CREATE PROCEDURE DeleteDentista
+    @ID_Dentista CHAR(8)
+AS
+BEGIN
+    IF @ID_Dentista = ''
+    BEGIN
+        RAISERROR('ID_Dentista no puede ser nulo o vacío.', 16, 1);
+        RETURN;
+    END
+
+    DELETE FROM Dentista
+    WHERE ID_Dentista = @ID_Dentista;
+
+    IF @@ROWCOUNT = 0
+    BEGIN
+        RAISERROR('No se encontró un registro con el ID_Dentista especificado.', 16, 1);
+    END
 END;
 GO
