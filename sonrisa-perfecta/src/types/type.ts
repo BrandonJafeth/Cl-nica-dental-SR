@@ -192,15 +192,15 @@ export interface EstadoCita {
 }
 
 export interface Cita {
-  ID_Cita: IdCita;
-  Fecha_Cita: string; // ISO format date
-  Motivo: string;
-  Hora_Inicio: string; // ISO format time
-  Hora_Fin: string; // ISO format time
-  ID_Paciente: IdPaciente;
-  ID_Dentista: IdDentista;
-  ID_Funcionario: IdFuncionario;
-  ID_EstadoCita: IdEstadoCita;
+  iD_Cita?: string;
+  fecha_Cita: string;
+  motivo: string;
+  hora_Inicio: string;
+  hora_Fin: string;
+  iD_Paciente: string;
+  iD_Dentista: string;
+  iD_Funcionario: string;
+  iD_EstadoCita: string;
 }
 
 export interface HistorialTratamiento {
