@@ -7,6 +7,7 @@ const API_URL = 'https://localhost:7232/api/Cuenta';
 export const CuentaService = {
   async getAll(): Promise<Cuenta[]> {
     const response = await axios.get<Cuenta[]>(API_URL);
+    console.log("Datos de cuentas obtenidos:", response.data); // Agrega un log aquí para verificar
     return response.data;
   },
 

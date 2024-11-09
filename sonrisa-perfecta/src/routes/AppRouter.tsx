@@ -6,6 +6,7 @@ import AppointmentsPage from '../pages/Managing/AppointmentsPage';
 import BillingPage from '../pages/Managing/BillingPage';
 import Login from '../pages/Auth/Login';
 import Register from '../pages/Auth/Register';
+import CuentasPage from '../pages/Managing/CuentasPage';
 import DentistPage from '../pages/Managing/DentistPage';
 import TratamientoPage from '../pages/Managing/TratamientoPage';
 import PaymentsPage from '../pages/Managing/PaymentsPage';
@@ -22,6 +23,7 @@ const AppRouter: React.FC = () => {
                 <Route path="/appointments" element={<AppointmentsPage />} />
                 <Route path="/bills" element={<BillingPage />} />
                 <Route path="/Treatments-Procedures" element={<PandTPage />} />
+                <Route path="/cuentas" element={<CuentasPage />} />
                 <Route path="/payments" element={<PaymentsPage />} />
                 <Route path="/treatments" element={<TratamientoPage />} />
                 <Route path="/dentist" element={<DentistPage />} />
@@ -31,3 +33,4 @@ const AppRouter: React.FC = () => {
 };
 
 export default AppRouter;
+

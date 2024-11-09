@@ -36,6 +36,9 @@ function Navbar() {
           <li>
             <Link to="/payments" className="text-white hover:text-[#93f7ea] text-lg transition-colors duration-200">Payments</Link>
           </li>
+          <li>
+            <Link to="/cuentas" className="text-white hover:text-[#93f7ea] text-lg transition-colors duration-200">Cuentas</Link>
+          </li>
         </ul>
 
         {/* Login y Register */}
