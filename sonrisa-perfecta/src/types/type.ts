@@ -1,90 +1,63 @@
-//jose tontio 
-// Types para IDs específicos
-type IdPaciente = `PAC${number}${number}${number}${number}`;
-type IdEstadoPago = `EP${number}${number}${number}${number}`;
-type IdTipoTratamiento = `TT${number}${number}${number}${number}`;
-type IdTratamiento = `TRA${number}${number}${number}${number}`;
-type IdProcedimiento = `PRO${number}${number}${number}${number}`;
-type IdFactura = `FAC${number}${number}${number}${number}`;
-type IdTipoPago = `TP${number}${number}${number}${number}`;
-type IdEstadoCuenta = `EC${number}${number}${number}${number}`;
-type IdHistorialMedico = `HM${number}${number}${number}${number}`;
-type IdCuenta = `CUE${number}${number}${number}${number}`;
-type IdFacturaProcedimiento = `FP${number}${number}${number}${number}`;
-type IdFacturaTratamiento = `FT${number}${number}${number}${number}`;
-type UniqueIdentifier = string; // For UNIQUEIDENTIFIER (UUID)
-type IdFuncionario = `FUN${number}${number}${number}${number}`;
-type IdUsuario = `USR${number}${number}${number}${number}`;
-type IdDentista = `DEN${number}${number}${number}${number}`;
-type IdEspecialidad = `ESP${number}${number}${number}${number}`;
-type IdDentistaEspecialidad = `DE${number}${number}${number}${number}`;
-type IdEstadoCita = `ECI${number}${number}${number}${number}`;
-type IdCita = `CIT${number}${number}${number}${number}`;
-type IdHistorialTratamiento = `HT${number}${number}${number}${number}`;
-type IdRoles = `ROL${number}${number}${number}${number}`;
-type IdPermisos = `PER${number}${number}${number}${number}`;
-type IdRolesPermisos = `RP${number}${number}${number}${number}`;
-type IdUsuarioRoles = `UR${number}${number}${number}${number}`;
-
 // Interfaces de las tablas
 
 export interface EstadoPago {
-  ID_EstadoPago: IdEstadoPago;
+  ID_EstadoPago: string;
   Nombre_EP: string;
   Descripcion_EP: string;
 }
 
 export interface TipoTratamiento {
-  ID_TipoTratamiento: IdTipoTratamiento;
+  ID_TipoTratamiento: string;
   Nombre_Tipo_Tratamiento: string;
   Descripcion_Tipo_Tratamiento: string;
 }
 
 export interface Tratamiento {
-  ID_Tratamiento: IdTratamiento;
+  ID_Tratamiento: string;
   Nombre_Tra: string;
   Descripcion_Tra: string;
-  ID_TipoTratamiento: IdTipoTratamiento;
+  ID_TipoTratamiento: string;
+  ID_EstadoTratamiento: string;
 }
 
 export interface Procedimiento {
-  ID_Procedimiento: IdProcedimiento;
+  ID_Procedimiento: string;
   Fecha_Proc: string; // ISO format date
   Detalles_Proc: string;
   Hora_Inicio_Proc: string; // ISO format time
   Hora_Fin_Proc: string; // ISO format time
-  ID_Tratamiento: IdTratamiento;
+  ID_Tratamiento: string;
 }
 
 export interface Factura {
-  ID_Factura: IdFactura;
+  ID_Factura: string;
   MontoTotal_Fa: number;
   FechaEmision_Fa: string; // ISO format date
-  ID_EstadoPago: IdEstadoPago;
+  ID_EstadoPago: string;
 }
 
 export interface TipoPago {
-  ID_Tipo_Pago: IdTipoPago;
+  ID_Tipo_Pago: string;
   Nombre_TP: string;
   Descripcion_TP: string;
 }
 
 export interface Pago {
-  ID_Pago: UniqueIdentifier;
+  ID_Pago: string;
   Monto_Pago: number;
   Fecha_Pago: string; // ISO format date
-  ID_Factura: IdFactura;
-  ID_Tipo_Pago: IdTipoPago;
+  ID_Factura: string;
+  ID_Tipo_Pago: string;
 }
 
 export interface EstadoCuenta {
-  ID_Estado_Cuenta: IdEstadoCuenta;
+  ID_Estado_Cuenta: string;
   Nombre_EC: string;
   Descripcion_EC: string;
 }
 
 export interface Paciente {
-  ID_Paciente: IdPaciente;
+  ID_Paciente: string;
   Nombre_Pac: string;
   Apellido1_Pac: string;
   Apellido2_Pac: string;
@@ -92,47 +65,42 @@ export interface Paciente {
   Telefono_Pac: string;
   Correo_Pac: string;
   Direccion_Pac: string;
-  ID_HistorialMedico: IdHistorialMedico;
+  ID_HistorialMedico: string;
 }
-export type { IdPaciente, IdHistorialMedico }; 
-
 
 export interface HistorialMedico {
-  ID_HistorialMedico: IdHistorialMedico;
+  ID_HistorialMedico: string;
   Fecha_Historial: string; // ISO format date
   Diagnostico: string;
   Tratamientos_Medicos: string;
 }
 
 export interface Cuenta {
-  ID_Cuenta: IdCuenta;
+  ID_Cuenta: string;
   Saldo_Total: number;
   Fecha_Apertura: string; // ISO format date
   Fecha_Cierre: string; // ISO format date
   Fecha_Ultima_Actualizacion: string; // ISO format date
   Observaciones: string;
-  ID_Estado_Cuenta: IdEstadoCuenta;
-  ID_Factura: IdFactura;
-  ID_Paciente: IdPaciente;
+  ID_Estado_Cuenta: string;
+  ID_Factura: string;
+  ID_Paciente: string;
 }
 
-export type{ IdFacturaProcedimiento, IdProcedimiento }
 export interface FacturaProcedimiento {
-  ID_Factura_Procedimiento: IdFacturaProcedimiento;
-  ID_Factura: IdFactura;
-  ID_Procedimiento: IdProcedimiento;
+  ID_Factura_Procedimiento: string;
+  ID_Factura: string;
+  ID_Procedimiento: string;
 }
-
-export type { IdFacturaTratamiento, IdFactura, IdTratamiento }  
 
 export interface FacturaTratamiento {
-  ID_Factura_Tratamiento: IdFacturaTratamiento;
-  ID_Factura: IdFactura;
-  ID_Tratamiento: IdTratamiento;
+  ID_Factura_Tratamiento: string;
+  ID_Factura: string;
+  ID_Tratamiento: string;
 }
 
 export interface Auditoria {
-  ID_Auditoria: UniqueIdentifier;
+  ID_Auditoria: string;
   Fecha_Hora_Accion: string; // ISO format datetime
   Accion: string;
   DispositivoQueRealizo: string;
@@ -140,7 +108,7 @@ export interface Auditoria {
 }
 
 export interface Funcionario {
-  ID_Funcionario: IdFuncionario;
+  ID_Funcionario: string;
   Nombre: string;
   Apellido1: string;
   Apellido2: string;
@@ -149,18 +117,18 @@ export interface Funcionario {
 }
 
 export interface Usuarios {
-  ID_Usuario: IdUsuario;
+  ID_Usuario: string;
   Nombre: string;
   Apellido1: string;
   Apellido2: string;
   Email: string;
   Contraseña: string;
   Token: string;
-  ID_Funcionario: IdFuncionario;
+  ID_Funcionario: string;
 }
 
 export interface Dentista {
-  ID_Dentista: IdDentista;
+  ID_Dentista: string;
   Nombre_Den: string;
   Apellido1_Den: string;
   Apellido2_Den: string;
@@ -168,72 +136,69 @@ export interface Dentista {
   FechaNacimiento_Den: string; // ISO format date
   Telefono_Den: string;
   Correo_Den: string;
-  ID_Funcionario: IdFuncionario;
+  ID_Funcionario: string;
 }
 
 export interface Especialidad {
-  ID_Especialidad: IdEspecialidad;
+  ID_Especialidad: string;
   Nombre_Esp: string;
   Descripcion_Esp: string;
 }
 
 export interface DentistaEspecialidad {
-  ID_Dentista_Especialidad: IdDentistaEspecialidad;
-  ID_Dentista: IdDentista;
-  ID_Especialidad: IdEspecialidad;
+  ID_Dentista_Especialidad: string;
+  ID_Dentista: string;
+  ID_Especialidad: string;
 }
 
-
-export type { IdEstadoCita }
 export interface EstadoCita {
-  ID_EstadoCita: IdEstadoCita;
+  ID_EstadoCita: string;
   Nombre_Estado: string;
   Descripcion_Estado: string;
 }
 
 export interface Cita {
-  ID_Cita: IdCita;
+  ID_Cita: string;
   Fecha_Cita: string; // ISO format date
   Motivo: string;
   Hora_Inicio: string; // ISO format time
   Hora_Fin: string; // ISO format time
-  ID_Paciente: IdPaciente;
-  ID_Dentista: IdDentista;
-  ID_Funcionario: IdFuncionario;
-  ID_EstadoCita: IdEstadoCita;
+  ID_Paciente: string;
+  ID_Dentista: string;
+  ID_Funcionario: string;
+  ID_EstadoCita: string;
 }
 
 export interface HistorialTratamiento {
-  ID_Historial_Tratamiento: IdHistorialTratamiento;
-  ID_HistorialMedico: IdHistorialMedico;
-  ID_Tratamiento: IdTratamiento;
+  ID_Historial_Tratamiento: string;
+  ID_HistorialMedico: string;
+  ID_Tratamiento: string;
   Fecha_Tratamiento: string; // ISO format date
 }
 
 export interface Roles {
-  ID_Roles: IdRoles;
+  ID_Roles: string;
   Nombre: string;
   Descripcion: string;
 }
 
 export interface Permisos {
-  ID_Permisos: IdPermisos;
+  ID_Permisos: string;
   Nombre: string;
   Descripcion: string;
 }
 
 export interface RolesPermisos {
-  ID_Roles_Permisos: IdRolesPermisos;
-  ID_Roles: IdRoles;
-  ID_Permisos: IdPermisos;
+  ID_Roles_Permisos: string;
+  ID_Roles: string;
+  ID_Permisos: string;
 }
 
 export interface UsuarioRoles {
-  ID_Usuario_Roles: IdUsuarioRoles;
-  ID_Usuario: IdUsuario;
-  ID_Roles: IdRoles;
+  ID_Usuario_Roles: string;
+  ID_Usuario: string;
+  ID_Roles: string;
 }
-
 
 // Tabla: Estado_Tratamiento
 export type EstadoTratamiento = {

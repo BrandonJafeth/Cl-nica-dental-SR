@@ -4,9 +4,10 @@ import HomePage from '../pages/Informative/HomePage';
 import ClientsPage from '../pages/Managing/ClientsPage';
 import AppointmentsPage from '../pages/Managing/AppointmentsPage';
 import BillingPage from '../pages/Managing/BillingPage';
-import PandTPage from '../pages/Managing/P&TPage';
 import Login from '../pages/Auth/Login';
 import Register from '../pages/Auth/Register';
+import DentistPage from '../pages/Managing/DentistPage';
+import TratamientoPage from '../pages/Managing/TratamientoPage';
 
 
 
@@ -20,7 +21,8 @@ const AppRouter: React.FC = () => {
                 <Route path="/clients" element={<ClientsPage />} />
                 <Route path="/appointments" element={<AppointmentsPage />} />
                 <Route path="/bills" element={<BillingPage / >} />
-                <Route path="/Treatments-Procedures" element={<PandTPage/>} />
+                <Route path="/treatments" element={<TratamientoPage/>} />
+                <Route path="/dentist" element={<DentistPage />} />
 
             </Routes>
         </Router>
