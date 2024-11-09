@@ -7,6 +7,7 @@ import BillingPage from '../pages/Managing/BillingPage';
 import PandTPage from '../pages/Managing/P&TPage';
 import Login from '../pages/Auth/Login';
 import Register from '../pages/Auth/Register';
+import PaymentsPage from '../pages/Managing/PaymentsPage';
 
 
 
@@ -21,6 +22,7 @@ const AppRouter: React.FC = () => {
                 <Route path="/appointments" element={<AppointmentsPage />} />
                 <Route path="/bills" element={<BillingPage / >} />
                 <Route path="/Treatments-Procedures" element={<PandTPage/>} />
+                <Route path="/payments" element={<PaymentsPage />} /> {/* Agrega la nueva ruta */}
 
             </Routes>
         </Router>
