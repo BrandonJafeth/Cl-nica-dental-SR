@@ -10,9 +10,9 @@ namespace Application.Dtos.PostDtos
     {
         public string ID_Cuenta { get; set; }
         public decimal Saldo_Total { get; set; }
-        public DateTime Fecha_Apertura { get; set; }
-        public DateTime Fecha_Cierre { get; set; }
-        public DateTime Fecha_Ultima_Actualizacion { get; set; }
+        public DateOnly Fecha_Apertura { get; set; }
+        public DateOnly Fecha_Cierre { get; set; }
+        public DateOnly Fecha_Ultima_Actualizacion { get; set; }
         public string Observaciones { get; set; }
         public string ID_Estado_Cuenta { get; set; }
         public string ID_Factura { get; set; }

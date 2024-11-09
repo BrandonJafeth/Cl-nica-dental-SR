@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+﻿using Application.BrandonServices;
+using Application.Dtos.PostDtos;
+using Domain.Interfaces.Brandon_Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Clinica_Dental.Controllers
 {
@@ -8,36 +11,77 @@ namespace Clinica_Dental.Controllers
     [ApiController]
     public class DentistaController : ControllerBase
     {
+        private readonly ISvDentista _svDentista;
+
+        public DentistaController(ISvDentista svDentista)
+        {
+            _svDentista = svDentista;
+        }
+
         // GET: api/<DentistaController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult<IEnumerable<DentistaDto>>> Get()
         {
-            return new string[] { "value1", "value2" };
+            var dentistas = await _svDentista.GetAllAsync();
+            return Ok(dentistas);
         }
 
         // GET api/<DentistaController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<DentistaDto>> Get(string id)
         {
-            return "value";
+            var dentista = await _svDentista.GetByIdAsync(id);
+            if (dentista == null)
+            {
+                return NotFound();
+            }
+            return Ok(dentista);
         }
 
         // POST api/<DentistaController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult> Post([FromBody] DentistaDto dentistaDto)
         {
+            if (dentistaDto == null)
+            {
+                return BadRequest();
+            }
+
+            await _svDentista.AddAsync(dentistaDto);
+            await _svDentista.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(Get), new { id = dentistaDto.ID_Dentista }, dentistaDto);
         }
 
         // PUT api/<DentistaController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ActionResult> Put(string id, [FromBody] DentistaDto dentistaDto)
         {
+            if (dentistaDto == null || id != dentistaDto.ID_Dentista)
+            {
+                return BadRequest();
+            }
+
+            await _svDentista.UpdateAsync(dentistaDto);
+            await _svDentista.SaveChangesAsync();
+
+            return NoContent();
         }
 
         // DELETE api/<DentistaController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> Delete(string id)
         {
+            var dentista = await _svDentista.GetByIdAsync(id);
+            if (dentista == null)
+            {
+                return NotFound();
+            }
+
+            await _svDentista.DeleteAsync(id);
+            await _svDentista.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }

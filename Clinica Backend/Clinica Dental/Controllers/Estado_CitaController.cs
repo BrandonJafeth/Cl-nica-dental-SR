@@ -1,6 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+﻿using Application.Dtos.PostDtos;
+using Application.GenericService;
+using Clinica_Dental;
+using Domain.Interfaces.Generic;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Clinica_Dental.Controllers
 {
@@ -8,36 +13,92 @@ namespace Clinica_Dental.Controllers
     [ApiController]
     public class Estado_CitaController : ControllerBase
     {
-        // GET: api/<Estado_CitaController>
+        private readonly ISvGeneric<Estado_Cita> _service;
+
+        public Estado_CitaController(ISvGeneric<Estado_Cita> service)
+        {
+            _service = service;
+        }
+
+        // GET: api/Estado_Cita
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult<IEnumerable<EstadoCitasPostDto>>> Get()
         {
-            return new string[] { "value1", "value2" };
+            var result = await _service.GetAllAsync();
+            var dtoResult = result.Select(e => new EstadoCitasPostDto
+            {
+                ID_EstadoCita = e.ID_EstadoCita,
+                Nombre_Estado = e.Nombre_Estado,
+                Descripcion_Estado = e.Descripcion_Estado
+            }).ToList();
+
+            return Ok(dtoResult);
         }
 
-        // GET api/<Estado_CitaController>/5
+        // GET: api/Estado_Cita/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<EstadoCitasPostDto>> Get(string id)
         {
-            return "value";
+            var result = await _service.GetByIdAsync(id);
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            var dtoResult = new EstadoCitasPostDto
+            {
+                ID_EstadoCita = result.ID_EstadoCita,
+                Nombre_Estado = result.Nombre_Estado,
+                Descripcion_Estado = result.Descripcion_Estado
+            };
+
+            return Ok(dtoResult);
         }
 
-        // POST api/<Estado_CitaController>
+        // POST: api/Estado_Cita
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult> Post([FromBody] EstadoCitasPostDto estadoCitaDto)
         {
+            var estadoCita = new Estado_Cita
+            {
+                ID_EstadoCita = estadoCitaDto.ID_EstadoCita,
+                Nombre_Estado = estadoCitaDto.Nombre_Estado,
+                Descripcion_Estado = estadoCitaDto.Descripcion_Estado
+            };
+
+            await _service.AddAsync(estadoCita);
+            await _service.SaveChangesAsync();
+            return CreatedAtAction(nameof(Get), new { id = estadoCita.ID_EstadoCita }, estadoCitaDto);
         }
 
-        // PUT api/<Estado_CitaController>/5
+        // PUT: api/Estado_Cita/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ActionResult> Put(string id, [FromBody] EstadoCitasPostDto estadoCitaDto)
         {
+            if (id != estadoCitaDto.ID_EstadoCita)
+            {
+                return BadRequest();
+            }
+
+            var estadoCita = new Estado_Cita
+            {
+                ID_EstadoCita = estadoCitaDto.ID_EstadoCita,
+                Nombre_Estado = estadoCitaDto.Nombre_Estado,
+                Descripcion_Estado = estadoCitaDto.Descripcion_Estado
+            };
+
+            await _service.UpdateAsync(estadoCita);
+            await _service.SaveChangesAsync();
+            return NoContent();
         }
 
-        // DELETE api/<Estado_CitaController>/5
+        // DELETE: api/Estado_Cita/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> Delete(string id)
         {
+            await _service.DeleteAsync(id);
+            await _service.SaveChangesAsync();
+            return NoContent();
         }
     }
 }

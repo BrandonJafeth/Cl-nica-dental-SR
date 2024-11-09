@@ -1,4 +1,6 @@
+using Application.BrandonServices;
 using Application.GenericService;
+using Domain.Interfaces.Brandon_Interfaces;
 using Domain.Interfaces.Generic;
 using Infraestructure.DependencyInjection;
 
@@ -18,6 +20,14 @@ builder.Services.AddCors(options =>
 
 
 builder.Services.AddScoped(typeof(ISvGeneric<>), typeof(SvGeneric<>));
+
+builder.Services.AddScoped<ISvCita, SvCita>();
+builder.Services.AddScoped<ISvCuenta, SvCuenta>();
+builder.Services.AddScoped<ISvDentista, SvDentista>();
+builder.Services.AddScoped<ISvDentista_Especialidad, SvDentista_Especialidad>();
+builder.Services.AddScoped<ISvFactura, SvFactura>();
+builder.Services.AddScoped<ISvFactura_Tratamiento, SvFactura_Tratamiento>();
+builder.Services.AddScoped<ISvFactura_Procedimiento, SvFactura_Procedimiento>();
 
 
 builder.Services.AddInfrastructure(builder.Configuration);
