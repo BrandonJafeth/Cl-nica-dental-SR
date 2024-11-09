@@ -49,6 +49,20 @@ builder.Services.AddScoped<ISvTratamiento, SvTratamiento>();
 builder.Services.AddScoped<ISvUsuario, SvUsuario>();
 builder.Services.AddScoped<ISvUsuarioRoles, SvUsuarioRoles>();
 
+builder.Services.AddScoped<SvFuncionario>();
+builder.Services.AddScoped<SvHistorialMedico>();
+builder.Services.AddScoped< SvHistorialTratamiento>();
+builder.Services.AddScoped<SvPaciente>();
+builder.Services.AddScoped<SvPago>();
+builder.Services.AddScoped<SvPermiso>();
+builder.Services.AddScoped<SvProcedimiento>();
+builder.Services.AddScoped<SvRole>();
+builder.Services.AddScoped<SvRolesPermiso>();
+builder.Services.AddScoped<SvTipoPago>();
+builder.Services.AddScoped<SvTipoTratamiento>();
+builder.Services.AddScoped<SvTratamiento>();
+builder.Services.AddScoped<SvUsuario>();
+builder.Services.AddScoped<SvUsuarioRoles>();
 #endregion
 
 

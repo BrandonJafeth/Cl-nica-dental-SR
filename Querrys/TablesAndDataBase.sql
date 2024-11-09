@@ -112,7 +112,17 @@ CREATE TABLE Paciente (
     Direccion_Pac VARCHAR(200)
 ) ON PacientesFileGroup;
 
+-- Tabla intermedia Paciente_Procedimiento 
+CREATE TABLE Paciente_Procedimiento (
+    ID_Paciente_Procedimiento CHAR(8) PRIMARY KEY,
+    ID_Paciente CHAR(8),
+    ID_Procedimiento CHAR(8),
+    FOREIGN KEY (ID_Paciente) REFERENCES Paciente(ID_Paciente),
+    FOREIGN KEY (ID_Procedimiento) REFERENCES Procedimiento(ID_Procedimiento)
+) ON TratamientosFileGroup;
+
 -- Tabla: Historial_Medico (sin clave foránea inicialmente)
+
 CREATE TABLE Historial_Medico (
     ID_HistorialMedico CHAR(8) PRIMARY KEY,
     Fecha_Historial DATE,
@@ -145,7 +155,9 @@ CREATE TABLE Funcionario (
     Apellido1 VARCHAR(200),
     Apellido2 VARCHAR(200),
     Email VARCHAR(20),
-    Contraseña CHAR(12)
+    Contraseña CHAR(12),
+    ID_Usuario CHAR(8),
+    FOREIGN KEY (ID_Usuario) REFERENCES Usuarios(ID_Usuario)
 ) ON AuditoriaFileGroup;
 
 
@@ -158,8 +170,6 @@ CREATE TABLE Usuarios (
     Email VARCHAR(50),
     Contraseña CHAR(12),
     Token VARCHAR(100),
-    ID_Funcionario CHAR(8),
-    FOREIGN KEY (ID_Funcionario) REFERENCES Funcionario(ID_Funcionario)
 ) ON AuditoriaFileGroup;
 
 -- Tabla: Dentista
