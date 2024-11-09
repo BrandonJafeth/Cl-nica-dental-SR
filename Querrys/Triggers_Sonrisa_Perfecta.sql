@@ -1521,5 +1521,189 @@ BEGIN
 END;
 GO
 
+-- Trigger de auditoría para la tabla Pago
+CREATE OR ALTER TRIGGER tr_AuditarInsercionPago
+ON Pago
+AFTER INSERT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    SELECT NEWID(), GETDATE(), 'Inserción en Pago: ' + CAST(i.ID_Pago AS VARCHAR(36)), HOST_NAME(), SYSTEM_USER
+    FROM inserted i;
+END;
+GO
+
+CREATE OR ALTER TRIGGER tr_AuditarActualizacionPago
+ON Pago
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    SELECT NEWID(), GETDATE(), 'Actualización en Pago: ' + CAST(i.ID_Pago AS VARCHAR(36)), HOST_NAME(), SYSTEM_USER
+    FROM inserted i;
+END;
+GO
+
+CREATE OR ALTER TRIGGER tr_AuditarEliminacionPago
+ON Pago
+AFTER DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    SELECT NEWID(), GETDATE(), 'Eliminación en Pago: ' + CAST(d.ID_Pago AS VARCHAR(36)), HOST_NAME(), SYSTEM_USER
+    FROM deleted d;
+END;
+GO
+
+-- Trigger de auditoría para la tabla Estado_Cuenta
+CREATE OR ALTER TRIGGER tr_AuditarInsercionEstadoCuenta
+ON Estado_Cuenta
+AFTER INSERT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    SELECT NEWID(), GETDATE(), 'Inserción en Estado_Cuenta: ' + i.ID_Estado_Cuenta, HOST_NAME(), SYSTEM_USER
+    FROM inserted i;
+END;
+GO
+
+CREATE OR ALTER TRIGGER tr_AuditarActualizacionEstadoCuenta
+ON Estado_Cuenta
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    SELECT NEWID(), GETDATE(), 'Actualización en Estado_Cuenta: ' + d.ID_Estado_Cuenta, HOST_NAME(), SYSTEM_USER
+    FROM deleted d;
+END;
+GO
+
+CREATE OR ALTER TRIGGER tr_AuditarEliminacionEstadoCuenta
+ON Estado_Cuenta
+AFTER DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    SELECT NEWID(), GETDATE(), 'Eliminación en Estado_Cuenta: ' + d.ID_Estado_Cuenta, HOST_NAME(), SYSTEM_USER
+    FROM deleted d;
+END;
+GO
+
+-- Trigger de auditoría para la tabla Tipo_Pago
+CREATE OR ALTER TRIGGER tr_AuditarInsercionTipoPago
+ON Tipo_Pago
+AFTER INSERT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    SELECT NEWID(), GETDATE(), 'Inserción en Tipo_Pago: ' + i.ID_Tipo_Pago, HOST_NAME(), SYSTEM_USER
+    FROM inserted i;
+END;
+GO
+
+CREATE OR ALTER TRIGGER tr_AuditarActualizacionTipoPago
+ON Tipo_Pago
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    SELECT NEWID(), GETDATE(), 'Actualización en Tipo_Pago: ' + d.ID_Tipo_Pago, HOST_NAME(), SYSTEM_USER
+    FROM deleted d;
+END;
+GO
+
+CREATE OR ALTER TRIGGER tr_AuditarEliminacionTipoPago
+ON Tipo_Pago
+AFTER DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    SELECT NEWID(), GETDATE(), 'Eliminación en Tipo_Pago: ' + d.ID_Tipo_Pago, HOST_NAME(), SYSTEM_USER
+    FROM deleted d;
+END;
+GO
+
+-- Trigger de auditoría para la tabla Historial_Tratamiento
+CREATE OR ALTER TRIGGER tr_AuditarInsercionHistorialTratamiento
+ON Historial_Tratamiento
+AFTER INSERT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    SELECT NEWID(), GETDATE(), 'Inserción en Historial_Tratamiento: ' + i.ID_Historial_Tratamiento, HOST_NAME(), SYSTEM_USER
+    FROM inserted i;
+END;
+GO
+
+CREATE OR ALTER TRIGGER tr_AuditarActualizacionHistorialTratamiento
+ON Historial_Tratamiento
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    SELECT NEWID(), GETDATE(), 'Actualización en Historial_Tratamiento: ' + d.ID_Historial_Tratamiento, HOST_NAME(), SYSTEM_USER
+    FROM deleted d;
+END;
+GO
+
+CREATE OR ALTER TRIGGER tr_AuditarEliminacionHistorialTratamiento
+ON Historial_Tratamiento
+AFTER DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    SELECT NEWID(), GETDATE(), 'Eliminación en Historial_Tratamiento: ' + d.ID_Historial_Tratamiento, HOST_NAME(), SYSTEM_USER
+    FROM deleted d;
+END;
+GO
+
+-- Trigger de auditoría para la tabla Roles_Permisos
+CREATE OR ALTER TRIGGER tr_AuditarInsercionRolesPermisos
+ON Roles_Permisos
+AFTER INSERT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    SELECT NEWID(), GETDATE(), 'Inserción en Roles_Permisos: ' + i.ID_Roles_Permisos, HOST_NAME(), SYSTEM_USER
+    FROM inserted i;
+END;
+GO
+
+CREATE OR ALTER TRIGGER tr_AuditarActualizacionRolesPermisos
+ON Roles_Permisos
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    SELECT NEWID(), GETDATE(), 'Actualización en Roles_Permisos: ' + d.ID_Roles_Permisos, HOST_NAME(), SYSTEM_USER
+    FROM deleted d;
+END;
+GO
+
+CREATE OR ALTER TRIGGER tr_AuditarEliminacionRolesPermisos
+ON Roles_Permisos
+AFTER DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO Auditoria (ID_Auditoria, Fecha_Hora_Accion, Acción, DispositivoQueRealizo, Usuario)
+    SELECT NEWID(), GETDATE(), 'Eliminación en Roles_Permisos: ' + d.ID_Roles_Permisos, HOST_NAME(), SYSTEM_USER
+    FROM deleted d;
+END;
+GO
 
 
