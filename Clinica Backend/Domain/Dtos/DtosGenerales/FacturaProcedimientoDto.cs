@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Application.Dtos.PostDtos
 {
-    public class FacturaProcedimientoPostDto
+    public class FacturaProcedimientoDto
     {
         public string ID_Factura_Procedimiento { get; set; }
         public string ID_Factura { get; set; }

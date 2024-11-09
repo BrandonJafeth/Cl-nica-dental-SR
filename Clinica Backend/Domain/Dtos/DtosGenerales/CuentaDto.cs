@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Application.Dtos.PostDtos
 {
-    public class CuentaPostDto
+    public class CuentaDto
     {
         public string ID_Cuenta { get; set; }
         public decimal Saldo_Total { get; set; }

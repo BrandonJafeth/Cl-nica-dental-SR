@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Application.Dtos.PostDtos
 {
-    public class CitaPostDto
+    public class CitaDto
     {
         public string ID_Cita { get; set; }
         public DateTime Fecha_Cita { get; set; }

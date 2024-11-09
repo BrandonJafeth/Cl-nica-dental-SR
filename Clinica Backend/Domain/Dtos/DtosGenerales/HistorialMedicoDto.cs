@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Application.Dtos.PostDtos
 {
-    public class HistorialMedicoPostDto
+    public class HistorialMedicoDto
     {
         public string ID_HistorialMedico { get; set; }
         public DateTime Fecha_Historial { get; set; }
