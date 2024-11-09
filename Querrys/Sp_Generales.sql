@@ -556,17 +556,17 @@ CREATE PROCEDURE InsertHistorialMedico
     @ID_HistorialMedico CHAR(8),
     @Fecha_Historial DATE,
     @Diagnostico VARCHAR(100),
-    @Tratamientos_Medicos VARCHAR(200)
+    @ID_Paciente CHAR(8)
 AS
 BEGIN
-    IF @ID_HistorialMedico = '' OR @Fecha_Historial IS NULL OR @Diagnostico = '' OR @Tratamientos_Medicos = ''
+    IF @ID_HistorialMedico = '' OR @Fecha_Historial IS NULL OR @Diagnostico = '' OR @ID_Paciente = ''
     BEGIN
         RAISERROR('No se permiten valores nulos o vacíos', 16, 1);
         RETURN;
     END
 
-    INSERT INTO Historial_Medico (ID_HistorialMedico, Fecha_Historial, Diagnostico, Tratamientos_Medicos)
-    VALUES (@ID_HistorialMedico, @Fecha_Historial, @Diagnostico, @Tratamientos_Medicos);
+    INSERT INTO Historial_Medico (ID_HistorialMedico, Fecha_Historial, Diagnostico, ID_Paciente)
+    VALUES (@ID_HistorialMedico, @Fecha_Historial, @Diagnostico, @ID_Paciente);
 END;
 GO
 
@@ -575,10 +575,10 @@ CREATE PROCEDURE UpdateHistorialMedico
     @ID_HistorialMedico CHAR(8),
     @Fecha_Historial DATE,
     @Diagnostico VARCHAR(100),
-    @Tratamientos_Medicos VARCHAR(200)
+    @ID_Paciente CHAR(8)
 AS
 BEGIN
-    IF @ID_HistorialMedico = '' OR @Fecha_Historial IS NULL OR @Diagnostico = '' OR @Tratamientos_Medicos = ''
+    IF @ID_HistorialMedico = '' OR @Fecha_Historial IS NULL OR @Diagnostico = '' OR @ID_Paciente = ''
     BEGIN
         RAISERROR('No se permiten valores nulos o vacíos', 16, 1);
         RETURN;
@@ -587,7 +587,7 @@ BEGIN
     UPDATE Historial_Medico
     SET Fecha_Historial = @Fecha_Historial,
         Diagnostico = @Diagnostico,
-        Tratamientos_Medicos = @Tratamientos_Medicos
+        ID_Paciente = @ID_Paciente
     WHERE ID_HistorialMedico = @ID_HistorialMedico;
 END;
 GO
@@ -845,18 +845,18 @@ CREATE PROCEDURE InsertFuncionario
     @Nombre VARCHAR(20),
     @Apellido1 VARCHAR(200),
     @Apellido2 VARCHAR(200),
-    @Email VARCHAR(20),
-    @Contraseña CHAR(12)
+    @Email VARCHAR(20)
+    
 AS
 BEGIN
-    IF @ID_Funcionario = '' OR @Nombre = '' OR @Apellido1 = '' OR @Apellido2 = '' OR @Email = '' OR @Contraseña = ''
+    IF @ID_Funcionario = '' OR @Nombre = '' OR @Apellido1 = '' OR @Apellido2 = '' OR @Email = '' 
     BEGIN
         RAISERROR('No se permiten valores nulos o vacíos', 16, 1);
         RETURN;
     END
 
-    INSERT INTO Funcionario (ID_Funcionario, Nombre, Apellido1, Apellido2, Email, Contraseña)
-    VALUES (@ID_Funcionario, @Nombre, @Apellido1, @Apellido2, @Email, @Contraseña);
+    INSERT INTO Funcionario (ID_Funcionario, Nombre, Apellido1, Apellido2, Email)
+    VALUES (@ID_Funcionario, @Nombre, @Apellido1, @Apellido2, @Email);
 END;
 GO
 
@@ -866,11 +866,11 @@ CREATE PROCEDURE UpdateFuncionario
     @Nombre VARCHAR(20),
     @Apellido1 VARCHAR(200),
     @Apellido2 VARCHAR(200),
-    @Email VARCHAR(20),
-    @Contraseña CHAR(12)
+    @Email VARCHAR(20)
+    
 AS
 BEGIN
-    IF @ID_Funcionario = '' OR @Nombre = '' OR @Apellido1 = '' OR @Apellido2 = '' OR @Email = '' OR @Contraseña = ''
+    IF @ID_Funcionario = '' OR @Nombre = '' OR @Apellido1 = '' OR @Apellido2 = '' OR @Email = '' 
     BEGIN
         RAISERROR('No se permiten valores nulos o vacíos', 16, 1);
         RETURN;
@@ -880,8 +880,7 @@ BEGIN
     SET Nombre = @Nombre,
         Apellido1 = @Apellido1,
         Apellido2 = @Apellido2,
-        Email = @Email,
-        Contraseña = @Contraseña
+        Email = @Email
     WHERE ID_Funcionario = @ID_Funcionario;
 END;
 GO

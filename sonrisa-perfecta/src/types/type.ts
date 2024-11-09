@@ -29,6 +29,8 @@ export interface Procedimiento {
   ID_Tratamiento: string;
 }
 
+// src/types/type.ts
+
 export interface Factura {
   iD_Factura: string;
   montoTotal_Fa: number;

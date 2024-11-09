@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace YourNamespace.Controllers
+namespace Clinica_Dental.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
