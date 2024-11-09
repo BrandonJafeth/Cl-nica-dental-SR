@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Application.Dtos.PostDtos
 {
-    public class DentistaEspecialidadPostDto
+    public class DentistaEspecialidadDto
     {
         public string ID_Dentista_Especialidad { get; set; }
         public string ID_Dentista { get; set; }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Application.Dtos.PostDtos
 {
-    public class ProcedimientoPostDto
+    public class ProcedimientoDto
     {
         public string ID_Procedimiento { get; set; }
         public DateTime Fecha_Proc { get; set; }

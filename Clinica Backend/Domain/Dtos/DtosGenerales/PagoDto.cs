@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace Application.Dtos.PostDtos
 {
-    public class FacturaPostDto
+    public class PagoDto
     {
+        public Guid ID_Pago { get; set; }
+        public decimal Monto_Pago { get; set; }
+        public DateTime Fecha_Pago { get; set; }
         public string ID_Factura { get; set; }
-        public decimal MontoTotal_Fa { get; set; }
-        public DateTime FechaEmision_Fa { get; set; }
-        public string ID_EstadoPago { get; set; }
+        public string ID_Tipo_Pago { get; set; }
     }
 
 }

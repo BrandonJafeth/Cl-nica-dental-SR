@@ -7,13 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Domain\Domain.csproj" />
     <ProjectReference Include="..\Infraestructure\Infraestructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Dtos\GetDtos\" />
-    <Folder Include="Dtos\PutDtos\" />
     <Folder Include="ViewModels\" />
   </ItemGroup>
 
